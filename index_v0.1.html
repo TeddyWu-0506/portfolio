@@ -1,0 +1,2817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Teddy Wu — AI Product Manager</title>
+    <meta name="description" content="Teddy Wu - AI Product Manager specializing in AI-powered content marketing tools. Built and deployed two AI systems driving 70-83% efficiency improvements in content review and KOL recommendation.">
+    <meta name="keywords" content="AI Product Manager, Content Marketing, KOL Recommendation, RAG, Prompt Engineering, HITL, Teddy Wu">
+    <meta property="og:title" content="Teddy Wu — AI Product Manager">
+    <meta property="og:description" content="AI Product Manager specializing in content marketing automation. 200+ monthly KOL campaigns, 1.5M+ monthly budget, 40%+ viral content rate.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="resource/image/头像.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+       :root {
+           --bg: #FAFAFA;
+           --surface: #FFFFFF;
+           --surface-hover: #F5F5F5;
+           --text: #1A1A1A;
+           --text-secondary: #6B7280;
+           --text-tertiary: #9CA3AF;
+           --border: #E5E7EB;
+           --border-light: #F3F4F6;
+           --accent: #5E6AD2;
+           --accent-hover: #4F5BC4;
+           --accent-light: rgba(94, 106, 210, 0.08);
+           --success: #10B981;
+           --success-light: rgba(16, 185, 129, 0.08);
+           --warning: #F59E0B;
+           --warning-light: rgba(245, 158, 11, 0.08);
+           --danger: #EF4444;
+           --danger-light: rgba(239, 68, 68, 0.08);
+           --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+           --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+           --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+           --radius: 8px;
+           --radius-lg: 12px;
+           --gm: 40px;
+       }
+
+        [data-theme="dark"] {
+            --bg: #0F0F0F;
+            --surface: #1A1A1A;
+            --surface-hover: #252525;
+            --text: #F5F5F5;
+            --text-secondary: #A0A0A0;
+            --text-tertiary: #707070;
+            --border: #2A2A2A;
+            --border-light: #1F1F1F;
+            --accent: #7B85D6;
+            --accent-hover: #8B94E0;
+            --accent-light: rgba(123, 133, 214, 0.12);
+            --success: #34D399;
+            --success-light: rgba(52, 211, 153, 0.12);
+            --warning: #FBBF24;
+            --warning-light: rgba(251, 191, 36, 0.12);
+            --danger: #F87171;
+            --danger-light: rgba(248, 113, 113, 0.12);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+        }
+
+       .bg-grid {
+           position: fixed;
+           inset: 0;
+           z-index: -1;
+           background-image: 
+               linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+               linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+           background-size: 40px 40px;
+           pointer-events: none;
+       }
+
+        [data-theme="dark"] .bg-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        }
+
+        [data-theme="dark"] .nav {
+            background: rgba(15,15,15,0.8);
+        }
+        [data-theme="dark"] .mobile-menu {
+            background: var(--surface);
+            border-bottom-color: var(--border);
+        }
+
+        [data-theme="dark"] .progress-dot .dot-label {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .demo-kol-btn:hover { background: #C91A32; }
+        [data-theme="dark"] .wechat-qr-popup {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .wechat-qr-popup::after {
+            border-top-color: var(--surface);
+        }
+        [data-theme="dark"] .demo-kol-tab.active { background: #E01E3A; }
+        [data-theme="dark"] .loader-btn,
+        [data-theme="dark"] .demo-btn-sm,
+        [data-theme="dark"] .contact-btn {
+            background: var(--text);
+        }
+        [data-theme="dark"] .hamburger:hover,
+        [data-theme="dark"] .theme-toggle:hover {
+            border-color: var(--text-tertiary);
+        }
+        [data-theme="dark"] .demo-btn-sm:hover { background: #444; }
+        [data-theme="dark"] .demo-action-btn.confirm {
+            background: var(--text);
+            border-color: var(--text);
+        }
+        [data-theme="dark"] .demo-action-btn.confirm:hover { background: #444; }
+        [data-theme="dark"] .contact-btn:hover { background: #444; }
+        [data-theme="dark"] .loader-btn:hover { background: #444; }
+
+
+        .loader {
+            position: fixed; inset: 0;
+            background: var(--bg);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+        .loader.done { opacity: 0; pointer-events: none; }
+
+        .loader-label {
+            font-size: 13px; font-weight: 500;
+            color: var(--text-tertiary);
+            text-transform: uppercase; letter-spacing: 0.12em;
+            margin-bottom: 20px;
+        }
+
+        .loader-title {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700; letter-spacing: -0.03em;
+            margin-bottom: 40px;
+        }
+
+        .loader-btn {
+            background: var(--text); color: #fff;
+            border: none; border-radius: 100px;
+            padding: 14px 28px;
+            font-size: 15px; font-weight: 500;
+            cursor: pointer;
+            opacity: 0; transform: translateY(8px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .loader-btn.visible { opacity: 1; transform: translateY(0); }
+
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 16px var(--gm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250,250,250,0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .nav-logo {
+            font-size: 15px; font-weight: 600;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+        }
+        .nav-logo:hover { opacity: 0.7; }
+
+        .nav-right {
+            display: flex; align-items: center; gap: 16px;
+        }
+
+        .nav-status {
+            font-size: 13px; font-weight: 400;
+            color: var(--text-secondary);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .nav-status .dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex; gap: 4px;
+        }
+        .nav-links a {
+            font-size: 13px; font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--surface-hover);
+        }
+
+        section {
+            height: 100vh;
+            max-height: 100vh;
+            padding: 80px var(--gm) 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .section-label {
+            font-size: 12px; font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: clamp(24px, 3.5vw, 32px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .hero {
+            height: 100vh;
+            max-height: 100vh;
+            scroll-snap-align: start;
+            display: flex; flex-direction: column;
+            justify-content: center;
+            padding: 80px var(--gm) 40px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .hero-name {
+            font-size: clamp(40px, 7vw, 64px);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .hero-role {
+            font-size: clamp(15px, 1.8vw, 18px);
+            font-weight: 400;
+            color: var(--text-secondary);
+            max-width: 560px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .hero-role strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .hero-stats {
+            display: flex; gap: 32px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .hero-stat-value {
+            font-size: 28px; font-weight: 700;
+            color: var(--text);
+        }
+        .hero-stat-label {
+            font-size: 13px; color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .hero-tags {
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .hero-tag {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px; font-weight: 400;
+            color: var(--text-secondary);
+            background: var(--surface);
+        }
+
+        .projects-list {
+            display: flex; flex-direction: column;
+            gap: 32px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .projects-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .projects-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .project-row {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .project-info h3 {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .project-info .project-sub {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+
+        .project-problem {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .project-features {
+            display: flex; flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .project-feature {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.5;
+        }
+        .project-feature::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 8px;
+            width: 5px; height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .project-results {
+            display: flex; gap: 24px;
+            flex-wrap: wrap;
+        }
+        .project-result-val {
+            font-size: 20px; font-weight: 700;
+            color: var(--text);
+        }
+        .project-result-label {
+            font-size: 12px; color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        /* Demo Panel Base */
+        .demo-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+
+        .demo-nav {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .demo-nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .demo-nav-tabs {
+            display: flex;
+            gap: 2px;
+        }
+
+        .demo-nav-tab {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .demo-nav-tab:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .demo-nav-tab.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .demo-nav-tab svg {
+            width: 14px; height: 14px;
+            flex-shrink: 0;
+        }
+
+        .demo-nav-right {
+            margin-left: auto;
+        }
+
+        .demo-nav-btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-nav-btn:hover {
+            border-color: var(--text-tertiary);
+            color: var(--text);
+        }
+
+        .demo-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .demo-page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .demo-page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .demo-hero-title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .demo-hero-title h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .demo-hero-title p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .demo-status-bar .status-text {
+            color: var(--text-secondary);
+        }
+
+        .demo-status-bar .status-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .demo-status-bar .status-badge {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-section {
+            margin-bottom: 20px;
+        }
+
+        .demo-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .demo-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .demo-btn-sm {
+            padding: 10px 16px;
+            background: var(--text);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-btn-sm:hover {
+            background: #333;
+        }
+
+        .demo-btn-sm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .demo-success-msg {
+            padding: 10px 12px;
+            background: var(--success-light);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--success);
+            margin-top: 8px;
+        }
+
+        .demo-preview-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .demo-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .demo-preview-label {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-preview-label::before {
+            content: '';
+            width: 3px;
+            height: 16px;
+            background: var(--text);
+            border-radius: 2px;
+        }
+
+        .demo-preview-count {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-preview-field {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+
+        .demo-preview-text {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .demo-preview-text .highlight {
+            background: rgba(94, 106, 210, 0.1);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .demo-review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .demo-review-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .demo-review-count {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-review-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .demo-review-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .demo-review-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .demo-review-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: var(--warning-light);
+            color: var(--warning);
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+
+        .demo-review-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .demo-review-compare {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .demo-review-box {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .demo-review-box.original {
+            background: var(--danger-light);
+            border: 1px solid rgba(239,68,68,0.15);
+        }
+
+        .demo-review-box.suggestion {
+            background: var(--success-light);
+            border: 1px solid rgba(16,185,129,0.15);
+        }
+
+        .demo-review-box-label {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-review-box.original .demo-review-box-label { color: var(--danger); }
+        .demo-review-box.suggestion .demo-review-box-label { color: var(--success); }
+
+        .demo-review-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            padding-top: 20px;
+        }
+
+        .demo-review-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-action-btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .demo-action-btn.save {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .demo-action-btn.save:hover {
+            border-color: var(--text-tertiary);
+            color: var(--text);
+        }
+
+        .demo-action-btn.confirm {
+            background: var(--text);
+            border: 1px solid var(--text);
+            color: #fff;
+        }
+
+        .demo-action-btn.confirm:hover { background: #333; }
+
+        .demo-action-btn.ignore {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--danger);
+        }
+
+        .demo-action-btn.ignore:hover { background: var(--danger-light); }
+
+        /* Library Page */
+        .demo-library-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .demo-library-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-library-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .demo-library-card-icon {
+            width: 40px; height: 40px;
+            background: var(--accent-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .demo-library-card-icon svg {
+            width: 20px; height: 20px;
+            color: var(--accent);
+        }
+
+        .demo-library-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .demo-library-card-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+        }
+
+        .demo-library-upload {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .demo-library-upload:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .demo-library-upload-icon {
+            width: 48px; height: 48px;
+            margin: 0 auto 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-library-upload-text {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .demo-library-upload-hint {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* KOL Demo */
+        .demo-kol-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .demo-kol-logo {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #FF2442, #FF6B81);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .demo-kol-logo svg {
+            width: 20px; height: 20px;
+            color: #fff;
+        }
+
+        .demo-kol-title-group h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .demo-kol-title-group p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-kol-header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-ai-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 1px solid rgba(255,36,66,0.3);
+            color: #FF2442;
+            border-radius: 100px;
+            font-weight: 500;
+        }
+
+        .demo-kol-tabs {
+            display: flex;
+            justify-content: center;
+            padding: 12px 20px;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .demo-kol-tab {
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-kol-tab:hover { background: var(--surface-hover); }
+        .demo-kol-tab.active { background: #FF2442; color: #fff; }
+
+        .demo-kol-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .demo-kol-input-section {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .demo-kol-input-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .demo-kol-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+            resize: vertical;
+            min-height: 70px;
+            line-height: 1.6;
+        }
+
+        .demo-kol-textarea:focus {
+            outline: none;
+            border-color: #FF2442;
+        }
+
+        .demo-kol-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .demo-kol-filter-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+
+        .demo-kol-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+            cursor: pointer;
+        }
+
+        .demo-kol-select:focus {
+            outline: none;
+            border-color: #FF2442;
+        }
+
+        .demo-kol-submit {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .demo-kol-btn {
+            padding: 10px 24px;
+            background: #FF2442;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-kol-btn:hover { background: #E01E3A; transform: translateY(-1px); }
+        .demo-kol-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .demo-kol-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .demo-kol-results-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .demo-kol-results-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .demo-kol-results-count strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .demo-kol-retry {
+            font-size: 13px;
+            color: #FF2442;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .demo-kol-results-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-kol-action {
+            padding: 5px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--surface);
+            cursor: pointer;
+        }
+
+        .demo-kol-action:hover {
+            border-color: var(--text-tertiary);
+            color: var(--text);
+        }
+
+        .demo-kol-summary {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+
+        .demo-kol-summary-icon {
+            width: 28px; height: 28px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-summary-icon svg {
+            width: 14px; height: 14px;
+            color: var(--text-secondary);
+        }
+
+        .demo-kol-summary-content h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .demo-kol-summary-content p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .demo-kol-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .demo-kol-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            background: var(--surface);
+        }
+
+        .demo-kol-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .demo-kol-card-checkbox {
+            width: 16px; height: 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .demo-kol-card-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-card-info { flex: 1; }
+
+        .demo-kol-card-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .demo-kol-card-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .demo-kol-card-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-kol-card-score {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 2.5px solid #FF2442;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FF2442;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .demo-kol-card-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .demo-kol-card-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .demo-kol-card-stat svg {
+            width: 12px; height: 12px;
+        }
+
+        .demo-kol-card-recommend {
+            font-size: 11px;
+            padding: 8px;
+            background: rgba(255,36,66,0.04);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .demo-kol-card-recommend strong {
+            color: #FF2442;
+            font-weight: 600;
+        }
+
+        .demo-kol-card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demo-kol-card-pills {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .demo-kol-card-pill {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .demo-kol-card-pill.green { background: var(--success-light); color: var(--success); }
+        .demo-kol-card-pill.blue { background: rgba(59,130,246,0.08); color: #3B82F6; }
+        .demo-kol-card-pill.purple { background: rgba(139,92,246,0.08); color: #8B5CF6; }
+
+        .demo-kol-card-price {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .demo-kol-footer {
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        /* KOL List Page */
+        .demo-kol-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .demo-kol-list-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .demo-kol-list-search {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-kol-list-search input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            width: 200px;
+        }
+
+        .demo-kol-list-search input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .demo-kol-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .demo-kol-list-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .demo-kol-list-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text);
+        }
+
+        .demo-kol-list-table tr:hover td {
+            background: var(--surface-hover);
+        }
+
+        .demo-kol-list-blogger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-kol-list-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-list-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .demo-kol-list-category {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .metric-cell {
+            background: var(--surface);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .metric-num {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .metric-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .metric-desc strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .exp-list {
+            display: flex; flex-direction: column;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .exp-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .exp-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .exp-item {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+        }
+        .exp-item:last-child { border-bottom: 1px solid var(--border); }
+
+        .exp-period {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            padding-top: 4px;
+        }
+
+        .exp-company {
+            font-size: clamp(20px, 2.5vw, 24px);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+
+        .exp-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .exp-highlights {
+            list-style: none;
+            display: flex; flex-direction: column;
+            gap: 8px;
+        }
+        .exp-highlights li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.6;
+        }
+        .exp-highlights li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 9px;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .cap-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .cap-cell {
+            background: var(--surface);
+            padding: 32px 24px;
+        }
+
+        .cap-title {
+            font-size: 16px; font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .cap-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+            text-align: center;
+            padding: 80px var(--gm) 40px;
+            justify-content: center;
+        }
+
+        .contact-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 32px;
+        }
+
+        .contact-info {
+            display: flex; gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .contact-item-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .contact-item-value {
+            font-size: 16px; font-weight: 500;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--text);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .contact-btn:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        footer {
+            padding: 24px var(--gm);
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 900px) {
+            :root { --gm: 24px; }
+            .project-row { grid-template-columns: 1fr; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .exp-item { grid-template-columns: 1fr; gap: 8px; }
+            .cap-grid { grid-template-columns: 1fr; }
+            .demo-kol-cards { grid-template-columns: 1fr; }
+            .demo-kol-filters { grid-template-columns: 1fr; }
+            .demo-review-compare { grid-template-columns: 1fr; }
+            .demo-review-arrow { transform: rotate(90deg); padding: 0; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .demo-library-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Hero Avatar */
+        .hero-top {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        .hero-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border);
+            flex-shrink: 0;
+        }
+        .hero-top-text .section-label { margin-bottom: 4px; }
+        .hero-top-text .hero-name { margin-bottom: 0; }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px; height: 36px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            padding: 8px;
+            transition: all 0.2s;
+        }
+        .hamburger:hover { border-color: var(--text-tertiary); }
+        .hamburger span {
+            display: block;
+            width: 100%; height: 1.5px;
+            background: var(--text);
+            border-radius: 1px;
+            transition: all 0.3s;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 61px; left: 0; right: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            z-index: 99;
+            padding: 12px var(--gm);
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shadow-lg);
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            font-size: 14px; font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .mobile-menu a:hover { color: var(--text); background: var(--surface-hover); }
+
+        /* Progress Indicator */
+        .progress-dots {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .progress-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .progress-dot:hover { background: var(--text-tertiary); transform: scale(1.3); }
+        .progress-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+        .progress-dot .dot-label {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            background: var(--surface);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+        .progress-dot:hover .dot-label { opacity: 1; }
+
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+        .theme-toggle:hover { border-color: var(--text-tertiary); color: var(--text); }
+        .theme-toggle svg { width: 16px; height: 16px; }
+        .theme-toggle .icon-moon { display: block; }
+        .theme-toggle .icon-sun { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
+        /* Contact Improvements */
+        .contact-item-value a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .contact-item-value a:hover { color: var(--accent); }
+        .contact-item-value .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 500;
+            font-family: inherit;
+        }
+        .copy-btn:hover { background: var(--surface-hover); color: var(--accent); }
+        .copy-btn svg { width: 14px; height: 14px; color: var(--text-tertiary); }
+        .copy-toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 200;
+            pointer-events: none;
+        }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* WeChat QR Modal */
+        .wechat-qr-wrapper { position: relative; display: inline-block; }
+        .wechat-qr-popup {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            text-align: center;
+        }
+        .wechat-qr-popup.show { display: block; }
+        .wechat-qr-popup img {
+            width: 180px; height: 180px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+        .wechat-qr-popup p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .wechat-qr-popup::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--surface);
+        }
+
+        /* Footer Improvements */
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-links svg { width: 16px; height: 16px; }
+        .footer-resume {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .footer-resume:hover { border-color: var(--accent); color: var(--accent); }
+        .footer-resume svg { width: 14px; height: 14px; }
+
+        /* Demo Button Feedback */
+        .demo-action-btn.saved {
+            background: var(--success-light) !important;
+            border-color: var(--success) !important;
+            color: var(--success) !important;
+        }
+        .demo-action-btn.confirmed {
+            background: var(--success) !important;
+            color: #fff !important;
+            border-color: var(--success) !important;
+        }
+        .demo-action-btn.ignored {
+            opacity: 0.4;
+            text-decoration: line-through;
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--border-light) 25%, var(--surface-hover) 50%, var(--border-light) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius);
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive: Tablet */
+        @media (max-width: 768px) {
+            .hero-top { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .hero-avatar { width: 64px; height: 64px; }
+            .hero-stats { gap: 20px; }
+            .hero-stat-value { font-size: 24px; }
+            .contact-info { flex-direction: column; gap: 20px; }
+            .progress-dots { display: none; }
+            footer { flex-direction: column; text-align: center; }
+        }
+
+        /* Responsive: Large screens */
+        @media (min-width: 1440px) {
+            :root { --gm: 60px; }
+            section { max-width: 1400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="loader" id="loader">
+        <div class="loader-label">AI Product Manager</div>
+        <div class="loader-title">Teddy Wu</div>
+        <button class="loader-btn" id="enterBtn">Enter Site</button>
+    </div>
+
+    <nav class="nav">
+        <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Teddy Wu</div>
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="#projects">Projects</a>
+                <a href="#metrics">Impact</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </button>
+            <div class="nav-status">
+                <span class="dot"></span>
+                Open to opportunities
+            </div>
+            <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+        <a href="#metrics" onclick="closeMobileMenu()">Impact</a>
+        <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+        <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+    </div>
+
+    <div class="progress-dots" id="progressDots">
+        <div class="progress-dot active" data-section="hero" onclick="scrollToSection('hero')"><span class="dot-label">Home</span></div>
+        <div class="progress-dot" data-section="projects" onclick="scrollToSection('projects')"><span class="dot-label">Projects</span></div>
+        <div class="progress-dot" data-section="metrics" onclick="scrollToSection('metrics')"><span class="dot-label">Impact</span></div>
+        <div class="progress-dot" data-section="experience" onclick="scrollToSection('experience')"><span class="dot-label">Experience</span></div>
+        <div class="progress-dot" data-section="capabilities" onclick="scrollToSection('capabilities')"><span class="dot-label">Skills</span></div>
+        <div class="progress-dot" data-section="contact" onclick="scrollToSection('contact')"><span class="dot-label">Contact</span></div>
+    </div>
+
+    <main>
+
+        <section class="hero">
+            <div class="hero-top">
+                <img src="resource/image/头像.jpg" alt="Teddy Wu" class="hero-avatar">
+                <div class="hero-top-text">
+                    <div class="section-label">AI Product Manager · 广州</div>
+                    <h1 class="hero-name">Teddy Wu</h1>
+                </div>
+            </div>
+            <p class="hero-role">
+                专注内容营销场景下 AI 提效工具的设计与落地。<br>
+                从一线痛点出发，<strong>独立设计并落地两套 AI 系统</strong>，<br>
+                驱动内容投放全链路提效 70-83%
+            </p>
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-value">200+</div>
+                    <div class="hero-stat-label">月均博主投放</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">150万+</div>
+                    <div class="hero-stat-label">月消耗预算</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">40%+</div>
+                    <div class="hero-stat-label">月度爆文率</div>
+                </div>
+            </div>
+            <div class="hero-tags">
+                <span class="hero-tag">RAG 知识库</span>
+                <span class="hero-tag">Prompt Engineering</span>
+                <span class="hero-tag">HITL 人机协同</span>
+                <span class="hero-tag">数据建模</span>
+                <span class="hero-tag">场景化匹配</span>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="section-label">Core Projects · Interactive Demo</div>
+            <h2 class="section-title">AI 系统落地</h2>
+            <div class="projects-list">
+
+                <!-- Project 1: Content Intelligence System -->
+                <div class="project-row">
+                    <div class="project-info">
+                        <h3>Content Intelligence<br>System</h3>
+                        <p class="project-sub">达人内容自动化审核系统 · 2026</p>
+                        <div class="project-problem">
+                            人工审核规则零散、多品牌合规标准不统一，单素材全链路审核耗时 8-10min，批量投放产能不足，漏审风险高
+                        </div>
+                        <div class="project-features">
+                            <div class="project-feature">RAG 私有知识库，品牌规则召回率 92%</div>
+                            <div class="project-feature">分层 Prompt 模块（风险识别/规范校验/优化建议）</div>
+                            <div class="project-feature">HITL 人机协同闭环，系统持续自优化</div>
+                            <div class="project-feature">飞书/腾讯文档 CLI 集成，数据双向同步</div>
+                        </div>
+                        <div class="project-results">
+                            <div>
+                                <div class="project-result-val">↑70%</div>
+                                <div class="project-result-label">审核效率 10→3min</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">↓50%</div>
+                                <div class="project-result-label">返稿率 80→40%</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">↑200%</div>
+                                <div class="project-result-label">一稿通过率 10→30%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-panel" id="demo1-panel">
+                        <div class="demo-nav">
+                            <div class="demo-nav-title">飞书图文审核</div>
+                            <div class="demo-nav-tabs">
+                                <div class="demo-nav-tab active" data-page="import" onclick="switchDemo1Page('import')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
+                                    文档导入
+                                </div>
+                                <div class="demo-nav-tab" data-page="preview" onclick="switchDemo1Page('preview')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+                                    文档预览
+                                </div>
+                                <div class="demo-nav-tab" data-page="review" onclick="switchDemo1Page('review')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg>
+                                    内容审核
+                                </div>
+                                <div class="demo-nav-tab" data-page="library" onclick="switchDemo1Page('library')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="8" cy="5" rx="6" ry="3"/><path d="M2 5v6c0 1.66 2.69 3 6 3s6-1.34 6-3V5"/></svg>
+                                    资料库
+                                </div>
+                            </div>
+                            <div class="demo-nav-right">
+                                <button class="demo-nav-btn">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3"/></svg>
+                                    设置 API
+                                </button>
+                            </div>
+                        </div>
+                        <div class="demo-content">
+                            <!-- Page 1: Import -->
+                            <div class="demo-page active" id="demo1-page-import">
+                                <div class="demo-hero-title">
+                                    <h2>飞书图文稿件自动审核</h2>
+                                    <p>智能内容合规检测 · 知识库增强 · 一键回写飞书</p>
+                                </div>
+                                <div class="demo-status-bar">
+                                    <div class="status-text">点击下方"导入文档"开始审核流程</div>
+                                    <div class="status-badge">已连接飞书文档</div>
+                                </div>
+                                <div class="demo-section">
+                                    <div class="demo-section-title">导入飞书文档</div>
+                                    <div class="demo-input-row">
+                                        <input type="text" class="demo-input" placeholder="粘贴飞书文档链接..." id="demo1-url-input" value="https://my.feishu.cn/docx/HE6VdmVdaoYvTExiG7XcazSunce">
+                                        <button class="demo-btn-sm" onclick="importDocument()">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
+                                            导入文档
+                                        </button>
+                                    </div>
+                                    <div id="demo1-import-msg" style="display:none;" class="demo-success-msg">文档导入成功，点击"文档预览"查看内容</div>
+                                </div>
+                                <div class="demo-section" style="margin-top:32px;">
+                                    <div class="demo-section-title">快速开始</div>
+                                    <div style="display:flex;gap:12px;">
+                                        <button class="demo-btn-sm" onclick="quickImport()" style="flex:1;justify-content:center;">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            使用示例文档
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Page 2: Preview -->
+                            <div class="demo-page" id="demo1-page-preview">
+                                <div class="demo-section">
+                                    <div class="demo-section-title">文档预览</div>
+                                    <div class="demo-preview-card">
+                                        <div class="demo-preview-header">
+                                            <div class="demo-preview-label">【发布标题】</div>
+                                            <div class="demo-preview-count">2 块</div>
+                                        </div>
+                                        <div class="demo-preview-field">发布标题</div>
+                                        <div class="demo-preview-text"><span class="highlight">挖到宝！这瓶洗衣原液让我精简了洗衣步骤，感觉柔顺剂和留香珠都能省啦花火</span></div>
+                                    </div>
+                                    <div class="demo-preview-card">
+                                        <div class="demo-preview-header">
+                                            <div class="demo-preview-label">【发布文案】</div>
+                                            <div class="demo-preview-count">12 块</div>
+                                        </div>
+                                        <div class="demo-preview-field">发布文案</div>
+                                        <div class="demo-preview-text">
+                                            <span class="highlight">姐妹们！今天必须给你们按头安利这个懒人洗衣神器——汰渍洗衣原液</span> 真的太好用了<br>
+                                            以前洗个衣服真的好麻烦<br>
+                                            <span class="highlight">洗衣原液</span><br>
+                                            <span class="highlight">一瓶搞定日常洗衣难题</span><br>
+                                            它和普通洗衣液不太一样哦！一瓶里就融合了去渍、留香、护色和温和配方
+                                        </div>
+                                    </div>
+                                    <div class="demo-preview-card">
+                                        <div class="demo-preview-header">
+                                            <div class="demo-preview-label">【发布 TAG】</div>
+                                            <div class="demo-preview-count">2 块</div>
+                                        </div>
+                                        <div class="demo-preview-field">发布 TAG</div>
+                                        <div class="demo-preview-text">#汰渍洗衣原液 #洗衣原液 #懒人洗衣神器 #家务好物分享 #衣物清洁 #洗衣好物 #汰渍 #家居好物 #洗衣液推荐 #去渍神器 #持久留香 #山茶花香</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
+                                    <button class="demo-btn-sm" onclick="switchDemo1Page('import')">返回</button>
+                                    <button class="demo-btn-sm" onclick="switchDemo1Page('review')">开始审核 →</button>
+                                </div>
+                            </div>
+
+                            <!-- Page 3: Review -->
+                            <div class="demo-page" id="demo1-page-review">
+                                <div class="demo-review-header">
+                                    <div class="demo-review-title">内容审核</div>
+                                    <div style="display:flex;align-items:center;gap:12px;">
+                                        <div class="demo-review-count">3 条建议</div>
+                                        <button class="demo-btn-sm" onclick="runDemo1Review()">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 0111.47-2.4M14 8a6 6 0 01-11.47 2.4"/><path d="M14 2v4h-4M2 14v-4h4"/></svg>
+                                            重新审核
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="demo-review-item">
+                                    <div class="demo-review-item-header">
+                                        <div class="demo-review-item-title">卖点缺乏使用场景或可感知价值；表达不够自然</div>
+                                        <div class="demo-review-status">待处理</div>
+                                    </div>
+                                    <div class="demo-review-desc">原文描述过于侧重物理特性（非牛顿流体、挂壁性），未直接关联用户感知的清洁效果或使用便利性。且"非牛顿流体"等术语对普通消费者不够直观，建议转化为更易懂的场景化描述。</div>
+                                    <div class="demo-review-compare">
+                                        <div class="demo-review-box original">
+                                            <div class="demo-review-box-label">原文</div>
+                                            图2｜产品质地特写 俯拍角度，手拿原液瓶往透明玻璃杯里倒出一点原液，展示非牛顿流体那种稠稠的质地。展示其高浓缩质地，挂壁性强不易流淌，说明用量少也能产生丰富泡沫，适合日常机洗。加花字标注："高浓缩，少量即可满足日常洗涤需求！"
+                                        </div>
+                                        <div class="demo-review-arrow">→</div>
+                                        <div class="demo-review-box suggestion">
+                                            <div class="demo-review-box-label">建议</div>
+                                            图2｜质地特写 俯拍展示原液倒入杯中，质地浓稠挂壁，流动性慢。这种高浓缩配方意味着只需少量就能覆盖衣物表面，轻松包裹污渍，日常机洗更省心。加花字标注："高浓缩，少量即净，机洗更省力！"
+                                        </div>
+                                    </div>
+                                    <div class="demo-review-actions">
+                                        <button class="demo-action-btn save">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            保存编辑
+                                        </button>
+                                        <button class="demo-action-btn confirm">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            确认
+                                        </button>
+                                        <button class="demo-action-btn ignore">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+                                            忽略
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
+                                    <button class="demo-btn-sm" onclick="switchDemo1Page('preview')">← 返回预览</button>
+                                </div>
+                            </div>
+
+                            <!-- Page 4: Library -->
+                            <div class="demo-page" id="demo1-page-library">
+                                <div class="demo-section">
+                                    <div class="demo-section-title">资料库</div>
+                                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">管理品牌 BRIEF、审核模板和合规规则</p>
+                                </div>
+                                <div class="demo-library-grid">
+                                    <div class="demo-library-card">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">品牌 BRIEF</div>
+                                        <div class="demo-library-card-desc">汰渍/潘婷/飘柔品牌调性、卖点、禁忌词库</div>
+                                    </div>
+                                    <div class="demo-library-card">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8v12H4z"/><path d="M6 6h4M6 8h4M6 10h4"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">审核模板</div>
+                                        <div class="demo-library-card-desc">图文审核、视频审核、直播话术审核模板</div>
+                                    </div>
+                                    <div class="demo-library-card">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">合规规则</div>
+                                        <div class="demo-library-card-desc">广告法禁用词、平台规则、品牌特殊要求</div>
+                                    </div>
+                                    <div class="demo-library-card">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">历史审核</div>
+                                        <div class="demo-library-card-desc">已审核文档归档、数据导出、效果复盘</div>
+                                    </div>
+                                </div>
+                                <div class="demo-library-upload">
+                                    <div class="demo-library-upload-icon">
+                                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4 6l4-4 4 4M2 12v2h12v-2"/></svg>
+                                    </div>
+                                    <div class="demo-library-upload-text">上传 BRIEF 或模板</div>
+                                    <div class="demo-library-upload-hint">支持 PDF、Word、Excel 格式</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: KOL Recommend System -->
+                <div class="project-row">
+                    <div class="project-info">
+                        <h3>KOL Recommend<br>System</h3>
+                        <p class="project-sub">达人自动化推荐系统 · 2026</p>
+                        <div class="project-problem">
+                            达人数据分散多平台，无统一标准化资产库，人工筛选主观性强，无法支撑大促批量 KOC 投放
+                        </div>
+                        <div class="project-features">
+                            <div class="project-feature">多源 API 数据标准化建模（飞瓜/MCN）</div>
+                            <div class="project-feature">RAG 多维向量库，匹配率稳定 85%</div>
+                            <div class="project-feature">场景化分层匹配引擎（种草/品宣/拉新）</div>
+                            <div class="project-feature">双向评分迭代闭环，持续优化推荐</div>
+                        </div>
+                        <div class="project-results">
+                            <div>
+                                <div class="project-result-val">↑83%</div>
+                                <div class="project-result-label">选号效率 30→5min</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">↑67%</div>
+                                <div class="project-result-label">中选率 30→50%</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">2.5x</div>
+                                <div class="project-result-label">投放产能提升</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-panel" id="demo2-panel">
+                        <div class="demo-kol-header">
+                            <div class="demo-kol-logo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <div class="demo-kol-title-group">
+                                <h3>小红书达人推荐</h3>
+                                <p>AI 智能匹配 · 精准推荐</p>
+                            </div>
+                            <div class="demo-kol-header-right">
+                                <div class="demo-ai-badge">AI Powered</div>
+                                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-tertiary);cursor:pointer;"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
+                            </div>
+                        </div>
+                        <div class="demo-kol-tabs">
+                            <div class="demo-kol-tab active" data-page="recommend" onclick="switchDemo2Page('recommend')">AI 智能推荐</div>
+                            <div class="demo-kol-tab" data-page="feishu" onclick="switchDemo2Page('feishu')">飞书达人库</div>
+                            <div class="demo-kol-tab" data-page="import" onclick="switchDemo2Page('import')">导入达人库</div>
+                        </div>
+                        <div class="demo-kol-body">
+                            <!-- Page 1: AI Recommend Input -->
+                            <div class="demo-page active" id="demo2-page-recommend">
+                                <div class="demo-kol-input-section">
+                                    <div class="demo-kol-input-title">描述你的推广需求</div>
+                                    <textarea class="demo-kol-textarea" id="demo2-requirement">汰渍品牌需要找一批生活母婴类型的 KOC 博主，主要以年轻妈妈人设为主，做多洗衣液横测笔记</textarea>
+                                    <div class="demo-kol-filters">
+                                        <div>
+                                            <div class="demo-kol-filter-label">推广品类</div>
+                                            <select class="demo-kol-select">
+                                                <option>家居生活</option>
+                                                <option>美妆护肤</option>
+                                                <option>母婴育儿</option>
+                                                <option>美食饮品</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div class="demo-kol-filter-label">合作预算</div>
+                                            <select class="demo-kol-select">
+                                                <option>1 万以内</option>
+                                                <option>1-3 万</option>
+                                                <option>3-5 万</option>
+                                                <option>5 万以上</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div class="demo-kol-filter-label">目标人群</div>
+                                            <select class="demo-kol-select">
+                                                <option>25-34 岁女性</option>
+                                                <option>18-24 岁女性</option>
+                                                <option>35-44 岁女性</option>
+                                                <option>全年龄段</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="demo-kol-submit">
+                                        <button class="demo-kol-btn" id="demo2-start-btn" onclick="startDemo2Recommend()">开始推荐</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Page 2: AI Recommend Results -->
+                            <div class="demo-page" id="demo2-page-results">
+                                <div class="demo-kol-results-header">
+                                    <div class="demo-kol-results-left">
+                                        <div class="demo-kol-results-count">共推荐 <strong>3</strong> 位达人</div>
+                                        <div class="demo-kol-retry" onclick="switchDemo2Page('recommend')">重新推荐</div>
+                                    </div>
+                                    <div class="demo-kol-results-right">
+                                        <button class="demo-kol-action">全选</button>
+                                        <button class="demo-kol-action">导出深度数据 (0)</button>
+                                    </div>
+                                </div>
+                                <div class="demo-kol-summary">
+                                    <div class="demo-kol-summary-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="demo-kol-summary-content">
+                                        <h4>AI 推荐总结</h4>
+                                        <p>从 3 位候选中精选 3 位高匹配母婴家居 KOC，均符合年轻妈妈人设及预算要求，适合汰渍洗衣液横测推广。</p>
+                                    </div>
+                                </div>
+                                <div class="demo-kol-cards" id="demo2-kol-cards"></div>
+                                <div class="demo-kol-footer">
+                                    AI 生成的达人推荐仅供参考 · 数据为模拟生成 · 实际合作请以达人真实数据为准
+                                </div>
+                            </div>
+
+                            <!-- Page 3: Feishu KOL List -->
+                            <div class="demo-page" id="demo2-page-feishu">
+                                <div class="demo-kol-list-header">
+                                    <div class="demo-kol-list-title">飞书达人库</div>
+                                    <div class="demo-kol-list-search">
+                                        <input type="text" placeholder="搜索达人...">
+                                    </div>
+                                </div>
+                                <table class="demo-kol-list-table">
+                                    <thead>
+                                        <tr>
+                                            <th>达人</th>
+                                            <th>粉丝量</th>
+                                            <th>图文报价</th>
+                                            <th>视频报价</th>
+                                            <th>人设</th>
+                                            <th>内容风格</th>
+                                            <th>曝光中位数</th>
+                                            <th>互动中位数</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="demo2-feishu-list"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- Page 4: Import -->
+                            <div class="demo-page" id="demo2-page-import">
+                                <div class="demo-hero-title" style="margin-top:40px;">
+                                    <h2>导入达人库</h2>
+                                    <p>支持从飞书、Excel、CSV 批量导入达人数据</p>
+                                </div>
+                                <div class="demo-library-upload" style="margin-top:24px;">
+                                    <div class="demo-library-upload-icon">
+                                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4 6l4-4 4 4M2 12v2h12v-2"/></svg>
+                                    </div>
+                                    <div class="demo-library-upload-text">上传达人数据文件</div>
+                                    <div class="demo-library-upload-hint">支持 Excel、CSV 格式，单次最多 1000 条</div>
+                                </div>
+                                <div style="margin-top:24px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);">
+                                    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">导入说明</div>
+                                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                                        1. 下载模板文件，按格式填写达人信息<br>
+                                        2. 支持字段：达人名称、平台 ID、粉丝量、报价、人设标签、内容风格等<br>
+                                        3. 上传后系统将自动清洗数据并生成标准化标签<br>
+                                        4. 导入完成后可在"飞书达人库"中查看和管理
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="metrics">
+            <div class="section-label">Business Impact</div>
+            <h2 class="section-title">核心数据</h2>
+            <div class="metrics-grid">
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="70">0</div>
+                    <div class="metric-desc"><strong>审核效率</strong>提升<br>10min → 3min</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="83">0</div>
+                    <div class="metric-desc"><strong>选号效率</strong>提升<br>30min → 5min</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="200">0</div>
+                    <div class="metric-desc"><strong>一稿通过率</strong>提升<br>10% → 30%</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="67">0</div>
+                    <div class="metric-desc"><strong>中选率</strong>提升<br>30% → 50%</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <div class="section-label">Career Path</div>
+            <h2 class="section-title">职业路径</h2>
+            <div class="exp-list">
+                <div class="exp-item">
+                    <div class="exp-period">2024.09 — 至今</div>
+                    <div>
+                        <div class="exp-company">阳狮集团（盛世长城）</div>
+                        <div class="exp-role">Senior Media Executive / AIPM</div>
+                        <ul class="exp-highlights">
+                            <li>服务宝洁汰渍全平台 KOL 营销，从投放痛点出发独立完成两套 AI 系统 0→1 落地</li>
+                            <li>全链路投放闭环操盘，月均 200+ 博主投放、月消耗 150 万+</li>
+                            <li>进店率 15%+、CPUV &lt; 15，月度爆文率 40%+</li>
+                            <li>对接 30+ 核心 MCN，搭建标准化达人评估体系</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <div class="exp-period">2023.04 — 2024.07</div>
+                    <div>
+                        <div class="exp-company">蓝色光标</div>
+                        <div class="exp-role">高级客户执行</div>
+                        <ul class="exp-highlights">
+                            <li>操盘脉动、简爱品牌百万级达人投放，深耕头部 KOL 全域 Campaign</li>
+                            <li>承接何同学等 TOP 级达人多平台打包投放，曝光互动超额达成品牌目标 200%</li>
+                            <li>落地多品牌并行投放 SOP，识别自动化工具核心诉求，为 AI 系统建设提供需求输入</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <div class="exp-period">2021.11 — 2023.03</div>
+                    <div>
+                        <div class="exp-company">茉莉数科集团</div>
+                        <div class="exp-role">客户执行</div>
+                        <ul class="exp-highlights">
+                            <li>服务宝洁潘婷、飘柔品牌，完整负责抖音官号运营全链路</li>
+                            <li>闭环供应商筛选、拍摄、审核交付全流程，搭建内容合规校验清单</li>
+                            <li>数据驱动内容迭代，拆解播放/转化/受众画像指标</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="capabilities">
+            <div class="section-label">Skill Set</div>
+            <h2 class="section-title">能力模型</h2>
+            <div class="cap-grid">
+                <div class="cap-cell">
+                    <div class="cap-title">业务问题建模</div>
+                    <div class="cap-desc">从投放一线重复作业中识别审核、匹配两大痛点，拆解为可建模的 AI 系统需求，驱动两套系统 0-1 落地</div>
+                </div>
+                <div class="cap-cell">
+                    <div class="cap-title">系统架构设计</div>
+                    <div class="cap-desc">独立设计 RAG 知识库 + 分层 Prompt + HITL 闭环的审核系统，以及多源 API + 场景化匹配 + 双向评分的推荐系统</div>
+                </div>
+                <div class="cap-cell">
+                    <div class="cap-title">核心模块构建</div>
+                    <div class="cap-desc">Filtering（数据清洗标签化）、Validation（多层合规校验）、Ranking（场景化匹配打分推荐）三大模块</div>
+                </div>
+                <div class="cap-cell">
+                    <div class="cap-title">持续迭代优化</div>
+                    <div class="cap-desc">HITL 人工回流 + 人工评分反馈 + 向量库增量更新，构建系统自优化闭环，驱动准确率与匹配度持续提升</div>
+                </div>
+            </div>
+        </section>
+
+       <section class="contact" id="contact">
+            <h2 class="contact-title">Let's Talk</h2>
+            <div class="contact-info">
+                <div>
+                    <div class="contact-item-label">Email</div>
+                    <div class="contact-item-value"><a href="mailto:1502110191@qq.com">1502110191@qq.com</a></div>
+                </div>
+                <div>
+                    <div class="contact-item-label">Phone</div>
+                    <div class="contact-item-value"><a href="tel:13680369508">13680369508</a></div>
+                </div>
+                <div>
+                    <div class="contact-item-label">WeChat</div>
+                    <div class="contact-item-value wechat-qr-wrapper">
+                        <button class="copy-btn" onclick="toggleWechatQR()">
+                            TeddyGorrr
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        </button>
+                        <div class="wechat-qr-popup" id="wechatQR">
+                            <img src="resource/image/微信二维码.jpeg" alt="WeChat QR Code">
+                            <p>扫码添加微信</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="mailto:1502110191@qq.com" class="contact-btn">Get in Touch</a>
+        </section>
+
+    </main>
+
+    <footer>
+        <span>© 2026 Teddy Wu</span>
+        <div class="footer-links">
+            <a href="https://github.com/TeddyWu-0506?tab=repositories" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="resource/resume.pdf" target="_blank" class="footer-resume">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                下载简历
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Loader
+        const loader = document.getElementById('loader');
+        const enterBtn = document.getElementById('enterBtn');
+        setTimeout(() => enterBtn.classList.add('visible'), 500);
+        enterBtn.addEventListener('click', () => {
+            loader.classList.add('done');
+            setTimeout(() => {
+                loader.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }, 600);
+        });
+
+        // Demo 1: Page Switching
+        function switchDemo1Page(page) {
+            document.querySelectorAll('#demo1-panel .demo-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#demo1-panel .demo-nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('demo1-page-' + page).classList.add('active');
+            document.querySelector('#demo1-panel .demo-nav-tab[data-page="' + page + '"]').classList.add('active');
+        }
+
+        function importDocument() {
+            const input = document.getElementById('demo1-url-input');
+            const url = input.value.trim();
+            if (!url) {
+                input.style.borderColor = 'var(--danger)';
+                input.setAttribute('placeholder', '请先填写飞书文档链接');
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.setAttribute('placeholder', '粘贴飞书文档链接...');
+                }, 2000);
+                return;
+            }
+            document.getElementById('demo1-import-msg').style.display = 'block';
+            setTimeout(() => switchDemo1Page('preview'), 800);
+        }
+
+        function quickImport() {
+            document.getElementById('demo1-url-input').value = 'https://my.feishu.cn/docx/HE6VdmVdaoYvTExiG7XcazSunce';
+            document.getElementById('demo1-import-msg').style.display = 'block';
+            setTimeout(() => switchDemo1Page('preview'), 800);
+        }
+
+        function runDemo1Review() {
+            const btn = event.target.closest('.demo-btn-sm');
+            btn.disabled = true;
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite"><path d="M2 8a6 6 0 0111.47-2.4"/></svg> 审核中...';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 0111.47-2.4M14 8a6 6 0 01-11.47 2.4"/><path d="M14 2v4h-4M2 14v-4h4"/></svg> 重新审核';
+            }, 1500);
+        }
+
+        // Demo 2: Page Switching
+        function switchDemo2Page(page) {
+            document.querySelectorAll('#demo2-panel .demo-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#demo2-panel .demo-kol-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('demo2-page-' + page).classList.add('active');
+            document.querySelector('#demo2-panel .demo-kol-tab[data-page="' + page + '"]').classList.add('active');
+        }
+
+        function startDemo2Recommend() {
+            const btn = document.getElementById('demo2-start-btn');
+            btn.disabled = true;
+            btn.textContent = '推荐中...';
+            
+            setTimeout(() => {
+                const mockKOLs = [
+                    { name: '鹿可可 Yolo', tags: ['家居生活', '母婴'], score: '92', desc: '亲切知性宝妈风，清爽干净的生活感测评', followers: '12.6w', engagement: '1000-3000', comments: '50-200', recommend: '宝妈人设契合度高，图文报价 3058 元在预算内，擅长家电家居测评。', pills: [{text:'性价比高',color:'green'},{text:'专业度强',color:'blue'},{text:'风格独特',color:'purple'}], price: '3058', avatar: '鹿' },
+                    { name: '天天在家', tags: ['母婴育儿', '家居'], score: '95', desc: '温馨家庭日常，真实亲切的育儿与生活分享', followers: '12.8w', engagement: '1000-3000', comments: '50-200', recommend: '母婴 + 家居双领域标签，直击中产宝妈群体，虽报价略高但内容场景极契合。', pills: [{text:'转化率高',color:'green'},{text:'粉丝黏性好',color:'blue'},{text:'口碑好',color:'green'}], price: '10000', avatar: '天' },
+                    { name: '诗哥的家居生活', tags: ['家居家装'], score: '85', desc: '理性专业设计师风，干货满满的选购攻略', followers: '11.3w', engagement: '1000-3000', comments: '50-200', recommend: '女粉占比 92% 极高，擅长理性测评，虽人设为设计师但家居属性强，适合硬核对比。', pills: [{text:'专业度强',color:'blue'},{text:'内容优质',color:'green'},{text:'种草力强',color:'purple'}], price: '9000', avatar: '诗' }
+                ];
+
+                const cardsHTML = mockKOLs.map(k => `
+                    <div class="demo-kol-card">
+                        <div class="demo-kol-card-top">
+                            <div class="demo-kol-card-checkbox"></div>
+                            <div class="demo-kol-card-avatar">${k.avatar}</div>
+                            <div class="demo-kol-card-info">
+                                <div class="demo-kol-card-name">${k.name}</div>
+                                <div class="demo-kol-card-tags">
+                                    ${k.tags.map(t => `<span class="demo-kol-card-tag">${t}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="demo-kol-card-score">${k.score}</div>
+                        </div>
+                        <div class="demo-kol-card-desc">${k.desc}</div>
+                        <div class="demo-kol-card-stats">
+                            <div class="demo-kol-card-stat">
+                                <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z"/></svg>
+                                ${k.followers}
+                            </div>
+                            <div class="demo-kol-card-stat">
+                                <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 2l2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3 4-.5z"/></svg>
+                                ${k.engagement}
+                            </div>
+                            <div class="demo-kol-card-stat">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 8h12"/></svg>
+                                ${k.comments}
+                            </div>
+                        </div>
+                        <div class="demo-kol-card-recommend">
+                            <strong>AI 推荐：</strong>${k.recommend}
+                        </div>
+                        <div class="demo-kol-card-bottom">
+                            <div class="demo-kol-card-pills">
+                                ${k.pills.map(p => `<span class="demo-kol-card-pill ${p.color}">${p.text}</span>`).join('')}
+                            </div>
+                            <div class="demo-kol-card-price">${k.price}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('demo2-kol-cards').innerHTML = cardsHTML;
+                switchDemo2Page('results');
+                btn.disabled = false;
+                btn.textContent = '开始推荐';
+            }, 1500);
+        }
+
+        // Generate Feishu KOL List
+        const feishuKOLs = [
+            { name: '鹿可可 Yolo', category: '家居生活/母婴', followers: '12.6w', imgPrice: '3,058', videoPrice: '5,500', persona: '知性宝妈', style: '清爽生活测评', exposure: '8.5w', engagement: '2,100' },
+            { name: '天天在家', category: '母婴育儿/家居', followers: '12.8w', imgPrice: '10,000', videoPrice: '18,000', persona: '温馨家庭', style: '育儿生活分享', exposure: '9.2w', engagement: '2,400' },
+            { name: '诗哥的家居生活', category: '家居家装', followers: '11.3w', imgPrice: '9,000', videoPrice: '16,000', persona: '理性设计师', style: '干货选购攻略', exposure: '7.8w', engagement: '1,900' },
+            { name: '小敏妈日记', category: '母婴育儿', followers: '8.5w', imgPrice: '2,500', videoPrice: '4,500', persona: '普通宝妈', style: '真实育儿日常', exposure: '6.2w', engagement: '1,600' },
+            { name: '家居种草机', category: '家居生活', followers: '15.2w', imgPrice: '4,200', videoPrice: '7,800', persona: '家居达人', style: '好物推荐测评', exposure: '11w', engagement: '2,800' },
+            { name: '辣妈成长记', category: '母婴育儿', followers: '9.8w', imgPrice: '3,200', videoPrice: '5,800', persona: '成长型妈妈', style: '母婴好物分享', exposure: '7.1w', engagement: '1,800' },
+            { name: '生活家阿杰', category: '家居生活', followers: '18.5w', imgPrice: '5,500', videoPrice: '9,500', persona: '品质生活', style: '生活方式分享', exposure: '13w', engagement: '3,200' },
+            { name: '萌娃与家', category: '母婴/家居', followers: '10.2w', imgPrice: '3,800', videoPrice: '6,500', persona: '萌娃家庭', style: '亲子家居生活', exposure: '8w', engagement: '2,000' },
+            { name: '收纳师小林', category: '家居生活', followers: '13.6w', imgPrice: '4,500', videoPrice: '8,000', persona: '专业收纳师', style: '收纳整理技巧', exposure: '9.5w', engagement: '2,500' },
+            { name: '二胎妈妈 Lily', category: '母婴育儿', followers: '11.8w', imgPrice: '3,500', videoPrice: '6,200', persona: '二胎宝妈', style: '多孩家庭日常', exposure: '8.8w', engagement: '2,200' }
+        ];
+
+        const feishuListHTML = feishuKOLs.map(k => `
+            <tr>
+                <td>
+                    <div class="demo-kol-list-blogger">
+                        <div class="demo-kol-list-avatar">${k.name[0]}</div>
+                        <div>
+                            <div class="demo-kol-list-name">${k.name}</div>
+                            <div class="demo-kol-list-category">${k.category}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>${k.followers}</td>
+                <td>¥${k.imgPrice}</td>
+                <td>¥${k.videoPrice}</td>
+                <td>${k.persona}</td>
+                <td>${k.style}</td>
+                <td>${k.exposure}</td>
+                <td>${k.engagement}</td>
+            </tr>
+        `).join('');
+
+        document.getElementById('demo2-feishu-list').innerHTML = feishuListHTML;
+
+        // Metric counters
+        document.querySelectorAll('.metric-num[data-target]').forEach(el => {
+            const target = +el.dataset.target;
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 60%',
+                onEnter: () => {
+                    gsap.to(el, {
+                        innerText: target,
+                        duration: 1.5,
+                        ease: 'power2.out',
+                        snap: { innerText: 1 },
+                        onUpdate() { el.textContent = Math.round(parseFloat(el.textContent)) + '%'; }
+                    });
+                },
+                once: true
+            });
+        });
+
+        // Scroll reveal
+        gsap.utils.toArray('.project-row, .exp-item, .metric-cell, .cap-cell').forEach(el => {
+            gsap.from(el, {
+                opacity: 0, y: 16,
+                duration: 0.6, ease: 'power2.out',
+                scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+            });
+        });
+
+        // Dark Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load theme from localStorage or system preference
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.remove('open');
+            hamburger.classList.remove('active');
+        }
+
+        // Progress Dots
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Update active dot on scroll
+        function updateProgressDots() {
+            const sections = ['hero', 'projects', 'metrics', 'experience', 'capabilities', 'contact'];
+            const dots = document.querySelectorAll('.progress-dot');
+            const scrollPos = window.scrollY + window.innerHeight / 2;
+
+            sections.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const top = section.offsetTop;
+                    const bottom = top + section.offsetHeight;
+                    if (scrollPos >= top && scrollPos < bottom) {
+                        dots.forEach(dot => dot.classList.remove('active'));
+                        dots[index].classList.add('active');
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateProgressDots);
+
+        // WeChat QR Toggle
+        function toggleWechatQR() {
+            const popup = document.getElementById('wechatQR');
+            popup.classList.toggle('show');
+        }
+
+        // Close QR popup when clicking outside
+        document.addEventListener('click', function(e) {
+            const qrWrapper = document.querySelector('.wechat-qr-wrapper');
+            const popup = document.getElementById('wechatQR');
+            if (qrWrapper && popup && !qrWrapper.contains(e.target)) {
+                popup.classList.remove('show');
+            }
+        });
+
+        // Demo Button Feedback
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.demo-action-btn');
+            if (!btn) return;
+
+            if (btn.classList.contains('save')) {
+                btn.classList.add('saved');
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 已保存';
+                setTimeout(() => {
+                    btn.classList.remove('saved');
+                    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 保存编辑';
+                }, 2000);
+            } else if (btn.classList.contains('confirm')) {
+                btn.classList.add('confirmed');
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 已确认';
+            } else if (btn.classList.contains('ignore')) {
+                btn.classList.add('ignored');
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg> 已忽略';
+            }
+        });
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('已复制到剪贴板');
+            }).catch(() => {
+                showToast('复制失败，请手动复制');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'copy-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+    </script>
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
