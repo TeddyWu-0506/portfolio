@@ -412,12 +412,28 @@
     color: var(--text);
 }
 
+/* Physics canvas */
+.physics-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: auto;
+    transition: filter 0.5s;
+}
+
 /* Dark mode */
 [data-theme="dark"] .tunnel-wall {
     background-color: #0F0F0F;
-    background-image: 
+    background-image:
         linear-gradient(#2A2A2A 1px, transparent 1px),
         linear-gradient(90deg, #2A2A2A 1px, transparent 1px);
+}
+
+[data-theme="dark"] .physics-canvas {
+    filter: invert(1);
+    transition: filter 0.5s;
 }
 
 [data-theme="dark"] .tunnel-card {
@@ -2362,7 +2378,7 @@
 
     <div class="loader-3d" id="loader">
         <!-- Physics Canvas -->
-        <canvas id="physicsCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:15;pointer-events:auto;"></canvas>
+        <canvas id="physicsCanvas" class="physics-canvas"></canvas>
 
         <!-- Theme Toggle -->
         <div class="loader-theme-wrapper">
@@ -3395,7 +3411,6 @@
             function draw(images) {
                 ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
                 const bodies = Matter.Composite.allBodies(engine.world);
-                const dark = isDark();
                 const w = window.innerWidth;
                 const h = window.innerHeight;
 
@@ -3416,18 +3431,7 @@
                     ctx.translate(body.position.x, body.position.y);
                     ctx.rotate(body.angle);
 
-                    // Dark mode: subtle dark background circle behind icon
-                    if (dark) {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, ICON_SIZE / 2 + 6, 0, Math.PI * 2);
-                        ctx.fillStyle = 'rgba(30,30,30,0.85)';
-                        ctx.fill();
-                        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                        // Invert icon colors for dark mode
-                        ctx.filter = 'invert(1)';
-                    } else {
+                    if (!isDark()) {
                         // Light mode: soft shadow
                         ctx.shadowColor = 'rgba(0,0,0,0.12)';
                         ctx.shadowBlur = 8;
