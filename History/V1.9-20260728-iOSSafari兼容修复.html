@@ -1,0 +1,4619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+   <title>Teddy Wu — AI Product Manager</title>
+    <meta name="description" content="Teddy Wu - AI Product Manager specializing in AI-powered content marketing tools. Built and deployed two AI systems driving 70-83% efficiency improvements in content review and KOL recommendation.">
+    <meta name="keywords" content="AI Product Manager, Content Marketing, KOL Recommendation, RAG, Prompt Engineering, HITL, Teddy Wu">
+    <meta property="og:title" content="Teddy Wu — AI Product Manager">
+    <meta property="og:description" content="AI Product Manager specializing in content marketing automation. 200+ monthly KOL campaigns, 1.5M+ monthly budget, 40%+ viral content rate.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="resource/image/头像.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        // Apply theme immediately before first paint to prevent flash
+        (function() {
+            var t = localStorage.getItem('theme');
+            if (t === 'dark' || t === 'light') {
+                // User manually chose a theme — respect it
+                document.documentElement.setAttribute('data-theme', t);
+            } else {
+                // No manual choice (or 'system') — follow system preference
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            }
+            // Listen for system theme changes — update only when no manual override
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!localStorage.getItem('theme')) {
+                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <style>
+       :root {
+           --bg: #FAFAFA;
+           --surface: #FFFFFF;
+           --surface-hover: #F5F5F5;
+           --text: #1A1A1A;
+           --text-secondary: #6B7280;
+           --text-tertiary: #9CA3AF;
+           --border: #E5E7EB;
+           --border-light: #F3F4F6;
+           --accent: #5E6AD2;
+           --accent-hover: #4F5BC4;
+           --accent-light: rgba(94, 106, 210, 0.08);
+           --success: #10B981;
+           --success-light: rgba(16, 185, 129, 0.08);
+           --warning: #F59E0B;
+           --warning-light: rgba(245, 158, 11, 0.08);
+           --danger: #EF4444;
+           --danger-light: rgba(239, 68, 68, 0.08);
+           --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+           --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+           --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+           --radius: 8px;
+           --radius-lg: 12px;
+           --gm: 40px;
+       }
+
+       html { transition: color 0.5s, background-color 0.5s; -webkit-text-size-adjust: 100%; }
+       body {
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: var(--bg);
+           color: var(--text);
+           overflow-x: hidden;
+           -webkit-font-smoothing: antialiased;
+           -webkit-overflow-scrolling: touch;
+           line-height: 1.5;
+       }
+
+        
+[data-theme="dark"] .loader-3d {
+    background: #0F0F0F;
+}
+
+[data-theme="dark"] {
+            --bg: #0F0F0F;
+            --surface: #1A1A1A;
+            --surface-hover: #252525;
+            --text: #F5F5F5;
+            --text-secondary: #A0A0A0;
+            --text-tertiary: #707070;
+            --border: #2A2A2A;
+            --border-light: #1F1F1F;
+            --accent: #7B85D6;
+            --accent-hover: #8B94E0;
+            --accent-light: rgba(123, 133, 214, 0.12);
+            --success: #34D399;
+            --success-light: rgba(52, 211, 153, 0.12);
+            --warning: #FBBF24;
+            --warning-light: rgba(251, 191, 36, 0.12);
+            --danger: #F87171;
+            --danger-light: rgba(248, 113, 113, 0.12);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+       .bg-grid {
+           position: fixed;
+           inset: 0;
+           z-index: -1;
+           background-image: 
+               linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+               linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+           background-size: 40px 40px;
+           pointer-events: none;
+       }
+
+        [data-theme="dark"] .bg-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        }
+
+        [data-theme="dark"] .nav {
+            background: rgba(15,15,15,0.8);
+        }
+        [data-theme="dark"] .mobile-menu {
+            background: var(--surface);
+            border-bottom-color: var(--border);
+        }
+
+        [data-theme="dark"] .progress-dot .dot-label {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .demo-kol-btn:hover { background: #C91A32; }
+        [data-theme="dark"] .wechat-qr-popup {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .wechat-qr-popup::after {
+            border-top-color: var(--surface);
+        }
+        [data-theme="dark"] .demo-kol-tab.active { background: #E01E3A; }
+        [data-theme="dark"] .demo-btn-sm,
+        [data-theme="dark"] .contact-btn {
+            background: var(--text);
+        }
+        [data-theme="dark"] .hamburger:hover,
+        [data-theme="dark"] .theme-toggle:hover {
+            border-color: var(--text-tertiary);
+        }
+        [data-theme="dark"] .demo-btn-sm:hover { background: #444; }
+        [data-theme="dark"] .demo-action-btn.confirm {
+            background: var(--text);
+            border-color: var(--text);
+        }
+        [data-theme="dark"] .demo-action-btn.confirm:hover { background: #444; }
+        [data-theme="dark"] .contact-btn:hover { background: #444; }
+
+
+
+
+/* Delphi 3D Tunnel - Images directly positioned on walls */
+.loader-3d {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: #FAFAFA;
+    z-index: 9999;
+    overflow: hidden;
+    transition: background 0.5s;
+}
+
+.loader-3d.done {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.loader-3d.zooming {
+    opacity: 1;
+    pointer-events: none;
+}
+
+.loader-3d.zooming .tunnel-content {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tunnel-scene {
+    z-index: 10;
+    position: absolute;
+    inset: 0;
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
+    
+}
+
+.tunnel-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+
+
+@keyframes tunnelScroll {
+    0% { transform: translateZ(0); }
+    100% { transform: translateZ(1500px); }
+}
+
+
+.tunnel-wall {
+    position: absolute;
+    z-index: 1;
+    width: 3000px;
+    height: 3000px;
+    left: 50%;
+    top: 50%;
+    margin-left: -1500px;
+    margin-top: -1500px;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px);
+    background-size: 150px 150px;
+    background-color: #FAFAFA;
+    transition: background-color 0.5s;
+}
+
+.tunnel-wall--left { transform: translateX(-500px) rotateY(90deg); }
+
+.tunnel-wall--right { transform: translateX(500px) rotateY(-90deg); }
+
+.tunnel-wall--top { transform: translateY(-500px) rotateX(90deg); }
+
+.tunnel-wall--bottom { transform: translateY(500px) rotateX(-90deg); }
+
+.tunnel-wall--bottom { transform: translateY(500px) rotateX(-90deg); }
+
+
+
+/* Left wall: x=-500, rotateY(90deg) to face right */
+
+
+
+
+
+/* Right wall: x=+500, rotateY(-90deg) to face left */
+
+
+
+
+
+/* Top wall: y=-500, rotateX(90deg) to face down */
+
+
+
+
+
+/* Bottom wall: y=+500, rotateX(-90deg) to face up */
+
+
+
+
+
+/* Center content */
+
+
+
+.tunnel-content {
+    z-index: 20;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;}
+
+.tunnel-content > * { pointer-events: auto; }
+
+.tunnel-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+}
+
+.tunnel-title {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    margin-bottom: 32px;
+    color: var(--text);
+}
+
+.tunnel-subtitle {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+.tunnel-subtitle .highlight {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.tunnel-btn {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 100px;
+    padding: 20px 40px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.tunnel-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tunnel-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.tunnel-btn-secondary {
+    background: #FAFAFA;
+    color: var(--text);
+    border: none;
+    padding: 20px 24px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 16px;
+    transition: opacity 0.3s ease;
+}
+
+.tunnel-btn-secondary:hover { opacity: 0.7; }
+
+/* Theme toggle */
+.loader-theme-wrapper {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.loader-theme-hint {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(8px);
+    animation: hintFadeIn 0.6s 1.5s ease forwards;
+}
+@keyframes hintFadeIn {
+    to { opacity: 1; transform: translateX(0); }
+}
+.loader-theme-toggle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.loader-theme-toggle:hover {
+    transform: scale(1.1);
+    border-color: var(--accent);
+}
+
+.loader-theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text);
+}
+
+/* Physics canvas */
+.physics-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: auto;
+    transition: filter 0.5s;
+}
+
+/* Dark mode */
+[data-theme="dark"] .tunnel-wall {
+    background-color: #0F0F0F;
+    background-image:
+        linear-gradient(#2A2A2A 1px, transparent 1px),
+        linear-gradient(90deg, #2A2A2A 1px, transparent 1px);
+}
+
+[data-theme="dark"] .physics-canvas {
+    filter: invert(1);
+    transition: filter 0.5s;
+}
+
+[data-theme="dark"] .tunnel-card {
+    background: #1A1A1A;
+    border-color: #2A2A2A;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] .tunnel-btn:hover {
+    box-shadow: 0 8px 24px rgba(123, 133, 214, 0.3);
+}
+
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 16px var(--gm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250,250,250,0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.5s, border-color 0.5s;
+        }
+
+        .nav-logo {
+            font-size: 15px; font-weight: 600;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+        }
+        .nav-logo:hover { opacity: 0.7; }
+
+        .nav-right {
+            display: flex; align-items: center; gap: 16px;
+        }
+
+        .nav-status {
+            font-size: 13px; font-weight: 400;
+            color: var(--text-secondary);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .nav-status .dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex; gap: 4px;
+        }
+        .nav-links a {
+            font-size: 13px; font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--surface-hover);
+        }
+
+        section {
+            height: 100vh;
+            height: 100dvh;
+            max-height: 100vh;
+            max-height: 100dvh;
+            padding: 80px var(--gm) 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .section-label {
+            font-size: 12px; font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: clamp(24px, 3.5vw, 32px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            height: 100dvh;
+            max-height: 100vh;
+            max-height: 100dvh;
+            display: flex; flex-direction: column;
+            padding: 40px var(--gm);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .hero-content {
+            margin: auto 0;
+        }
+
+        /* Blur Text animation - initial state */
+        .hero-blur-text {
+            filter: blur(8px);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: none;
+        }
+
+        .hero-blur-text.animate {
+            filter: blur(0);
+            opacity: 1;
+            transform: translateY(0);
+            transition: filter 0.8s ease, opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .hero-name {
+            font-size: clamp(40px, 7vw, 64px);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .hero-role {
+            font-size: clamp(15px, 1.8vw, 18px);
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .hero-role strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .hero-stats {
+            display: flex; gap: 32px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .hero-stat-value {
+            font-size: 28px; font-weight: 700;
+            color: var(--text);
+        }
+        .hero-stat-label {
+            font-size: 13px; color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .hero-data-section {
+            margin-top: 20px;
+        }
+
+        .hero-data-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .hero-ai-groups {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-ai-group {
+            flex: 1;
+            min-width: 200px;
+            padding-left: 12px;
+            border-left: 2px solid var(--border);
+        }
+
+        .hero-ai-group-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .hero-ai-group .hero-stats {
+            gap: 20px;
+        }
+
+        .projects-list {
+            display: flex; flex-direction: column;
+            gap: 32px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        #projects {
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+
+        #projects .projects-list {
+            max-height: calc(100vh - 120px);
+            max-height: calc(100dvh - 120px);
+            overflow-y: auto;
+        }
+        
+        .projects-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .projects-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .project-row {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .project-info h3 {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .project-info .project-sub {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+
+        .project-problem {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .project-features {
+            display: flex; flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .project-feature {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.5;
+        }
+        .project-feature::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 8px;
+            width: 5px; height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .project-results {
+            display: flex; gap: 24px;
+            flex-wrap: wrap;
+        }
+        .project-result-val {
+            font-size: 20px; font-weight: 700;
+            color: var(--text);
+        }
+        .project-result-label {
+            font-size: 12px; color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        /* Demo Panel Base */
+        .demo-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+
+        .demo-nav {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .demo-nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .demo-nav-tabs {
+            display: flex;
+            gap: 2px;
+        }
+
+        .demo-nav-tab {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .demo-nav-tab:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .demo-nav-tab.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .demo-nav-tab svg {
+            width: 14px; height: 14px;
+            flex-shrink: 0;
+        }
+
+        .demo-nav-right {
+            margin-left: auto;
+        }
+
+        .demo-nav-btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-nav-btn:hover {
+            border-color: var(--text-tertiary);
+            color: var(--text);
+        }
+
+        .demo-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .demo-page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .demo-page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .demo-hero-title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .demo-hero-title h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .demo-hero-title p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .demo-status-bar .status-text {
+            color: var(--text-secondary);
+        }
+
+        .demo-status-bar .status-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .demo-status-bar .status-badge {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-section {
+            margin-bottom: 20px;
+        }
+
+        .demo-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .demo-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .demo-btn-sm {
+            padding: 10px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-btn-sm:hover {
+            background: #333;
+        }
+
+        .demo-btn-sm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .demo-success-msg {
+            padding: 10px 12px;
+            background: var(--success-light);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--success);
+            margin-top: 8px;
+        }
+
+        .demo-preview-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .demo-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .demo-preview-label {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-preview-label::before {
+            content: '';
+            width: 3px;
+            height: 16px;
+            background: var(--text);
+            border-radius: 2px;
+        }
+
+        .demo-preview-count {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-preview-field {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+
+        .demo-preview-text {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .demo-preview-text .highlight {
+            background: rgba(94, 106, 210, 0.1);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .demo-review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .demo-review-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .demo-review-count {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-review-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .demo-review-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .demo-review-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .demo-review-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: var(--warning-light);
+            color: var(--warning);
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+
+        .demo-review-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .demo-review-compare {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .demo-review-box {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .demo-review-box.original {
+            background: var(--danger-light);
+            border: 1px solid rgba(239,68,68,0.15);
+        }
+
+        .demo-review-box.suggestion {
+            background: var(--success-light);
+            border: 1px solid rgba(16,185,129,0.15);
+        }
+
+        .demo-review-box-label {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-review-box.original .demo-review-box-label { color: var(--danger); }
+        .demo-review-box.suggestion .demo-review-box-label { color: var(--success); }
+
+        .demo-review-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            padding-top: 20px;
+        }
+
+        .demo-review-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-action-btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .demo-action-btn.save {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .demo-action-btn.save:hover {
+            border-color: var(--text-tertiary);
+            color: var(--text);
+        }
+
+        .demo-action-btn.confirm {
+            background: var(--text);
+            border: 1px solid var(--text);
+            color: var(--bg);
+        }
+
+        .demo-action-btn.confirm:hover { background: #333; }
+
+        .demo-action-btn.ignore {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--danger);
+        }
+
+        .demo-action-btn.ignore:hover { background: var(--danger-light); }
+
+        /* Library Page */
+        .demo-library-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .demo-library-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-library-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .demo-library-card-icon {
+            width: 40px; height: 40px;
+            background: var(--accent-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .demo-library-card-icon svg {
+            width: 20px; height: 20px;
+            color: var(--accent);
+        }
+
+        .demo-library-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .demo-library-card-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+        }
+
+        .demo-library-upload {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .demo-library-upload:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .library-resource-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .library-resource-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .demo-library-upload-icon {
+            width: 48px; height: 48px;
+            margin: 0 auto 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-library-upload-text {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .demo-library-upload-hint {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* KOL Demo */
+        .demo-kol-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .demo-kol-logo {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #FF2442, #FF6B81);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .demo-kol-logo svg {
+            width: 20px; height: 20px;
+            color: #fff;
+        }
+
+        .demo-kol-title-group h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .demo-kol-title-group p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-kol-header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-ai-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 1px solid rgba(255,36,66,0.3);
+            color: #FF2442;
+            border-radius: 100px;
+            font-weight: 500;
+        }
+
+        .demo-kol-tabs {
+            display: flex;
+            justify-content: center;
+            padding: 12px 20px;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .demo-kol-tab {
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-kol-tab:hover { background: var(--surface-hover); }
+        .demo-kol-tab.active { background: #FF2442; color: #fff; }
+
+        .demo-kol-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .demo-kol-input-section {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .demo-kol-input-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .demo-kol-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+            resize: vertical;
+            min-height: 70px;
+            line-height: 1.6;
+        }
+
+        .demo-kol-textarea:focus {
+            outline: none;
+            border-color: #FF2442;
+        }
+
+        .demo-kol-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .demo-kol-filter-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+
+        .demo-kol-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+            cursor: pointer;
+        }
+
+        .demo-kol-select:focus {
+            outline: none;
+            border-color: #FF2442;
+        }
+
+        .demo-kol-submit {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .demo-kol-btn {
+            padding: 10px 24px;
+            background: #FF2442;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-kol-btn:hover { background: #E01E3A; transform: translateY(-1px); }
+        .demo-kol-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .demo-kol-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .demo-kol-results-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .demo-kol-results-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .demo-kol-results-count strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .demo-kol-retry {
+            font-size: 13px;
+            color: #FF2442;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .demo-kol-results-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-kol-action {
+            padding: 5px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--surface);
+            cursor: pointer;
+        }
+
+        .demo-kol-action:hover {
+            border-color: var(--text-tertiary);
+            color: var(--text);
+        }
+
+        .demo-kol-summary {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+
+        .demo-kol-summary-icon {
+            width: 28px; height: 28px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-summary-icon svg {
+            width: 14px; height: 14px;
+            color: var(--text-secondary);
+        }
+
+        .demo-kol-summary-content h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .demo-kol-summary-content p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .demo-kol-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .demo-kol-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            background: var(--surface);
+        }
+
+        .demo-kol-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .demo-kol-card-checkbox {
+            width: 16px; height: 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .demo-kol-card-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-card-info { flex: 1; }
+
+        .demo-kol-card-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .demo-kol-card-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .demo-kol-card-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+        }
+
+        .demo-kol-card-score {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 2.5px solid #FF2442;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FF2442;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .demo-kol-card-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .demo-kol-card-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .demo-kol-card-stat svg {
+            width: 12px; height: 12px;
+        }
+
+        .demo-kol-card-recommend {
+            font-size: 11px;
+            padding: 8px;
+            background: rgba(255,36,66,0.04);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .demo-kol-card-recommend strong {
+            color: #FF2442;
+            font-weight: 600;
+        }
+
+        .demo-kol-card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demo-kol-card-pills {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .demo-kol-card-pill {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .demo-kol-card-pill.green { background: var(--success-light); color: var(--success); }
+        .demo-kol-card-pill.blue { background: rgba(59,130,246,0.08); color: #3B82F6; }
+        .demo-kol-card-pill.purple { background: rgba(139,92,246,0.08); color: #8B5CF6; }
+
+        .demo-kol-card-price {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .demo-kol-footer {
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        /* KOL List Page */
+        .demo-kol-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .demo-kol-list-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .demo-kol-list-search {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-kol-list-search input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            width: 200px;
+        }
+
+        .demo-kol-list-search input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .demo-kol-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .demo-kol-list-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .demo-kol-list-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text);
+        }
+
+        .demo-kol-list-table tr:hover td {
+            background: var(--surface-hover);
+        }
+
+        .demo-kol-list-blogger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-kol-list-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .demo-kol-list-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .demo-kol-list-category {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .exp-list {
+            display: flex; flex-direction: column;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .exp-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .exp-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .exp-item {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+        }
+        .exp-item:last-child { border-bottom: 1px solid var(--border); }
+
+        .exp-period {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            padding-top: 4px;
+        }
+
+        .exp-company {
+            font-size: clamp(20px, 2.5vw, 24px);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+
+        .exp-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .exp-highlights {
+            list-style: none;
+            display: flex; flex-direction: column;
+            gap: 8px;
+        }
+        .exp-highlights li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.6;
+        }
+        .exp-highlights li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 9px;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .cap-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .cap-cell {
+            background: var(--surface);
+            padding: 32px 24px;
+        }
+
+        .cap-title {
+            font-size: 16px; font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .cap-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+            text-align: center;
+            padding: 80px var(--gm) 40px;
+            justify-content: center;
+        }
+
+        .contact-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+
+        .contact-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .contact-profile-card {
+            display: flex;
+            align-items: stretch;
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .contact-profile-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact-profile-left {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 16px;
+            object-fit: cover;
+        }
+
+        .contact-resume-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+            width: fit-content;
+        }
+
+        .contact-resume-btn:hover {
+            opacity: 0.8;
+        }
+
+        .contact-profile-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-name {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .contact-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .contact-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .contact-detail-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .contact-detail-value a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-detail-value a:hover {
+            color: var(--accent);
+        }
+
+        .contact-social {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .contact-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .contact-social-link:hover {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        .contact-social-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .contact-qr-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .contact-qr {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .contact-qr-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .contact-info {
+            display: flex; gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .contact-item-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .contact-item-value {
+            font-size: 16px; font-weight: 500;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--text);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .contact-btn:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        footer {
+            padding: 24px var(--gm);
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 900px) {
+            :root { --gm: 24px; }
+            .project-row { grid-template-columns: 1fr; }
+            .exp-item { grid-template-columns: 1fr; gap: 8px; }
+            .cap-grid { grid-template-columns: 1fr; }
+            .demo-kol-cards { grid-template-columns: 1fr; }
+            .demo-kol-filters { grid-template-columns: 1fr; }
+            .demo-review-compare { grid-template-columns: 1fr; }
+            .demo-review-arrow { transform: rotate(90deg); padding: 0; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .demo-library-grid { grid-template-columns: 1fr; }
+            .contact-profile-card { flex-direction: column; align-items: center; text-align: center; }
+            .contact-avatar { width: 140px; height: 140px; }
+            .contact-details { align-items: center; }
+            .contact-qr-wrapper { margin-top: 20px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Hero Avatar */
+        .hero-top {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        .hero-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border);
+            flex-shrink: 0;
+        }
+        .hero-top-text .section-label { margin-bottom: 4px; }
+        .hero-top-text .hero-name { margin-bottom: 0; }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px; height: 36px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            padding: 8px;
+            transition: all 0.2s;
+        }
+        .hamburger:hover { border-color: var(--text-tertiary); }
+        .hamburger span {
+            display: block;
+            width: 100%; height: 1.5px;
+            background: var(--text);
+            border-radius: 1px;
+            transition: all 0.3s;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 61px; left: 0; right: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            z-index: 99;
+            padding: 12px var(--gm);
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shadow-lg);
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            font-size: 14px; font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .mobile-menu a:hover { color: var(--text); background: var(--surface-hover); }
+
+        /* Progress Indicator */
+        .progress-dots {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .progress-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .progress-dot:hover { background: var(--text-tertiary); transform: scale(1.3); }
+        .progress-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+        .progress-dot .dot-label {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            background: var(--surface);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+        .progress-dot:hover .dot-label { opacity: 1; }
+
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+        .theme-toggle:hover { border-color: var(--text-tertiary); color: var(--text); }
+        .theme-toggle svg { width: 16px; height: 16px; }
+        .theme-toggle .icon-moon { display: block; }
+        .theme-toggle .icon-sun { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
+        /* Contact Improvements */
+        .contact-item-value a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .contact-item-value a:hover { color: var(--accent); }
+        .contact-item-value .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 500;
+            font-family: inherit;
+        }
+        .copy-btn:hover { background: var(--surface-hover); color: var(--accent); }
+        .copy-btn svg { width: 14px; height: 14px; color: var(--text-tertiary); }
+        .copy-toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 200;
+            pointer-events: none;
+        }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* WeChat QR Modal */
+        .wechat-qr-wrapper { position: relative; display: inline-block; }
+        .wechat-qr-popup {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            text-align: center;
+        }
+        .wechat-qr-popup.show { display: block; }
+        .wechat-qr-popup img {
+            width: 180px; height: 180px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+        .wechat-qr-popup p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .wechat-qr-popup::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--surface);
+        }
+
+        /* Footer Improvements */
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-links svg { width: 16px; height: 16px; }
+        .footer-resume {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .footer-resume:hover { border-color: var(--accent); color: var(--accent); }
+        .footer-resume svg { width: 14px; height: 14px; }
+
+        /* Demo Button Feedback */
+        .demo-action-btn.saved {
+            background: var(--success-light) !important;
+            border-color: var(--success) !important;
+            color: var(--success) !important;
+        }
+        .demo-action-btn.confirmed {
+            background: var(--success) !important;
+            color: #fff !important;
+            border-color: var(--success) !important;
+        }
+        .demo-action-btn.ignored {
+            opacity: 0.4;
+            text-decoration: line-through;
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--border-light) 25%, var(--surface-hover) 50%, var(--border-light) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius);
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive: Tablet */
+        @media (max-width: 768px) {
+            .hero-top { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .hero-avatar { width: 64px; height: 64px; }
+            .hero-stats { gap: 20px; }
+            .hero-stat-value { font-size: 24px; }
+            .hero-ai-groups { flex-direction: column; gap: 20px; }
+            .contact-info { flex-direction: column; gap: 20px; }
+            .progress-dots { display: none; }
+            footer { flex-direction: column; text-align: center; }
+        }
+
+       /* Responsive: Large screens */
+       @media (min-width: 1440px) {
+           :root { --gm: 60px; }
+           section { max-width: 1400px; }
+       }
+
+        /* CurvedInput Component */
+        .curved-input {
+            position: relative;
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+        }
+        .curved-input__svg {
+            display: block;
+            overflow: visible;
+            width: 100%;
+            height: auto;
+            cursor: text;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .curved-input__svg text { font-family: inherit; }
+        .curved-input__ring { opacity: 0; transition: opacity 0.25s ease; }
+        .curved-input--focused .curved-input__ring { opacity: 0.28; }
+        .curved-input__button { cursor: pointer; outline: none; }
+        .curved-input__button-bg { transition: filter 0.2s ease, opacity 0.2s ease; }
+        .curved-input__button:hover .curved-input__button-bg { filter: brightness(1.12); }
+        .curved-input__button:active .curved-input__button-bg { filter: brightness(0.94); }
+        .curved-input__button:focus-visible .curved-input__button-bg { filter: brightness(1.18); }
+        .curved-input__field {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            opacity: 0; border: 0; padding: 0; margin: 0;
+            background: transparent; color: transparent; caret-color: transparent;
+            font-size: 16px; pointer-events: none; outline: none;
+        }
+        .curved-email-wrapper {
+            display: flex; justify-content: center; align-items: center;
+            width: 100%; max-width: 520px; margin: 0 auto 32px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="loader-3d" id="loader">
+        <!-- Physics Canvas -->
+        <canvas id="physicsCanvas" class="physics-canvas"></canvas>
+
+        <!-- Theme Toggle -->
+        <div class="loader-theme-wrapper">
+            <span class="loader-theme-hint">切换主题</span>
+            <button class="loader-theme-toggle" id="loaderThemeToggle" aria-label="Toggle theme">
+            <svg class="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg class="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+        </div>
+
+        <!-- 3D Tunnel Scene -->
+        <div class="tunnel-scene">
+            <div class="tunnel-container">
+                <!-- Grid Walls (background only) -->
+                <div class="tunnel-wall tunnel-wall--left"></div>
+                <div class="tunnel-wall tunnel-wall--right"></div>
+                <div class="tunnel-wall tunnel-wall--top"></div>
+                <div class="tunnel-wall tunnel-wall--bottom"></div>
+
+
+
+
+            </div>
+        </div>
+
+        <!-- Center Content -->
+        <div class="tunnel-content">
+            <div class="tunnel-label">嗨👋欢迎来串门</div>
+            <h1 class="tunnel-title">我是 Teddy Wu</h1>
+            <p class="tunnel-subtitle">你即将解锁我的AI打怪升级存档🌟</p>
+            <button class="tunnel-btn" id="enterBtn">进入我的主页</button>
+        </div>
+    </div>
+    <nav class="nav">
+        <div class="nav-logo" onclick="backToLoader()">← 返回主页</div>
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="#hero">个人信息</a>
+                <a href="#projects">AI系统落地</a>
+                <a href="#experience">职业路径</a>
+                <a href="#capabilities">能力模型</a>
+                <a href="#contact">联系我</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </button>
+            <div class="nav-status">
+                <span class="dot"></span>
+                Open to opportunities
+            </div>
+            <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#hero" onclick="closeMobileMenu()">个人信息</a>
+        <a href="#projects" onclick="closeMobileMenu()">AI系统落地</a>
+        <a href="#experience" onclick="closeMobileMenu()">职业路径</a>
+        <a href="#capabilities" onclick="closeMobileMenu()">能力模型</a>
+        <a href="#contact" onclick="closeMobileMenu()">联系我</a>
+    </div>
+
+    <div class="progress-dots" id="progressDots">
+        <div class="progress-dot active" data-section="hero" onclick="scrollToSection('hero')"><span class="dot-label">个人信息</span></div>
+        <div class="progress-dot" data-section="projects" onclick="scrollToSection('projects')"><span class="dot-label">AI系统落地</span></div>
+        <div class="progress-dot" data-section="experience" onclick="scrollToSection('experience')"><span class="dot-label">职业路径</span></div>
+        <div class="progress-dot" data-section="capabilities" onclick="scrollToSection('capabilities')"><span class="dot-label">能力模型</span></div>
+        <div class="progress-dot" data-section="contact" onclick="scrollToSection('contact')"><span class="dot-label">联系我</span></div>
+    </div>
+
+    <main>
+
+        <section class="hero" id="hero">
+            <div class="hero-content">
+            <div class="hero-top">
+                <img src="resource/image/头像.jpg" alt="Teddy Wu" class="hero-avatar">
+                <div class="hero-top-text">
+                    <div class="section-label">AI Product Manager · 广州</div>
+                    <h1 class="hero-name">Teddy Wu</h1>
+                </div>
+            </div>
+            <p class="hero-role hero-blur-text">
+                专注内容营销场景下 AI 提效工具的设计与落地。从一线痛点出发，<strong>独立设计并落地两套 AI 系统</strong>，驱动内容投放全链路提效
+            </p>
+            <div class="hero-data-section hero-blur-text">
+                <div class="hero-data-title">媒介执行业绩数据</div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-value">200+</div>
+                        <div class="hero-stat-label">月均博主投放</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">150万+</div>
+                        <div class="hero-stat-label">月消耗预算</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">40%+</div>
+                        <div class="hero-stat-label">月度爆文率</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-data-section hero-blur-text">
+                <div class="hero-data-title">AI 产品化提效数据</div>
+                <div class="hero-ai-groups">
+                    <div class="hero-ai-group">
+                        <div class="hero-ai-group-label">选号工具</div>
+                        <div class="hero-stats">
+                            <div>
+                                <div class="hero-stat-value">↑83%</div>
+                                <div class="hero-stat-label">选号效率 30→5min</div>
+                            </div>
+                            <div>
+                                <div class="hero-stat-value">↑67%</div>
+                                <div class="hero-stat-label">中选率 30%→50%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-ai-group">
+                        <div class="hero-ai-group-label">审核工具</div>
+                        <div class="hero-stats">
+                            <div>
+                                <div class="hero-stat-value">↑70%</div>
+                                <div class="hero-stat-label">审核效率 10→3min</div>
+                            </div>
+                            <div>
+                                <div class="hero-stat-value">↑200%</div>
+                                <div class="hero-stat-label">一稿通过率 10%→30%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="section-label">Core Projects · Interactive Demo</div>
+            <h2 class="section-title">AI 系统落地</h2>
+            <div class="projects-list">
+
+                <!-- Project 1: Content Intelligence System -->
+                <div class="project-row">
+                    <div class="project-info">
+                        <h3>Content Intelligence<br>System</h3>
+                        <p class="project-sub">达人内容自动化审核系统 · 2026</p>
+                        <div class="project-problem">
+                            人工审核规则零散、多品牌合规标准不统一，单素材全链路审核耗时 8-10min，批量投放产能不足，漏审风险高
+                        </div>
+                        <div class="project-features">
+                            <div class="project-feature">RAG 私有知识库，品牌规则召回率 92%</div>
+                            <div class="project-feature">分层 Prompt 模块（风险识别/规范校验/优化建议）</div>
+                            <div class="project-feature">HITL 人机协同闭环，系统持续自优化</div>
+                            <div class="project-feature">飞书/腾讯文档 CLI 集成，数据双向同步</div>
+                        </div>
+                        <div class="project-results">
+                            <div>
+                                <div class="project-result-val">↑70%</div>
+                                <div class="project-result-label">审核效率 10→3min</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">↓50%</div>
+                                <div class="project-result-label">返稿率 80→40%</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">↑200%</div>
+                                <div class="project-result-label">一稿通过率 10→30%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-panel" id="demo1-panel">
+                        <div class="demo-nav">
+                            <div class="demo-nav-title">飞书图文审核</div>
+                            <div class="demo-nav-tabs">
+                                <div class="demo-nav-tab active" data-page="import" onclick="switchDemo1Page('import')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
+                                    文档导入
+                                </div>
+                                <div class="demo-nav-tab" data-page="preview" onclick="switchDemo1Page('preview')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+                                    文档预览
+                                </div>
+                                <div class="demo-nav-tab" data-page="review" onclick="switchDemo1Page('review')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg>
+                                    内容审核
+                                </div>
+                                <div class="demo-nav-tab" data-page="library" onclick="switchDemo1Page('library')">
+                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="8" cy="5" rx="6" ry="3"/><path d="M2 5v6c0 1.66 2.69 3 6 3s6-1.34 6-3V5"/></svg>
+                                    资料库
+                                </div>
+                            </div>
+                        </div>
+                        <div class="demo-content">
+                            <!-- Page 1: Import -->
+                            <div class="demo-page active" id="demo1-page-import">
+                                <div class="demo-hero-title">
+                                    <h2>飞书图文稿件自动审核</h2>
+                                    <p>智能内容合规检测 · 知识库增强 · 一键回写飞书</p>
+                                </div>
+                                <div class="demo-status-bar">
+                                    <div class="status-text">点击下方"导入文档"开始审核流程</div>
+                                    <div class="status-badge">已连接飞书文档</div>
+                                </div>
+                                <div class="demo-section">
+                                    <div class="demo-section-title">导入飞书文档</div>
+                                    <div class="demo-input-row">
+                                        <input type="text" class="demo-input" placeholder="粘贴飞书文档链接..." id="demo1-url-input" value="https://my.feishu.cn/docx/HE6VdmVdaoYvTExiG7XcazSunce" readonly style="cursor:not-allowed;opacity:0.7;">
+                                        <button class="demo-btn-sm" onclick="importDocument()">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
+                                            导入文档
+                                        </button>
+                                    </div>
+                                    <div id="demo1-import-msg" style="display:none;" class="demo-success-msg">文档导入成功，点击"文档预览"查看内容</div>
+                                </div>
+                            </div>
+
+                            <!-- Page 2: Preview -->
+                            <div class="demo-page" id="demo1-page-preview">
+                                <div class="demo-section">
+                                    <div class="demo-section-title">文档预览</div>
+                                    <div class="demo-preview-card">
+                                        <div class="demo-preview-header">
+                                            <div class="demo-preview-label">【标题】（18 字）</div>
+                                            <div class="demo-preview-count">1 块</div>
+                                        </div>
+                                        <div class="demo-preview-text"><span class="highlight">挖到宝！汰渍洗衣原液，柔顺留香珠都省了✨</span></div>
+                                    </div>
+                                    <div class="demo-preview-card">
+                                        <div class="demo-preview-header">
+                                            <div class="demo-preview-label">【正文】</div>
+                                            <div class="demo-preview-count">1 块</div>
+                                        </div>
+                                        <div class="demo-preview-text">
+                                            姐妹们！懒人洗衣神器按头安利💥<br>
+                                            汰渍洗衣浓缩液真的巨好用！<br><br>
+                                            以前洗衣服步骤超多🥲<br>
+                                            洗衣液、柔顺剂、留香珠轮番安排<br><br>
+                                            它和普通洗衣液不一样✅<br>
+                                            一瓶融合去渍、留香、护色、温和配方<br>
+                                            <span class="highlight">所有顽固污渍都能轻松洗干净</span><br>
+                                            淡淡的山茶花香超治愈🌸<br>
+                                            贴身衣物清洗也安心<br><br>
+                                            直接精简洗衣流程，不用一堆洗护堆角落<br>
+                                            租房党、家务懒人闭眼冲！
+                                        </div>
+                                    </div>
+                                    <div class="demo-preview-card">
+                                        <div class="demo-preview-header">
+                                            <div class="demo-preview-label">【TAG】</div>
+                                            <div class="demo-preview-count">1 块</div>
+                                        </div>
+                                        <div class="demo-preview-text">#汰渍洗衣原液 #洗衣原液 #懒人洗衣神器 #家务好物分享 #衣物清洁 #洗衣好物 #汰渍 #家居好物 #洗衣液推荐 #去渍神器 #持久留香 #山茶花香</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
+                                    <button class="demo-btn-sm" onclick="switchDemo1Page('import')">返回</button>
+                                    <button class="demo-btn-sm" onclick="switchDemo1Page('review')">开始审核 →</button>
+                                </div>
+                            </div>
+
+                            <!-- Page 3: Review -->
+                            <div class="demo-page" id="demo1-page-review">
+                                <div class="demo-review-header">
+                                    <div class="demo-review-title">内容审核</div>
+                                    <div style="display:flex;align-items:center;gap:12px;">
+                                        <div class="demo-review-count">2 条问题</div>
+                                        <button class="demo-btn-sm" onclick="runDemo1Review()">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 0111.47-2.4M14 8a6 6 0 01-11.47 2.4"/><path d="M14 2v4h-4M2 14v-4h4"/></svg>
+                                            重新审核
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="demo-review-item" id="review-item-1">
+                                    <div class="demo-review-item-header">
+                                        <div class="demo-review-item-title">产品名错误：洗衣浓缩液</div>
+                                        <div class="demo-review-status">待处理</div>
+                                    </div>
+                                    <div class="demo-review-desc">正文中将"洗衣原液"误写为"洗衣浓缩液"，与产品官方名称不一致，需修正为正确产品名。</div>
+                                    <div class="demo-review-compare">
+                                        <div class="demo-review-box original">
+                                            <div class="demo-review-box-label">原文</div>
+                                            汰渍洗衣浓缩液真的巨好用！
+                                        </div>
+                                        <div class="demo-review-arrow">→</div>
+                                        <div class="demo-review-box suggestion">
+                                            <div class="demo-review-box-label">建议</div>
+                                            汰渍洗衣原液真的巨好用！
+                                        </div>
+                                    </div>
+                                    <div class="demo-review-actions">
+                                        <button class="demo-action-btn confirm" onclick="confirmReview(1)">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            确认修改
+                                        </button>
+                                        <button class="demo-action-btn ignore" onclick="ignoreReview(1)">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+                                            忽略
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="demo-review-item" id="review-item-2">
+                                    <div class="demo-review-item-header">
+                                        <div class="demo-review-item-title">绝对化话术：所有顽固污渍都能轻松洗干净</div>
+                                        <div class="demo-review-status">待处理</div>
+                                    </div>
+                                    <div class="demo-review-desc">"所有顽固污渍都能轻松洗干净"属于绝对化用语，违反广告法相关规定，建议修改为更合规的表达。</div>
+                                    <div class="demo-review-compare">
+                                        <div class="demo-review-box original">
+                                            <div class="demo-review-box-label">原文</div>
+                                            所有顽固污渍都能轻松洗干净
+                                        </div>
+                                        <div class="demo-review-arrow">→</div>
+                                        <div class="demo-review-box suggestion">
+                                            <div class="demo-review-box-label">建议</div>
+                                            多种顽固污渍都能有效清洁
+                                        </div>
+                                    </div>
+                                    <div class="demo-review-actions">
+                                        <button class="demo-action-btn confirm" onclick="confirmReview(2)">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            确认修改
+                                        </button>
+                                        <button class="demo-action-btn ignore" onclick="ignoreReview(2)">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+                                            忽略
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="writeback-section" style="display:none;margin-top:20px;padding:16px;background:var(--success-light);border:1px solid rgba(16,185,129,0.3);border-radius:8px;text-align:center;">
+                                    <div style="font-size:14px;font-weight:600;color:var(--success);margin-bottom:12px;">✅ 所有问题已处理</div>
+                                    <button class="demo-btn-sm" onclick="writebackToFeishu()" style="background:var(--success);color:#fff;">
+                                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                        一键写回飞书
+                                    </button>
+                                </div>
+                                <div id="writeback-success" style="display:none;margin-top:20px;padding:20px;background:var(--surface);border:2px solid var(--success);border-radius:12px;text-align:center;">
+                                    <div style="font-size:32px;margin-bottom:12px;">🎉</div>
+                                    <div style="font-size:16px;font-weight:600;color:var(--success);margin-bottom:8px;">写回成功</div>
+                                    <div style="font-size:13px;color:var(--text-secondary);">内容已成功写回飞书文档</div>
+                                </div>
+                                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
+                                    <button class="demo-btn-sm" onclick="switchDemo1Page('preview')">← 返回预览</button>
+                                </div>
+                            </div>
+
+                            <!-- Page 4: Library -->
+                            <div class="demo-page" id="demo1-page-library">
+                                <div class="demo-section">
+                                    <div class="demo-section-title">资料库</div>
+                                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">管理品牌 BRIEF、审核模板和合规规则</p>
+                                </div>
+                                <div class="demo-library-grid">
+                                    <div class="demo-library-card" onclick="openLibraryModal('brief')">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">品牌 BRIEF</div>
+                                        <div class="demo-library-card-desc">汰渍/潘婷/飘柔品牌调性、卖点、禁忌词库</div>
+                                    </div>
+                                    <div class="demo-library-card" onclick="openLibraryModal('template')">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8v12H4z"/><path d="M6 6h4M6 8h4M6 10h4"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">审核模板</div>
+                                        <div class="demo-library-card-desc">图文审核、视频审核、直播话术审核模板</div>
+                                    </div>
+                                    <div class="demo-library-card" onclick="openLibraryModal('rules')">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">合规规则</div>
+                                        <div class="demo-library-card-desc">广告法禁用词、平台规则、品牌特殊要求</div>
+                                    </div>
+                                    <div class="demo-library-card" onclick="openLibraryModal('history')">
+                                        <div class="demo-library-card-icon">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                        </div>
+                                        <div class="demo-library-card-title">历史审核</div>
+                                        <div class="demo-library-card-desc">已审核文档归档、数据导出、效果复盘</div>
+                                    </div>
+                                </div>
+                                <div class="demo-library-upload" onclick="showNextTime()">
+                                    <div class="demo-library-upload-icon">
+                                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4 6l4-4 4 4M2 12v2h12v-2"/></svg>
+                                    </div>
+                                    <div class="demo-library-upload-text">上传 BRIEF 或模板</div>
+                                    <div class="demo-library-upload-hint">支持 PDF、Word、Excel 格式</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: KOL Recommend System -->
+                <div class="project-row">
+                    <div class="project-info">
+                        <h3>KOL Recommend<br>System</h3>
+                        <p class="project-sub">达人自动化推荐系统 · 2026</p>
+                        <div class="project-problem">
+                            达人数据分散多平台，无统一标准化资产库，人工筛选主观性强，无法支撑大促批量 KOC 投放
+                        </div>
+                        <div class="project-features">
+                            <div class="project-feature">多源 API 数据标准化建模（飞瓜/MCN）</div>
+                            <div class="project-feature">RAG 多维向量库，匹配率稳定 85%</div>
+                            <div class="project-feature">场景化分层匹配引擎（种草/品宣/拉新）</div>
+                            <div class="project-feature">双向评分迭代闭环，持续优化推荐</div>
+                        </div>
+                        <div class="project-results">
+                            <div>
+                                <div class="project-result-val">↑83%</div>
+                                <div class="project-result-label">选号效率 30→5min</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">↑67%</div>
+                                <div class="project-result-label">中选率 30→50%</div>
+                            </div>
+                            <div>
+                                <div class="project-result-val">2.5x</div>
+                                <div class="project-result-label">投放产能提升</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-panel" id="demo2-panel">
+                        <div class="demo-kol-header">
+                            <div class="demo-kol-logo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <div class="demo-kol-title-group">
+                                <h3>小红书达人推荐</h3>
+                                <p>AI 智能匹配 · 精准推荐</p>
+                            </div>
+                            <div class="demo-kol-header-right">
+                                <div class="demo-ai-badge">AI Powered</div>
+                                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-tertiary);cursor:pointer;"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
+                            </div>
+                        </div>
+                        <div class="demo-kol-tabs">
+                            <div class="demo-kol-tab active" data-page="recommend" onclick="switchDemo2Page('recommend')">AI 智能推荐</div>
+                            <div class="demo-kol-tab" data-page="feishu" onclick="switchDemo2Page('feishu')">飞书达人库</div>
+                            <div class="demo-kol-tab" data-page="import" onclick="switchDemo2Page('import')">导入达人库</div>
+                        </div>
+                        <div class="demo-kol-body">
+                            <!-- Page 1: AI Recommend Input -->
+                            <div class="demo-page active" id="demo2-page-recommend">
+                                <div class="demo-kol-input-section">
+                                    <div class="demo-kol-input-title">描述你的推广需求</div>
+                                    <textarea class="demo-kol-textarea" id="demo2-requirement">汰渍品牌需要找一批生活母婴类型的 KOC 博主，主要以年轻妈妈人设为主，做多洗衣液横测笔记</textarea>
+                                    <div class="demo-kol-filters">
+                                        <div>
+                                            <div class="demo-kol-filter-label">推广品类</div>
+                                            <select class="demo-kol-select" id="demo2-category">
+                                                <option value="母婴育儿">母婴育儿</option>
+                                                <option value="居家生活">居家生活</option>
+                                                <option value="美妆护肤">美妆护肤</option>
+                                                <option value="美食饮料">美食饮料</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div class="demo-kol-filter-label">合作预算</div>
+                                            <select class="demo-kol-select">
+                                                <option>1 万以内</option>
+                                                <option>1-3 万</option>
+                                                <option>3-5 万</option>
+                                                <option>5 万以上</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div class="demo-kol-filter-label">目标人群</div>
+                                            <select class="demo-kol-select">
+                                                <option>25-34 岁女性</option>
+                                                <option>18-24 岁女性</option>
+                                                <option>35-44 岁女性</option>
+                                                <option>全年龄段</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="demo-kol-submit">
+                                        <button class="demo-kol-btn" id="demo2-start-btn" onclick="startDemo2Recommend()">开始推荐</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Page 2: AI Recommend Results -->
+                            <div class="demo-page" id="demo2-page-results">
+                                <div class="demo-kol-results-header">
+                                    <div class="demo-kol-results-left">
+                                        <div class="demo-kol-results-count">共推荐 <strong>3</strong> 位达人</div>
+                                        <div class="demo-kol-retry" onclick="switchDemo2Page('recommend')">重新推荐</div>
+                                    </div>
+                                    <div class="demo-kol-results-right">
+                                        <button class="demo-kol-action" onclick="selectAllKOL()">全选</button>
+                                        <button class="demo-kol-action" onclick="exportSelectedKOLs()">导出深度数据 (0)</button>
+                                    </div>
+                                </div>
+                                <div class="demo-kol-summary">
+                                    <div class="demo-kol-summary-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="demo-kol-summary-content">
+                                        <h4>AI 推荐总结</h4>
+                                        <p>从 3 位候选中精选 3 位高匹配母婴家居 KOC，均符合年轻妈妈人设及预算要求，适合汰渍洗衣液横测推广。</p>
+                                    </div>
+                                </div>
+                                <div class="demo-kol-cards" id="demo2-kol-cards"></div>
+                                <div class="demo-kol-footer">
+                                    以上数据均为真实的小红书达人数据（只取21个做展示），数据截止时间2026年6月
+                                </div>
+                            </div>
+
+                            <!-- Page 3: Feishu KOL List -->
+                            <div class="demo-page" id="demo2-page-feishu">
+                                <div class="demo-kol-list-header">
+                                    <div class="demo-kol-list-title">飞书达人库</div>
+                                    <div class="demo-kol-list-search">
+                                        <input type="text" placeholder="搜索达人...">
+                                    </div>
+                                </div>
+                                <table class="demo-kol-list-table">
+                                    <thead>
+                                        <tr>
+                                            <th>达人</th>
+                                            <th>粉丝量</th>
+                                            <th>图文报价</th>
+                                            <th>视频报价</th>
+                                            <th>人设</th>
+                                            <th>内容风格</th>
+                                            <th>曝光中位数</th>
+                                            <th>互动中位数</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="demo2-feishu-list"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- Page 4: Import -->
+                            <div class="demo-page" id="demo2-page-import">
+                                <div class="demo-hero-title" style="margin-top:40px;">
+                                    <h2>导入达人库</h2>
+                                    <p>支持从飞书、Excel、CSV 批量导入达人数据</p>
+                                </div>
+                                <div class="demo-library-upload" style="margin-top:24px;" onclick="showNextTime()">
+                                    <div class="demo-library-upload-icon">
+                                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4 6l4-4 4 4M2 12v2h12v-2"/></svg>
+                                    </div>
+                                    <div class="demo-library-upload-text">上传达人数据文件</div>
+                                    <div class="demo-library-upload-hint">支持 Excel、CSV 格式，单次最多 1000 条</div>
+                                </div>
+                                <div style="margin-top:24px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);">
+                                    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">导入说明</div>
+                                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                                        1. 下载模板文件，按格式填写达人信息<br>
+                                        2. 支持字段：达人名称、平台 ID、粉丝量、报价、人设标签、内容风格等<br>
+                                        3. 上传后系统将自动清洗数据并生成标准化标签<br>
+                                        4. 导入完成后可在"飞书达人库"中查看和管理
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Resource Detail Modal -->
+        <div id="resource-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9001;align-items:center;justify-content:center;padding:20px;">
+            <div style="background:var(--surface);border-radius:16px;padding:0;max-width:480px;width:100%;max-height:80vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);">
+                    <div style="font-size:16px;font-weight:700;" id="detail-title"></div>
+                    <button onclick="closeResourceDetail()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary);padding:4px;">✕</button>
+                </div>
+                <div style="padding:24px;overflow-y:auto;max-height:calc(80vh - 80px);">
+                    <div id="detail-content" style="font-size:13px;color:var(--text-secondary);line-height:2;margin-bottom:20px;"></div>
+                    <div style="display:flex;gap:8px;">
+                        <button onclick="showNextTime()" style="flex:1;padding:10px;background:var(--text);color:var(--bg);border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">更新</button>
+                        <button onclick="showNextTime()" style="flex:1;padding:10px;background:var(--surface);color:var(--danger);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="experience">
+            <div class="section-label">Career Path</div>
+            <h2 class="section-title">职业路径</h2>
+            <div class="exp-list">
+                <div class="exp-item">
+                    <div class="exp-period">2024.09 — 至今</div>
+                    <div>
+                        <div class="exp-company">阳狮集团（盛世长城）</div>
+                        <div class="exp-role">Senior Media Executive / AIPM</div>
+                        <ul class="exp-highlights">
+                            <li>服务宝洁汰渍全平台 KOL 营销，从投放痛点出发独立完成两套 AI 系统 0→1 落地</li>
+                            <li>全链路投放闭环操盘，月均 200+ 博主投放、月消耗 150 万+</li>
+                            <li>进店率 15%+、CPUV &lt; 15，月度爆文率 40%+</li>
+                            <li>对接 30+ 核心 MCN，搭建标准化达人评估体系</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <div class="exp-period">2023.04 — 2024.07</div>
+                    <div>
+                        <div class="exp-company">蓝色光标</div>
+                        <div class="exp-role">高级客户执行</div>
+                        <ul class="exp-highlights">
+                            <li>操盘脉动、简爱品牌百万级达人投放，深耕头部 KOL 全域 Campaign</li>
+                            <li>承接何同学等 TOP 级达人多平台打包投放，曝光互动超额达成品牌目标 200%</li>
+                            <li>落地多品牌并行投放 SOP，识别自动化工具核心诉求，为 AI 系统建设提供需求输入</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <div class="exp-period">2021.11 — 2023.03</div>
+                    <div>
+                        <div class="exp-company">茉莉数科集团</div>
+                        <div class="exp-role">客户执行</div>
+                        <ul class="exp-highlights">
+                            <li>服务宝洁潘婷、飘柔品牌，完整负责抖音官号运营全链路</li>
+                            <li>闭环供应商筛选、拍摄、审核交付全流程，搭建内容合规校验清单</li>
+                            <li>数据驱动内容迭代，拆解播放/转化/受众画像指标</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="capabilities">
+            <div class="section-label">Skill Set</div>
+            <h2 class="section-title">能力模型</h2>
+            <div class="cap-grid">
+                <div class="cap-cell">
+                    <div class="cap-title">业务问题建模</div>
+                    <div class="cap-desc">从投放一线重复作业中识别审核、匹配两大痛点，拆解为可建模的 AI 系统需求，驱动两套系统 0-1 落地</div>
+                </div>
+                <div class="cap-cell">
+                    <div class="cap-title">系统架构设计</div>
+                    <div class="cap-desc">独立设计 RAG 知识库 + 分层 Prompt + HITL 闭环的审核系统，以及多源 API + 场景化匹配 + 双向评分的推荐系统</div>
+                </div>
+                <div class="cap-cell">
+                    <div class="cap-title">核心模块构建</div>
+                    <div class="cap-desc">Filtering（数据清洗标签化）、Validation（多层合规校验）、Ranking（场景化匹配打分推荐）三大模块</div>
+                </div>
+                <div class="cap-cell">
+                    <div class="cap-title">持续迭代优化</div>
+                    <div class="cap-desc">HITL 人工回流 + 人工评分反馈 + 向量库增量更新，构建系统自优化闭环，驱动准确率与匹配度持续提升</div>
+                </div>
+            </div>
+        </section>
+
+       <section class="contact" id="contact">
+            <h2 class="contact-title">Let's Talk</h2>
+            <p class="contact-subtitle">期待与你交流</p>
+
+            <div class="contact-profile-card">
+                <div class="contact-profile-left">
+                    <img src="resource/image/头像.jpg" alt="Teddy Wu" class="contact-avatar">
+                    <a href="resource/resume.pdf" target="_blank" class="contact-resume-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        下载简历
+                    </a>
+                </div>
+                <div class="contact-profile-right">
+                    <h3 class="contact-name">Teddy Wu</h3>
+                    <p class="contact-role">AI Product Manager · 广州</p>
+
+                    <div class="contact-details">
+                        <div class="contact-detail-item">
+                            <span class="contact-detail-icon">📍</span>
+                            <span>广州, 中国</span>
+                        </div>
+                        <div class="contact-detail-item">
+                            <span class="contact-detail-icon">📧</span>
+                            <span class="contact-detail-value">
+                                <a href="mailto:1502110191@qq.com">1502110191@qq.com</a>
+                            </span>
+                        </div>
+                        <div class="contact-detail-item">
+                            <span class="contact-detail-icon">📱</span>
+                            <span class="contact-detail-value">
+                                <a href="tel:13680369508">13680369508</a>
+                            </span>
+                        </div>
+                        <div class="contact-detail-item">
+                            <span class="contact-detail-icon">💬</span>
+                            <span class="contact-detail-value">TeddyGorrr</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-qr-wrapper">
+                    <img src="resource/image/微信二维码.jpeg" alt="WeChat QR" class="contact-qr">
+                    <span class="contact-qr-label">扫码添加微信</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <span>© 2026 Teddy Wu</span>
+        <div class="footer-links">
+            <a href="https://github.com/TeddyWu-0506?tab=repositories" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Loader - GSAP tunnel animation
+        const loader = document.getElementById('loader');
+        const enterBtn = document.getElementById('enterBtn');
+        const tunnelContainer = document.querySelector('.tunnel-container');
+        const tunnelScene = document.querySelector('.tunnel-scene');
+
+        // Idle: smooth forward Z drift (replicates original CSS tunnelScroll)
+        const tunnelDrift = gsap.to(tunnelContainer, {
+            z: 1500,
+            duration: 20,
+            ease: 'none',
+            repeat: -1
+        });
+
+        setTimeout(() => enterBtn.classList.add('visible'), 500);
+
+        enterBtn.addEventListener('click', function onClick() {
+            enterBtn.removeEventListener('click', onClick);
+            document.documentElement.style.scrollSnapType = 'none';
+            tunnelDrift.kill();
+            loader.classList.add('zooming');
+
+            gsap.to(tunnelContainer, {
+                z: '+=2500',
+                scale: 1.6,
+                duration: 0.9,
+                ease: 'power3.in',
+                onComplete: function() {
+                    gsap.to(loader, {
+                        filter: 'blur(12px)',
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: 'power2.in',
+                        onComplete: function() {
+                            loader.style.display = 'none';
+                            loader.style.filter = '';
+                            window.scrollTo(0, 0);
+                            setTimeout(function() {
+                                document.documentElement.style.scrollSnapType = '';
+                            }, 300);
+                            // Cleanup physics
+                            if (window.physicsCleanup) window.physicsCleanup();
+                            // Trigger blur text animation
+                            triggerBlurTextAnimation();
+                        }
+                    });
+                }
+            });
+
+            gsap.to(tunnelScene, {
+                filter: 'blur(6px)',
+                duration: 0.7,
+                ease: 'power2.in'
+            });
+        });
+
+        // Blur Text Animation
+        function triggerBlurTextAnimation() {
+            var blurElements = document.querySelectorAll('.hero-blur-text');
+            blurElements.forEach(function(el, index) {
+                setTimeout(function() {
+                    el.classList.add('animate');
+                }, index * 200 + 100);
+            });
+        }
+
+        // Back to Loader
+        function backToLoader() {
+            // Show loader immediately in zoomed-out state (where entry ended)
+            loader.style.display = '';
+            loader.style.opacity = '0';
+            loader.style.filter = 'blur(12px)';
+            loader.classList.remove('zooming', 'done');
+            loader.classList.add('zooming'); // hide tunnel content initially
+
+            // Set tunnel to zoomed-out state (reverse of entry end)
+            gsap.set(tunnelContainer, { z: 2500, scale: 1.6 });
+            gsap.set(tunnelScene, { filter: 'blur(6px)' });
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+            document.documentElement.style.scrollSnapType = 'none';
+
+            // Phase 1: Fade in loader
+            gsap.to(loader, {
+                opacity: 1,
+                filter: 'none',
+                duration: 0.4,
+                ease: 'power2.out',
+                onComplete: function() {
+                    // Phase 2: Tunnel zooms back (reverse of entry)
+                    gsap.to(tunnelContainer, {
+                        z: 0,
+                        scale: 1,
+                        duration: 0.9,
+                        ease: 'power3.out'
+                    });
+
+                    gsap.to(tunnelScene, {
+                        filter: 'none',
+                        duration: 0.7,
+                        ease: 'power2.out'
+                    });
+
+                    // Phase 3: Fade in tunnel content
+                    setTimeout(function() {
+                        loader.classList.remove('zooming');
+                    }, 300);
+
+                    // Phase 4: Start idle drift after zoom completes
+                    setTimeout(function() {
+                        var newDrift = gsap.to(tunnelContainer, {
+                            z: 1500,
+                            duration: 20,
+                            ease: 'none',
+                            repeat: -1
+                        });
+
+                        // Re-enable scroll-snap
+                        document.documentElement.style.scrollSnapType = '';
+
+                        // Re-attach entry click handler
+                        enterBtn.onclick = function() {
+                            newDrift.kill();
+                            document.documentElement.style.scrollSnapType = 'none';
+                            loader.classList.add('zooming');
+
+                            gsap.to(tunnelContainer, {
+                                z: '+=2500',
+                                scale: 1.6,
+                                duration: 0.9,
+                                ease: 'power3.in',
+                                onComplete: function() {
+                                    gsap.to(loader, {
+                                        filter: 'blur(12px)',
+                                        opacity: 0,
+                                        duration: 0.4,
+                                        ease: 'power2.in',
+                                        onComplete: function() {
+                                            loader.style.display = 'none';
+                                            loader.style.filter = '';
+                                            window.scrollTo(0, 0);
+                                            setTimeout(function() {
+                                                document.documentElement.style.scrollSnapType = '';
+                                            }, 300);
+                                        }
+                                    });
+                                }
+                            });
+
+                            gsap.to(tunnelScene, {
+                                filter: 'blur(6px)',
+                                duration: 0.7,
+                                ease: 'power2.in'
+                            });
+                        };
+                    }, 1200);
+                }
+            });
+
+            // Reinitialize physics icons
+            setTimeout(function() {
+                if (window.physicsCleanup) window.physicsCleanup();
+                if (window.physicsInit) window.physicsInit();
+            }, 500);
+        }
+
+        // Loader Theme Toggle
+        const loaderThemeToggle = document.getElementById('loaderThemeToggle');
+        const themeIconSun = loaderThemeToggle.querySelector('.theme-icon-sun');
+        const themeIconMoon = loaderThemeToggle.querySelector('.theme-icon-moon');
+        
+        // Check current theme
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            themeIconSun.style.display = 'none';
+            themeIconMoon.style.display = 'block';
+        }
+        
+        loaderThemeToggle.addEventListener('click', () => {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                html.removeAttribute('data-theme');
+                themeIconSun.style.display = 'block';
+                themeIconMoon.style.display = 'none';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIconSun.style.display = 'none';
+                themeIconMoon.style.display = 'block';
+            }
+        });
+
+        // ========== Physics Icons ==========
+        (function() {
+            const canvas = document.getElementById('physicsCanvas');
+            const ctx = canvas.getContext('2d');
+            const { Engine, Render, World, Bodies, Body, Mouse, MouseConstraint, Events, Runner } = Matter;
+
+            let engine, render, runner, mouseConstraint;
+            const ICON_SIZE = 64;
+            const dpr = window.devicePixelRatio || 1;
+            const iconFiles = [
+                'ChatGPT.png', 'Claude.png', 'Codex_OpenAI.png', 'Cursor.png',
+                'DeepSeek.png', 'Doubao_豆包.png', 'KIMI.png', 'Ollama.png',
+                'ChatGPT.png', 'Claude.png', 'Codex_OpenAI.png', 'Cursor.png',
+                'DeepSeek.png', 'Doubao_豆包.png', 'KIMI.png', 'Ollama.png'
+            ];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth * dpr;
+                canvas.height = window.innerHeight * dpr;
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+
+            function initPhysics() {
+                resizeCanvas();
+
+                engine = Engine.create({ gravity: { x: 0, y: 1.2 } });
+
+                // Walls (extra thick to prevent escape)
+                const wallThickness = 200;
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                const walls = [
+                    Bodies.rectangle(w / 2, h + wallThickness / 2, w + 400, wallThickness, { isStatic: true, friction: 0.8, restitution: 0.3 }),
+                    Bodies.rectangle(-wallThickness / 2, h / 2, wallThickness, h * 3, { isStatic: true, friction: 0.8, restitution: 0.3 }),
+                    Bodies.rectangle(w + wallThickness / 2, h / 2, wallThickness, h * 3, { isStatic: true, friction: 0.8, restitution: 0.3 })
+                ];
+                World.add(engine.world, walls);
+
+                // Static bodies for tunnel content (text + button)
+                var contentEls = document.querySelectorAll('.tunnel-label, .tunnel-title, .tunnel-subtitle, .tunnel-btn');
+                var contentBodies = [];
+                contentEls.forEach(function(el) {
+                    var rect = el.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) return;
+                    var bx = rect.left + rect.width / 2;
+                    var by = rect.top + rect.height / 2;
+                    var body = Bodies.rectangle(bx, by, rect.width + 20, rect.height + 10, {
+                        isStatic: true,
+                        friction: 0,
+                        restitution: 1.2,
+                        label: 'content'
+                    });
+                    contentBodies.push(body);
+                });
+                World.add(engine.world, contentBodies);
+
+                // Load and create icon bodies
+                let loaded = 0;
+                const images = [];
+                iconFiles.forEach(function(file, i) {
+                    const img = new Image();
+                    img.onload = function() {
+                        images[i] = img;
+                        loaded++;
+                        if (loaded === iconFiles.length) {
+                            spawnIcons(images);
+                        }
+                    };
+                    img.src = 'resource/ai-logos/processed/' + encodeURIComponent(file);
+                });
+
+                // Mouse drag
+                const mouse = Mouse.create(canvas);
+                mouse.pixelRatio = dpr;
+                mouseConstraint = MouseConstraint.create(engine, {
+                    mouse: mouse,
+                    constraint: { stiffness: 0.6, render: { visible: false } }
+                });
+                World.add(engine.world, mouseConstraint);
+
+                // Fix mouse position for retina
+                Events.on(mouseConstraint, 'mousedown', function(e) {
+                    canvas.style.cursor = 'grabbing';
+                });
+                Events.on(mouseConstraint, 'mouseup', function() {
+                    canvas.style.cursor = 'grab';
+                });
+
+                // Custom render loop
+                Events.on(engine, 'afterUpdate', function() {
+                    draw(images);
+                });
+
+                runner = Runner.create();
+                Runner.run(runner, engine);
+            }
+
+            function spawnIcons(images) {
+                iconFiles.forEach(function(file, i) {
+                    const x = 80 + Math.random() * (canvas.width - 160);
+                    const delay = i * 400;
+                    setTimeout(function() {
+                        const body = Bodies.circle(x, -20 - Math.random() * 40, ICON_SIZE / 2 + 4, {
+                            restitution: 0.6,
+                            friction: 0.3,
+                            frictionAir: 0.01,
+                            density: 0.002,
+                            label: 'icon-' + i
+                        });
+                        World.add(engine.world, body);
+                    }, delay);
+                });
+            }
+
+            function isDark() {
+                return document.documentElement.getAttribute('data-theme') === 'dark';
+            }
+
+            function draw(images) {
+                ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                const bodies = Matter.Composite.allBodies(engine.world);
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+
+                bodies.forEach(function(body) {
+                    if (!body.label || !body.label.startsWith('icon-')) return;
+
+                    // Safety: reset escaped icons
+                    if (body.position.x < -100 || body.position.x > w + 100 || body.position.y > h + 200) {
+                        Body.setPosition(body, { x: w / 2, y: -30 });
+                        Body.setVelocity(body, { x: 0, y: 0 });
+                    }
+
+                    const idx = parseInt(body.label.split('-')[1]);
+                    const img = images[idx];
+                    if (!img) return;
+
+                    ctx.save();
+                    ctx.translate(body.position.x, body.position.y);
+                    ctx.rotate(body.angle);
+
+                    if (!isDark()) {
+                        // Light mode: soft shadow
+                        ctx.shadowColor = 'rgba(0,0,0,0.12)';
+                        ctx.shadowBlur = 8;
+                        ctx.shadowOffsetY = 3;
+                    }
+
+                    ctx.drawImage(img, -ICON_SIZE / 2, -ICON_SIZE / 2, ICON_SIZE, ICON_SIZE);
+                    ctx.restore();
+                });
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                resizeCanvas();
+            });
+
+            // Initialize
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(initPhysics, 100);
+            } else {
+                window.addEventListener('load', function() { setTimeout(initPhysics, 100); });
+            }
+
+            // Expose cleanup for backToLoader
+            window.physicsCleanup = function() {
+                if (runner) Runner.stop(runner);
+                if (engine) World.clear(engine.world);
+                if (engine) Engine.clear(engine);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            };
+
+            window.physicsInit = initPhysics;
+            window._physicsEngine = function() { return engine; };
+        })();
+
+        // Demo 1: Page Switching
+        function switchDemo1Page(page) {
+            // Show loading state
+            var btn = event && event.target && event.target.closest('.demo-nav-tab, .demo-btn-sm');
+            if (btn) {
+                var originalText = btn.innerHTML;
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite"><path d="M8 2a6 6 0 0111.47 2.4"/></svg> 加载中...';
+                btn.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.style.pointerEvents = '';
+                    // Switch pages
+                    document.querySelectorAll('#demo1-panel .demo-page').forEach(p => p.classList.remove('active'));
+                    document.querySelectorAll('#demo1-panel .demo-nav-tab').forEach(t => t.classList.remove('active'));
+                    document.getElementById('demo1-page-' + page).classList.add('active');
+                    document.querySelector('#demo1-panel .demo-nav-tab[data-page="' + page + '"]').classList.add('active');
+                }, 1500);
+            } else {
+                // Direct call without button (e.g., from importDocument)
+                document.querySelectorAll('#demo1-panel .demo-page').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('#demo1-panel .demo-nav-tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('demo1-page-' + page).classList.add('active');
+                document.querySelector('#demo1-panel .demo-nav-tab[data-page="' + page + '"]').classList.add('active');
+            }
+        }
+
+        function importDocument() {
+            const input = document.getElementById('demo1-url-input');
+            const url = input.value.trim();
+            if (!url) {
+                input.style.borderColor = 'var(--danger)';
+                input.setAttribute('placeholder', '请先填写飞书文档链接');
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.setAttribute('placeholder', '粘贴飞书文档链接...');
+                }, 2000);
+                return;
+            }
+            document.getElementById('demo1-import-msg').style.display = 'block';
+            setTimeout(() => switchDemo1Page('preview'), 800);
+        }
+
+        function runDemo1Review() {
+            const btn = event.target.closest('.demo-btn-sm');
+            btn.disabled = true;
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite"><path d="M2 8a6 6 0 0111.47-2.4"/></svg> 审核中...';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 0111.47-2.4M14 8a6 6 0 01-11.47 2.4"/><path d="M14 2v4h-4M2 14v-4h4"/></svg> 重新审核';
+            }, 1500);
+        }
+
+        // Review actions
+        var reviewStatus = {1: null, 2: null};
+        function confirmReview(id) {
+            reviewStatus[id] = 'confirmed';
+            var item = document.getElementById('review-item-' + id);
+            var btn = item.querySelector('.demo-action-btn.confirm');
+            btn.classList.add('confirmed');
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 已确认';
+            item.querySelector('.demo-review-status').textContent = '已确认';
+            item.querySelector('.demo-review-status').style.background = 'var(--success-light)';
+            item.querySelector('.demo-review-status').style.color = 'var(--success)';
+            checkAllReviews();
+        }
+        function ignoreReview(id) {
+            reviewStatus[id] = 'ignored';
+            var item = document.getElementById('review-item-' + id);
+            var btn = item.querySelector('.demo-action-btn.ignore');
+            btn.classList.add('ignored');
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg> 已忽略';
+            item.querySelector('.demo-review-status').textContent = '已忽略';
+            item.querySelector('.demo-review-status').style.background = 'var(--danger-light)';
+            item.querySelector('.demo-review-status').style.color = 'var(--danger)';
+            checkAllReviews();
+        }
+        function checkAllReviews() {
+            if (reviewStatus[1] && reviewStatus[2]) {
+                document.getElementById('writeback-section').style.display = 'block';
+            }
+        }
+        function writebackToFeishu() {
+            var btn = event.target.closest('.demo-btn-sm');
+            btn.disabled = true;
+            btn.innerHTML = '写回中...';
+            setTimeout(function() {
+                document.getElementById('writeback-section').style.display = 'none';
+                document.getElementById('writeback-success').style.display = 'block';
+            }, 1500);
+        }
+
+        // Library Modal
+        var libraryData = {
+            brief: {
+                title: '品牌 BRIEF',
+                desc: '汰渍品牌小红书合作 BRIEF 资料库',
+                files: [
+                    { name: '汰渍洗衣原液-202607小红书合作BRIEF.docx' }
+                ]
+            },
+            template: {
+                title: '审核模板',
+                desc: '汰渍品牌内容审核模板资料库',
+                files: [
+                    { name: '汰渍洗衣原液-202607小红书合作审核模板.docx' }
+                ]
+            },
+            rules: {
+                title: '合规规则',
+                desc: '汰渍品牌合规与平台规则资料库',
+                files: [
+                    { name: '汰渍洗衣原液-202607小红书合作合规规则.docx' }
+                ]
+            },
+            history: {
+                title: '历史审核',
+                desc: '已完成审核稿件归档',
+                files: []
+            }
+        };
+        function openLibraryModal(type) {
+            var data = libraryData[type];
+            document.getElementById('detail-title').textContent = data.title;
+            var contentEl = document.getElementById('detail-content');
+
+            if (data.files.length === 0) {
+                contentEl.innerHTML =
+                    '<div style="text-align:center;padding:32px 0;color:var(--text-tertiary);font-size:13px;">暂无资料</div>';
+            } else {
+                var html = '<div style="font-size:12px;color:var(--text-tertiary);margin-bottom:12px;">' + data.desc + '</div>';
+                html += '<div style="display:flex;flex-direction:column;gap:10px;">';
+                data.files.forEach(function(file) {
+                    html +=
+                        '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;" onclick="showNextTime()">' +
+                        '<div style="width:44px;height:44px;background:#E8F0FE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+                        '</div>' +
+                        '<div style="flex:1;min-width:0;">' +
+                        '<div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + file.name + '</div>' +
+                        '<div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">Word 文档 · 点击打开</div>' +
+                        '</div>' +
+                        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M4 12l8-8M8 4h4v4"/></svg>' +
+                        '</div>';
+                });
+                html += '</div>';
+                contentEl.innerHTML = html;
+            }
+
+            document.getElementById('resource-detail-modal').style.display = 'flex';
+        }
+        function openResourceDetail(type) {
+            var data = libraryData[type];
+            document.getElementById('detail-title').textContent = data.title;
+            var contentEl = document.getElementById('detail-content');
+
+            if (data.type === 'doc') {
+                contentEl.innerHTML =
+                    '<div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;" onclick="showNextTime()">' +
+                    '<div style="width:44px;height:44px;background:#E8F0FE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+                    '</div>' +
+                    '<div style="flex:1;min-width:0;">' +
+                    '<div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + data.fileName + '</div>' +
+                    '<div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">Word 文档 · 点击打开</div>' +
+                    '</div>' +
+                    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M4 12l8-8M8 4h4v4"/></svg>' +
+                    '</div>';
+            } else if (data.type === 'links') {
+                var html = '<div style="display:flex;flex-direction:column;gap:10px;">';
+                data.items.forEach(function(item, i) {
+                    html +=
+                        '<a href="' + item.url + '" onclick="event.preventDefault();showNextTime()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;text-decoration:none;cursor:pointer;transition:border-color 0.2s;">' +
+                        '<div style="width:28px;height:28px;background:var(--accent-light);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:var(--accent);">' + (i + 1) + '</div>' +
+                        '<div style="flex:1;min-width:0;">' +
+                        '<div style="font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + item.name + '</div>' +
+                        '</div>' +
+                        '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M4 12l8-8M8 4h4v4"/></svg>' +
+                        '</a>';
+                });
+                html += '</div>';
+                contentEl.innerHTML = html;
+            }
+
+            document.getElementById('resource-detail-modal').style.display = 'flex';
+        }
+        function closeResourceDetail() {
+            document.getElementById('resource-detail-modal').style.display = 'none';
+        }
+        function showNextTime() {
+            // Create toast
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--text);color:var(--bg);padding:16px 32px;border-radius:12px;font-size:15px;font-weight:600;z-index:9999;animation:fadeIn 0.3s ease;';
+            toast.textContent = '下次一定 🙏';
+            document.body.appendChild(toast);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 1500);
+        }
+
+        // Demo 2: Page Switching with loading
+        function switchDemo2Page(page) {
+            // Show loading for feishu tab
+            if (page === 'feishu') {
+                var feishuList = document.getElementById('demo2-feishu-list');
+                if (feishuList && feishuList.children.length === 0) {
+                    feishuList.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px 0;"><div style="display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:8px;font-size:12px;color:var(--text-tertiary);">加载中...</div></td></tr>';
+                }
+            }
+
+            document.querySelectorAll('#demo2-panel .demo-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#demo2-panel .demo-kol-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('demo2-page-' + page).classList.add('active');
+            // Tab selection is optional (results page has no tab)
+            var tab = document.querySelector('#demo2-panel .demo-kol-tab[data-page="' + page + '"]');
+            if (tab) tab.classList.add('active');
+        }
+
+        // KOL selection state
+        var kolSelected = {};
+        var currentKOLs = [];
+
+        // Semantic category mapping
+        var categoryMapping = {
+            '母婴育儿': ['母婴用品', '母婴育儿', '育儿', '母婴', '宝宝', '妈妈'],
+            '居家生活': ['家居日用', '家居', '居家', '生活', '收纳', '家电', '清洁'],
+            '美妆护肤': ['美妆护肤', '美妆', '护肤', '化妆品', '个护'],
+            '美食饮料': ['食品饮料', '美食', '饮料', '食品', '零食', '饮品']
+        };
+
+        function startDemo2Recommend() {
+            const btn = document.getElementById('demo2-start-btn');
+            btn.disabled = true;
+            btn.textContent = '推荐中...';
+            kolSelected = {};
+
+            // Show loading skeleton
+            var loadingHTML = '<div style="text-align:center;padding:40px 0;"><div style="display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:12px;font-size:13px;color:var(--text-tertiary);">AI 正在匹配达人...</div></div>';
+            document.getElementById('demo2-kol-cards').innerHTML = loadingHTML;
+            switchDemo2Page('results');
+
+            // Get selected category
+            var category = document.getElementById('demo2-category').value;
+            var keywords = categoryMapping[category] || [category];
+            var startTime = Date.now();
+
+            // Load KOL data immediately
+            fetch('resource/KOL/kol_data.json')
+                .then(response => response.json())
+                .then(allKOLs => {
+                    // Semantic matching - use 内容主题 field
+                    var filteredKOLs = allKOLs.filter(kol => {
+                        var kolCategory = (kol['内容主题'] || '').toLowerCase();
+                        return keywords.some(keyword => kolCategory.includes(keyword.toLowerCase()));
+                    });
+
+                    if (filteredKOLs.length === 0) {
+                        filteredKOLs = allKOLs;
+                    }
+
+                    // Shuffle and take up to 6
+                    filteredKOLs = filteredKOLs.sort(() => Math.random() - 0.5).slice(0, 6);
+                    currentKOLs = filteredKOLs;
+
+                    // Calculate remaining delay (minimum 1.5s loading)
+                    var elapsed = Date.now() - startTime;
+                    var remainingDelay = Math.max(0, 1500 - elapsed);
+
+                    setTimeout(function() {
+                        // Generate cards
+                        const cardsHTML = filteredKOLs.map((k, i) => {
+                            var followers = k['粉丝量'] || 0;
+                            var followersStr = followers >= 10000 ? (followers / 10000).toFixed(1) + 'w' : followers.toString();
+                            var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(k['达人昵称']) + '&background=FF2442&color=fff&size=80&font-size=0.4';
+                            var tags = (k['内容主题'] || '').split(',').map(t => t.trim()).slice(0, 3);
+                            var desc = (k['人设'] || '暂无简介').split(',')[0];
+                            var imgPrice = k['图文报价'] || 0;
+                            var price = imgPrice > 0 ? '¥' + imgPrice.toLocaleString() : '议价';
+                            var femaleRatio = k['女粉占比'] || 0;
+                            var health = k['健康度'] || '';
+                            var contentFormat = (k['内容形式'] || '图文').split(',')[0];
+
+                            return `
+                                <div class="demo-kol-card" id="kol-card-${i}" onclick="toggleKOL(${i})">
+                                    <div class="demo-kol-card-top">
+                                        <div class="demo-kol-card-checkbox" id="kol-check-${i}"></div>
+                                        <div class="demo-kol-card-avatar" style="background:url(${avatarUrl}) center/cover;border-radius:50%;"></div>
+                                        <div class="demo-kol-card-info">
+                                            <div class="demo-kol-card-name"><a href="${k['主页链接']}" target="_blank" style="color:inherit;text-decoration:none;" onclick="event.stopPropagation();">${k['达人昵称']}</a></div>
+                                            <div class="demo-kol-card-tags">
+                                                ${tags.map(t => `<span class="demo-kol-card-tag">${t}</span>`).join('')}
+                                            </div>
+                                        </div>
+                                        <div class="demo-kol-card-score">${Math.floor(Math.random() * 15) + 80}</div>
+                                    </div>
+                                    <div class="demo-kol-card-desc">${desc}</div>
+                                    <div class="demo-kol-card-stats">
+                                        <div class="demo-kol-card-stat">
+                                            <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z"/></svg>
+                                            ${followersStr}
+                                        </div>
+                                        <div class="demo-kol-card-stat">
+                                            <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 2l2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3 4-.5z"/></svg>
+                                            ${femaleRatio}%
+                                        </div>
+                                        <div class="demo-kol-card-stat">
+                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 8h12"/></svg>
+                                            ${contentFormat}
+                                        </div>
+                                    </div>
+                                    <div class="demo-kol-card-recommend">
+                                        <strong>AI 推荐：</strong>${health === '优秀' ? '账号健康度优秀，' : ''}${desc}人设契合，图文报价 ${imgPrice > 0 ? imgPrice.toLocaleString() : '待定'} 元。
+                                    </div>
+                                    <div class="demo-kol-card-bottom">
+                                        <div class="demo-kol-card-pills">
+                                            ${health === '优秀' ? '<span class="demo-kol-card-pill green">健康度优</span>' : ''}
+                                            ${femaleRatio > 70 ? '<span class="demo-kol-card-pill blue">女粉占比高</span>' : ''}
+                                            <span class="demo-kol-card-pill purple">${contentFormat}</span>
+                                        </div>
+                                        <div class="demo-kol-card-price">${price}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+
+                        document.getElementById('demo2-kol-cards').innerHTML = cardsHTML;
+
+                        // Update KOL count
+                        var countEl = document.querySelector('.demo-kol-results-count');
+                        if (countEl) {
+                            countEl.innerHTML = '共推荐 <strong>' + filteredKOLs.length + '</strong> 位达人';
+                        }
+
+                        // Update button state
+                        btn.disabled = false;
+                        btn.textContent = '再次推荐';
+                        btn.onclick = function() {
+                            btn.textContent = '推荐中...';
+                            btn.disabled = true;
+                            startDemo2Recommend();
+                        };
+                    }, remainingDelay);
+                })
+                .catch(error => {
+                    console.error('Error loading KOL data:', error);
+                    btn.disabled = false;
+                    btn.textContent = '开始推荐';
+                });
+        }
+
+        function toggleKOL(index) {
+            var card = document.getElementById('kol-card-' + index);
+            var checkbox = document.getElementById('kol-check-' + index);
+            if (kolSelected[index]) {
+                delete kolSelected[index];
+                card.style.borderColor = '';
+                checkbox.style.background = '';
+                checkbox.style.borderColor = '';
+            } else {
+                kolSelected[index] = true;
+                card.style.borderColor = '#FF2442';
+                checkbox.style.background = '#FF2442';
+                checkbox.style.borderColor = '#FF2442';
+            }
+            updateExportCount();
+        }
+
+        function selectAllKOL() {
+            var cards = document.querySelectorAll('.demo-kol-card');
+            var allSelected = Object.keys(kolSelected).length === cards.length;
+            cards.forEach(function(card, i) {
+                var checkbox = document.getElementById('kol-check-' + i);
+                if (allSelected) {
+                    delete kolSelected[i];
+                    card.style.borderColor = '';
+                    checkbox.style.background = '';
+                    checkbox.style.borderColor = '';
+                } else {
+                    kolSelected[i] = true;
+                    card.style.borderColor = '#FF2442';
+                    checkbox.style.background = '#FF2442';
+                    checkbox.style.borderColor = '#FF2442';
+                }
+            });
+            updateExportCount();
+        }
+
+        function updateExportCount() {
+            var count = Object.keys(kolSelected).length;
+            var btn = document.querySelector('.demo-kol-action:last-child');
+            if (btn) btn.textContent = '导出深度数据 (' + count + ')';
+        }
+
+        function exportSelectedKOLs() {
+            var selectedIndices = Object.keys(kolSelected);
+            if (selectedIndices.length === 0) {
+                showNextTime();
+                return;
+            }
+
+            // Get selected KOLs data
+            var selectedKOLs = selectedIndices.map(i => currentKOLs[i]).filter(Boolean);
+
+            if (selectedKOLs.length === 0) {
+                showNextTime();
+                return;
+            }
+
+            // Get all field names from first KOL
+            var fields = Object.keys(selectedKOLs[0]);
+
+            // Create CSV content with BOM
+            var csvContent = '﻿';
+            csvContent += fields.join(',') + '\n';
+
+            selectedKOLs.forEach((kol, index) => {
+                var row = fields.map(field => {
+                    var val = kol[field] !== undefined ? kol[field] : '';
+                    // Wrap strings with quotes if they contain commas
+                    if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
+                        return '"' + val.replace(/"/g, '""') + '"';
+                    }
+                    return val;
+                });
+                csvContent += row.join(',') + '\n';
+            });
+
+            // Download CSV
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '达人推荐_' + new Date().toISOString().slice(0, 10) + '.csv';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        // Generate Feishu KOL List from JSON
+        fetch('resource/KOL/kol_data.json')
+            .then(response => response.json())
+            .then(allKOLs => {
+                const feishuListHTML = allKOLs.map(k => {
+                    var followers = k['粉丝量'] || 0;
+                    var followersStr = followers >= 10000 ? (followers / 10000).toFixed(1) + 'w' : followers.toString();
+                    var name = k['达人昵称'] || '';
+                    var avatar = name.charAt(0);
+                    var categories = (k['内容主题'] || '').split(',').map(t => t.trim()).slice(0, 2).join('/');
+                    var persona = (k['人设'] || '达人').split(',')[0];
+                    var contentFormat = (k['内容形式'] || '图文').split(',')[0];
+                    var imgPrice = k['图文报价'] || 0;
+                    var videoPrice = k['视频报价'] || 0;
+                    var imgPriceStr = imgPrice > 0 ? '¥' + imgPrice.toLocaleString() : '议价';
+                    var videoPriceStr = videoPrice > 0 ? '¥' + videoPrice.toLocaleString() : '议价';
+                    var femaleRatio = k['女粉占比'] || 0;
+                    var health = k['健康度'] || '-';
+                    var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=FF2442&color=fff&size=60&font-size=0.4';
+
+                    return `
+                        <tr>
+                            <td>
+                                <div class="demo-kol-list-blogger">
+                                    <div class="demo-kol-list-avatar" style="background:url(${avatarUrl}) center/cover;border-radius:50%;"></div>
+                                    <div>
+                                        <div class="demo-kol-list-name"><a href="${k['主页链接']}" target="_blank" style="color:inherit;text-decoration:none;">${name}</a></div>
+                                        <div class="demo-kol-list-category">${categories}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${followersStr}</td>
+                            <td>${imgPriceStr}</td>
+                            <td>${videoPriceStr}</td>
+                            <td>${persona}</td>
+                            <td>${contentFormat}</td>
+                            <td>${femaleRatio}%</td>
+                            <td>${health}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                document.getElementById('demo2-feishu-list').innerHTML = feishuListHTML;
+            })
+            .catch(error => {
+                console.error('Error loading Feishu KOL list:', error);
+            });
+
+        // Scroll reveal
+        gsap.utils.toArray('.exp-item, .cap-cell').forEach(el => {
+            gsap.from(el, {
+                opacity: 0, y: 16,
+                duration: 0.6, ease: 'power2.out',
+                scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+            });
+        });
+
+        // Contact card progressive reveal
+        gsap.to('.contact-profile-card', {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.contact-profile-card',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        // Dark Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.remove('open');
+            hamburger.classList.remove('active');
+        }
+
+        // Progress Dots
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Update active dot on scroll
+        function updateProgressDots() {
+            const sections = ['hero', 'projects', 'experience', 'capabilities', 'contact'];
+            const dots = document.querySelectorAll('.progress-dot');
+            const scrollPos = window.scrollY + window.innerHeight / 2;
+
+            sections.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const top = section.offsetTop;
+                    const bottom = top + section.offsetHeight;
+                    if (scrollPos >= top && scrollPos < bottom) {
+                        dots.forEach(dot => dot.classList.remove('active'));
+                        dots[index].classList.add('active');
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateProgressDots);
+
+        // WeChat QR Toggle
+        function toggleWechatQR() {
+            const popup = document.getElementById('wechatQR');
+            popup.classList.toggle('show');
+        }
+
+        // Close QR popup when clicking outside
+        document.addEventListener('click', function(e) {
+            const qrWrapper = document.querySelector('.wechat-qr-wrapper');
+            const popup = document.getElementById('wechatQR');
+            if (qrWrapper && popup && !qrWrapper.contains(e.target)) {
+                popup.classList.remove('show');
+            }
+        });
+
+        // Demo Button Feedback
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.demo-action-btn');
+            if (!btn) return;
+
+            if (btn.classList.contains('save')) {
+                btn.classList.add('saved');
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 已保存';
+                setTimeout(() => {
+                    btn.classList.remove('saved');
+                    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 保存编辑';
+                }, 2000);
+            } else if (btn.classList.contains('confirm')) {
+                btn.classList.add('confirmed');
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 已确认';
+            } else if (btn.classList.contains('ignore')) {
+                btn.classList.add('ignored');
+                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg> 已忽略';
+            }
+        });
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('已复制到剪贴板');
+            }).catch(() => {
+                showToast('复制失败，请手动复制');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'copy-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // ========== CurvedInput Component (Vanilla JS port - Fixed) ==========
+        (function() {
+            const DEG = 180 / Math.PI;
+            const round2 = n => Math.round(n * 100) / 100;
+
+            const hexToRgba = (hex, alpha) => {
+                let h = String(hex).replace('#', '');
+                if (h.length === 3) h = h.split('').map(c => c + c).join('');
+                const n = parseInt(h.slice(0, 6), 16);
+                if (Number.isNaN(n)) return hex;
+                return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+            };
+
+            const SHADOWS = { sm: [5, 12, 0.3], md: [10, 24, 0.4], lg: [16, 40, 0.52] };
+
+            const THEMES = {
+                dark: {
+                    backgroundColor: '#1B1722', textColor: '#f5f5f5', placeholderColor: '#a1a1aa',
+                    borderColor: '#392e4e', buttonColor: '#A855F7', buttonTextColor: '#ffffff', shadowColor: '#000000'
+                },
+                light: {
+                    backgroundColor: '#ffffff', textColor: '#1d2050', placeholderColor: '#9aa0b6',
+                    borderColor: '#262a56', buttonColor: '#4763eb', buttonTextColor: '#ffffff', shadowColor: '#0b0e2a'
+                }
+            };
+
+            const buildGeometry = (width, bend, thickness, pad) => {
+                const W = width, T = thickness;
+                const s = Math.max(-W * 0.35, Math.min(bend, W * 0.35));
+                const a = Math.abs(s);
+                const dir = s >= 0 ? 1 : -1;
+                const svgH = T + a + pad * 2;
+                if (a < 0.75) {
+                    const midY = pad + T / 2;
+                    return { straight: true, W, T, svgH, uPerLen: 1,
+                        point: (u, v) => [u, midY + v], angleAt: () => 0, uFromPoint: x => x };
+                }
+                const R = (W * W * 0.25 + a * a) / (2 * a);
+                const cx = W / 2;
+                const apexY = pad + T / 2 + (dir > 0 ? 0 : a);
+                const cy = apexY + dir * R;
+                const phi = Math.asin(Math.min(1, W / (2 * R)));
+                return { straight: false, W, T, svgH, R, dir, uPerLen: W / (2 * R * phi),
+                    point: (u, v) => {
+                        const th = ((u - cx) / cx) * phi;
+                        const rho = R - dir * v;
+                        return [cx + rho * Math.sin(th), cy - dir * rho * Math.cos(th)];
+                    },
+                    angleAt: u => dir * ((u - cx) / cx) * phi * DEG,
+                    uFromPoint: (x, y) => {
+                        const th = Math.atan2(x - cx, dir * (cy - y));
+                        return cx + (th / phi) * cx;
+                    }
+                };
+            };
+
+            const fmt = (g, u, v) => { const [x, y] = g.point(u, v); return `${round2(x)} ${round2(y)}`; };
+
+            const edgeSeg = (g, uTo, v, ltr) => {
+                if (g.straight) return `L ${fmt(g, uTo, v)}`;
+                const rho = round2(g.R - g.dir * v);
+                const sweep = ltr === g.dir > 0 ? 1 : 0;
+                return `A ${rho} ${rho} 0 0 ${sweep} ${fmt(g, uTo, v)}`;
+            };
+
+            const bentRectPath = (g, u0, u1, vTop, vBot, radius) => {
+                const rc = Math.max(0, Math.min(radius, (vBot - vTop) / 2, (u1 - u0) / 2));
+                return [
+                    `M ${fmt(g, u0 + rc, vTop)}`, edgeSeg(g, u1 - rc, vTop, true),
+                    `Q ${fmt(g, u1, vTop)} ${fmt(g, u1, vTop + rc)}`,
+                    `L ${fmt(g, u1, vBot - rc)}`,
+                    `Q ${fmt(g, u1, vBot)} ${fmt(g, u1 - rc, vBot)}`,
+                    edgeSeg(g, u0 + rc, vBot, false),
+                    `Q ${fmt(g, u0, vBot)} ${fmt(g, u0, vBot - rc)}`,
+                    `L ${fmt(g, u0, vTop + rc)}`,
+                    `Q ${fmt(g, u0, vTop)} ${fmt(g, u0 + rc, vTop)}`, 'Z'
+                ].join(' ');
+            };
+
+            const bentLinePath = (g, u0, u1, v) => `M ${fmt(g, u0, v)} ${edgeSeg(g, u1, v, true)}`;
+
+            let uidCounter = 0;
+            
+            // Create a single persistent measurement container
+            const measureContainer = document.createElement('div');
+            measureContainer.style.cssText = 'position:absolute;left:-9999px;top:-9999px;visibility:hidden;pointer-events:none;';
+            document.body.appendChild(measureContainer);
+
+            class CurvedInput {
+                constructor(container, opts = {}) {
+                    this.container = typeof container === 'string' ? document.querySelector(container) : container;
+                    this.opts = Object.assign({
+                        defaultValue: '', placeholder: 'Enter your email', buttonText: 'Get Started',
+                        type: 'email', theme: 'light', width: 450, bend: 28, height: 64,
+                        cornerRadius: 18, borderWidth: 1.5, fontSize: 16, shadowSize: 'md',
+                        showButton: true, showIcon: true, onSubmit: null
+                    }, opts);
+
+                    this.val = this.opts.defaultValue;
+                    this.caretIndex = this.val.length;
+                    this.focused = false;
+                    this.caretU = 0;
+                    this.scrollLen = 0;
+                    this.btnTextW = 0;
+                    this.w = 0;
+                    this.scrollRef = 0;
+                    this.uid = 'ci' + (++uidCounter);
+                    this.renderScheduled = false;
+
+                    this.palette = THEMES[this.opts.theme] || THEMES.dark;
+                    this.bgColor = this.opts.backgroundColor ?? this.palette.backgroundColor;
+                    this.fgColor = this.opts.textColor ?? this.palette.textColor;
+                    this.phColor = this.opts.placeholderColor ?? this.palette.placeholderColor;
+                    this.strokeColor = this.opts.borderColor ?? this.palette.borderColor;
+                    this.accentColor = this.opts.buttonColor ?? this.palette.buttonColor;
+                    this.btnFgColor = this.opts.buttonTextColor ?? this.palette.buttonTextColor;
+                    this.shColor = this.opts.shadowColor ?? this.palette.shadowColor;
+
+                    this.display = this.opts.type === 'password' ? '\u2022'.repeat(this.val.length) : this.val;
+
+                    this._build();
+                    this._setupResize();
+                    this._scheduleRender();
+                }
+
+                _build() {
+                    this.container.innerHTML = '';
+                    this.form = document.createElement('form');
+                    this.form.className = 'curved-input';
+                    this.form.style.width = typeof this.opts.width === 'number' ? this.opts.width + 'px' : this.opts.width;
+                    this.form.noValidate = true;
+                    this.form.addEventListener('submit', e => { e.preventDefault(); this._submit(); });
+
+                    this.input = document.createElement('input');
+                    this.input.className = 'curved-input__field';
+                    this.input.type = this.opts.type === 'email' ? 'email' : this.opts.type;
+                    this.input.value = this.val;
+                    this.input.autocomplete = 'off';
+                    this.input.autocapitalize = 'none';
+                    this.input.autocorrect = 'off';
+                    this.input.spellcheck = false;
+                    this.input.setAttribute('aria-label', this.opts.placeholder || 'Curved input');
+                    this.input.addEventListener('input', () => {
+                        this.val = this.input.value;
+                        this.display = this.opts.type === 'password' ? '\u2022'.repeat(this.val.length) : this.val;
+                        this.caretIndex = this.input.selectionStart || this.val.length;
+                        this._scheduleRender();
+                    });
+                    this.input.addEventListener('select', () => {
+                        this.caretIndex = this.input.selectionStart || this.val.length;
+                    });
+                    this.input.addEventListener('keyup', () => {
+                        this.caretIndex = this.input.selectionStart || this.val.length;
+                    });
+                    this.input.addEventListener('focus', () => { this.focused = true; this.form.classList.add('curved-input--focused'); this._scheduleRender(); });
+                    this.input.addEventListener('blur', () => { this.focused = false; this.form.classList.remove('curved-input--focused'); this._scheduleRender(); });
+
+                    this.form.appendChild(this.input);
+                    this.container.appendChild(this.form);
+                }
+
+                _setupResize() {
+                    let resizeTimeout;
+                    const ro = new ResizeObserver(entries => {
+                        clearTimeout(resizeTimeout);
+                        resizeTimeout = setTimeout(() => {
+                            const cw = entries[0]?.contentRect?.width ?? this.form.clientWidth;
+                            if (Math.round(cw) !== this.w) { 
+                                this.w = Math.round(cw); 
+                                this._scheduleRender(); 
+                            }
+                        }, 50);
+                    });
+                    ro.observe(this.form);
+                }
+
+                _scheduleRender() {
+                    if (!this.renderScheduled) {
+                        this.renderScheduled = true;
+                        requestAnimationFrame(() => {
+                            this.renderScheduled = false;
+                            this._render();
+                        });
+                    }
+                }
+
+                _submit() {
+                    if (this.opts.onSubmit) this.opts.onSubmit(this.val);
+                }
+
+                _measureText(text, fontSize, fontWeight) {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    ctx.font = `${fontWeight} ${fontSize}px Inter, -apple-system, BlinkMacSystemFont, sans-serif`;
+                    return ctx.measureText(text).width;
+                }
+
+                _render() {
+                    const w = this.w;
+                    if (w < 3) return;
+                    const { bend, height, borderWidth, fontSize, cornerRadius, shadowSize, showButton, showIcon, buttonText, placeholder } = this.opts;
+                    const pad = Math.ceil(borderWidth / 2) + 6;
+                    const geom = buildGeometry(w, bend, height, pad);
+                    if (!geom) return;
+
+                    const T = height;
+                    const btnInset = Math.max(5, borderWidth + 4);
+                    const chipH = Math.min(34, Math.max(16, T * 0.34));
+                    const chipW = chipH * 1.25;
+                    const iconU = 22 + chipW / 2;
+                    const textStartU = showIcon ? 22 + chipW + 13 : 24;
+
+                    // Measure button text width using canvas
+                    let btnW = 0;
+                    if (showButton) {
+                        const btnTextWidth = this._measureText(buttonText, fontSize, 600);
+                        btnW = Math.max(btnTextWidth + fontSize * 2.7, T * 1.35);
+                    }
+
+                    const btnU1 = geom.W - btnInset;
+                    const btnU0 = btnU1 - btnW;
+                    const textEndU = Math.max(textStartU + 20, showButton ? btnU0 - 14 : geom.W - 24);
+                    const winLen = (textEndU - textStartU) / geom.uPerLen;
+
+                    // Estimate text length using canvas (no DOM manipulation)
+                    let totalLen = 0, caretLen = 0;
+                    if (this.display.length) {
+                        const textWidth = this._measureText(this.display, fontSize, 500);
+                        totalLen = textWidth;
+                        if (this.caretIndex > 0) {
+                            const caretText = this.display.substring(0, Math.min(this.caretIndex, this.display.length));
+                            caretLen = this._measureText(caretText, fontSize, 500);
+                        }
+                    }
+
+                    // Scroll logic
+                    let next = this.scrollRef;
+                    if (caretLen - next > winLen - 2) next = caretLen - winLen + 2;
+                    if (caretLen - next < 0) next = caretLen;
+                    if (totalLen - next < winLen) next = Math.max(0, totalLen - winLen);
+                    next = Math.max(0, next);
+                    if (Math.abs(next - this.scrollRef) > 0.5) {
+                        this.scrollRef = next;
+                        this.scrollLen = next;
+                    }
+                    this.caretU = textStartU + (caretLen - next) * geom.uPerLen;
+
+                    // Build SVG
+                    const oldSvg = this.form.querySelector('svg');
+                    if (oldSvg) oldSvg.remove();
+
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('class', 'curved-input__svg');
+                    svg.setAttribute('width', geom.W);
+                    svg.setAttribute('height', round2(geom.svgH));
+                    svg.setAttribute('viewBox', `0 0 ${geom.W} ${round2(geom.svgH)}`);
+
+                    const shadow = SHADOWS[shadowSize];
+                    if (shadow) {
+                        svg.style.filter = `drop-shadow(0 ${shadow[0]}px ${shadow[1]}px ${hexToRgba(this.shColor, shadow[2])})`;
+                    }
+
+                    svg.addEventListener('pointerdown', e => e.preventDefault());
+                    svg.addEventListener('click', e => this._handleSurfaceClick(e, geom, textStartU));
+
+                    // Defs: clip path
+                    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                    const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+                    clipPath.setAttribute('id', 'ci-clip-' + this.uid);
+                    const clipPathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const vBase = fontSize * 0.34;
+                    const scrollU = this.scrollLen * geom.uPerLen;
+                    clipPathEl.setAttribute('d', bentRectPath(geom, textStartU - 6, textEndU + 8, -T / 2, T / 2, 0));
+                    clipPath.appendChild(clipPathEl);
+                    defs.appendChild(clipPath);
+                    svg.appendChild(defs);
+
+                    // Focus ring
+                    const bandPath = bentRectPath(geom, 0, geom.W, -T / 2, T / 2, cornerRadius);
+                    const ring = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    ring.setAttribute('class', 'curved-input__ring');
+                    ring.setAttribute('d', bandPath);
+                    ring.setAttribute('fill', 'none');
+                    ring.setAttribute('stroke', this.accentColor);
+                    ring.setAttribute('stroke-width', borderWidth + 6);
+                    svg.appendChild(ring);
+
+                    // Background band
+                    const bgBand = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    bgBand.setAttribute('d', bandPath);
+                    bgBand.setAttribute('fill', this.bgColor);
+                    bgBand.setAttribute('stroke', this.strokeColor);
+                    bgBand.setAttribute('stroke-width', borderWidth);
+                    svg.appendChild(bgBand);
+
+                    // Layout path for text
+                    const layoutPathId = 'ci-text-' + this.uid;
+                    const layoutPathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    layoutPathEl.setAttribute('id', layoutPathId);
+                    layoutPathEl.setAttribute('d', bentLinePath(geom, textStartU - scrollU, geom.W, vBase));
+                    layoutPathEl.setAttribute('fill', 'none');
+                    svg.appendChild(layoutPathEl);
+
+                    // Icon
+                    if (showIcon) {
+                        const [ix, iy] = geom.point(iconU, 0);
+                        const iconAngle = geom.angleAt(iconU);
+                        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                        g.setAttribute('transform', `translate(${round2(ix)} ${round2(iy)}) rotate(${round2(iconAngle)})`);
+                        g.setAttribute('aria-hidden', 'true');
+
+                        const ew = chipW * 0.5, eh = chipH * 0.5;
+                        const sw = Math.max(1.1, chipH * 0.075);
+
+                        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rect.setAttribute('x', -chipW / 2); rect.setAttribute('y', -chipH / 2);
+                        rect.setAttribute('width', chipW); rect.setAttribute('height', chipH);
+                        rect.setAttribute('rx', chipH * 0.27); rect.setAttribute('fill', this.accentColor);
+                        g.appendChild(rect);
+
+                        const envRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        envRect.setAttribute('x', -ew / 2); envRect.setAttribute('y', -eh / 2);
+                        envRect.setAttribute('width', ew); envRect.setAttribute('height', eh);
+                        envRect.setAttribute('rx', '1.4'); envRect.setAttribute('fill', 'none');
+                        envRect.setAttribute('stroke', '#ffffff'); envRect.setAttribute('stroke-width', sw);
+                        envRect.setAttribute('stroke-linejoin', 'round');
+                        g.appendChild(envRect);
+
+                        const flap = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        flap.setAttribute('d', `M ${round2(-ew / 2)} ${round2(-eh / 2 + sw * 0.4)} L 0 ${round2(eh * 0.14)} L ${round2(ew / 2)} ${round2(-eh / 2 + sw * 0.4)}`);
+                        flap.setAttribute('fill', 'none'); flap.setAttribute('stroke', '#ffffff');
+                        flap.setAttribute('stroke-width', sw); flap.setAttribute('stroke-linejoin', 'round');
+                        flap.setAttribute('stroke-linecap', 'round');
+                        g.appendChild(flap);
+
+                        svg.appendChild(g);
+                    }
+
+                    // Text group (clipped)
+                    const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    textGroup.setAttribute('clip-path', `url(#ci-clip-${this.uid})`);
+
+                    if (this.display.length) {
+                        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        text.style.fontSize = fontSize + 'px'; text.style.fontWeight = '500';
+                        text.style.fontFamily = 'inherit';
+                        text.setAttribute('fill', this.fgColor);
+                        text.setAttribute('xml:space', 'preserve');
+                        text.setAttribute('aria-hidden', 'true');
+                        const tp = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+                        tp.setAttribute('href', '#' + layoutPathId);
+                        tp.textContent = this.display;
+                        text.appendChild(tp);
+                        textGroup.appendChild(text);
+                    } else if (placeholder) {
+                        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        text.style.fontSize = fontSize + 'px'; text.style.fontWeight = '500';
+                        text.style.fontFamily = 'inherit';
+                        text.setAttribute('fill', this.phColor);
+                        text.setAttribute('xml:space', 'preserve');
+                        text.setAttribute('aria-hidden', 'true');
+                        const tp = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+                        tp.setAttribute('href', '#' + layoutPathId);
+                        tp.textContent = placeholder;
+                        text.appendChild(tp);
+                        textGroup.appendChild(text);
+                    }
+
+                    // Caret
+                    if (this.focused) {
+                        const [caretX, caretY] = geom.point(this.caretU, 0);
+                        const caretAngle = geom.angleAt(this.caretU);
+                        const caretH = Math.min(T * 0.58, fontSize * 1.45);
+                        const cg = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                        cg.setAttribute('transform', `translate(${round2(caretX)} ${round2(caretY)}) rotate(${round2(caretAngle)})`);
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('y1', -caretH / 2); line.setAttribute('y2', caretH / 2);
+                        line.setAttribute('stroke', this.fgColor); line.setAttribute('stroke-width', '1.5');
+                        line.setAttribute('stroke-linecap', 'round');
+                        const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                        anim.setAttribute('attributeName', 'opacity');
+                        anim.setAttribute('values', '1;0');
+                        anim.setAttribute('dur', '1.06s');
+                        anim.setAttribute('calcMode', 'discrete');
+                        anim.setAttribute('repeatCount', 'indefinite');
+                        line.appendChild(anim);
+                        cg.appendChild(line);
+                        textGroup.appendChild(cg);
+                    }
+
+                    svg.appendChild(textGroup);
+
+                    // Button
+                    if (showButton) {
+                        const buttonPath = bentRectPath(geom, btnU0, btnU1, -T / 2 + btnInset, T / 2 - btnInset, Math.min(cornerRadius * 0.72, (T - btnInset * 2) / 2));
+                        const buttonTextPathId = 'ci-btn-' + this.uid;
+                        const btnPathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        btnPathEl.setAttribute('id', buttonTextPathId);
+                        btnPathEl.setAttribute('d', bentLinePath(geom, btnU0, btnU1, vBase));
+                        btnPathEl.setAttribute('fill', 'none');
+                        svg.appendChild(btnPathEl);
+
+                        const btnG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                        btnG.setAttribute('class', 'curved-input__button');
+                        btnG.setAttribute('role', 'button');
+                        btnG.setAttribute('tabindex', '0');
+                        btnG.setAttribute('aria-label', buttonText);
+
+                        const btnBg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        btnBg.setAttribute('class', 'curved-input__button-bg');
+                        btnBg.setAttribute('d', buttonPath);
+                        btnBg.setAttribute('fill', this.accentColor);
+                        btnG.appendChild(btnBg);
+
+                        const btnText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        btnText.setAttribute('fill', this.btnFgColor);
+                        btnText.setAttribute('text-anchor', 'middle');
+                        btnText.style.fontSize = fontSize + 'px';
+                        btnText.style.fontWeight = '600';
+                        btnText.style.fontFamily = 'inherit';
+                        btnText.style.pointerEvents = 'none';
+                        const btnTp = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+                        btnTp.setAttribute('href', '#' + buttonTextPathId);
+                        btnTp.setAttribute('startOffset', '50%');
+                        btnTp.textContent = buttonText;
+                        btnText.appendChild(btnTp);
+                        btnG.appendChild(btnText);
+
+                        btnG.addEventListener('click', e => { e.stopPropagation(); this._submit(); });
+                        btnG.addEventListener('pointerdown', e => e.stopPropagation());
+                        btnG.addEventListener('keydown', e => {
+                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this._submit(); }
+                        });
+
+                        svg.appendChild(btnG);
+                    }
+
+                    this.form.insertBefore(svg, this.input);
+                }
+
+                _handleSurfaceClick(e, geom, textStartU) {
+                    const input = this.input;
+                    let idx = this.display.length;
+                    const svg = this.form.querySelector('svg');
+                    if (svg && this.display.length) {
+                        try {
+                            const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+                            const target = this.scrollRef + (geom.uFromPoint(pt.x, pt.y) - textStartU) / geom.uPerLen;
+                            idx = Math.round((target / (this.input.value.length || 1)) * this.input.value.length);
+                            idx = Math.max(0, Math.min(idx, this.input.value.length));
+                        } catch(err) { idx = this.display.length; }
+                    }
+                    input.focus();
+                    try { input.setSelectionRange(idx, idx); } catch(err) {}
+                    this.caretIndex = idx;
+                    this._scheduleRender();
+                }
+            }
+
+            // Initialize the email CurvedInput
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const emailInput = new CurvedInput(document.getElementById('curved-email-input'), {
+                defaultValue: '1502110191@qq.com',
+                placeholder: '1502110191@qq.com',
+                buttonText: 'Send Email',
+                theme: isDark ? 'dark' : 'light',
+                width: '100%',
+                bend: 28,
+                height: 64,
+                shadowSize: 'md',
+                onSubmit: function(value) {
+                    window.location.href = 'mailto:' + value;
+                }
+            });
+
+            // Watch for theme changes
+            const observer = new MutationObserver(function() {
+                const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                emailInput.opts.theme = dark ? 'dark' : 'light';
+                const palette = THEMES[emailInput.opts.theme];
+                emailInput.bgColor = palette.backgroundColor;
+                emailInput.fgColor = palette.textColor;
+                emailInput.phColor = palette.placeholderColor;
+                emailInput.strokeColor = palette.borderColor;
+                emailInput.accentColor = palette.buttonColor;
+                emailInput.btnFgColor = palette.buttonTextColor;
+                emailInput.shColor = palette.shadowColor;
+                emailInput._scheduleRender();
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+            window.CurvedInput = CurvedInput;
+        })();
+
+
+    </script>
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
