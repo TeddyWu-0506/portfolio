@@ -15,30 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
     <style>
-       /* Theme transition: register properties so CSS variables animate on theme toggle */
-       @property --bg { syntax: '<color>'; inherits: true; initial-value: #FAFAFA; }
-       @property --surface { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
-       @property --surface-hover { syntax: '<color>'; inherits: true; initial-value: #F5F5F5; }
-       @property --text { syntax: '<color>'; inherits: true; initial-value: #1A1A1A; }
-       @property --text-secondary { syntax: '<color>'; inherits: true; initial-value: #6B7280; }
-       @property --text-tertiary { syntax: '<color>'; inherits: true; initial-value: #9CA3AF; }
-       @property --border { syntax: '<color>'; inherits: true; initial-value: #E5E7EB; }
-       @property --border-light { syntax: '<color>'; inherits: true; initial-value: #F3F4F6; }
-       @property --accent { syntax: '<color>'; inherits: true; initial-value: #5E6AD2; }
-       @property --accent-hover { syntax: '<color>'; inherits: true; initial-value: #4F5BC4; }
-       @property --accent-light { syntax: '<color>'; inherits: true; initial-value: rgba(94,106,210,0.08); }
-       @property --success { syntax: '<color>'; inherits: true; initial-value: #10B981; }
-       @property --success-light { syntax: '<color>'; inherits: true; initial-value: rgba(16,185,129,0.08); }
-       @property --warning { syntax: '<color>'; inherits: true; initial-value: #F59E0B; }
-       @property --warning-light { syntax: '<color>'; inherits: true; initial-value: rgba(245,158,11,0.08); }
-       @property --danger { syntax: '<color>'; inherits: true; initial-value: #EF4444; }
-       @property --danger-light { syntax: '<color>'; inherits: true; initial-value: rgba(239,68,68,0.08); }
-       @property --shadow-sm { syntax: '<shadow>'; inherits: true; initial-value: 0 1px 2px rgba(0,0,0,0.04); }
-       @property --shadow-md { syntax: '<shadow>'; inherits: true; initial-value: 0 4px 12px rgba(0,0,0,0.06); }
-       @property --shadow-lg { syntax: '<shadow>'; inherits: true; initial-value: 0 8px 24px rgba(0,0,0,0.08); }
-
        :root {
            --bg: #FAFAFA;
            --surface: #FFFFFF;
@@ -64,9 +41,6 @@
            --radius-lg: 12px;
            --gm: 40px;
        }
-
-       html { transition: color 0.5s, background-color 0.5s; }
-       body { transition: color 0.5s, background-color 0.5s; }
 
         
 [data-theme="dark"] .loader-3d {
@@ -100,6 +74,7 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
         }
 
         body {
@@ -180,23 +155,11 @@
     background: #FAFAFA;
     z-index: 9999;
     overflow: hidden;
-    transition: background 0.5s;
 }
 
 .loader-3d.done {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease;
-}
-
-.loader-3d.zooming {
-    opacity: 1;
-    pointer-events: none;
-}
-
-.loader-3d.zooming .tunnel-content {
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
 .tunnel-scene {
@@ -213,6 +176,7 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
+    animation: tunnelScroll 20s linear infinite;
 }
 
 
@@ -232,12 +196,11 @@
     top: 50%;
     margin-left: -1500px;
     margin-top: -1500px;
-    background-image:
+    background-image: 
         linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px);
     background-size: 150px 150px;
     background-color: #FAFAFA;
-    transition: background-color 0.5s;
 }
 
 .tunnel-wall--left { transform: translateX(-500px) rotateY(90deg); }
@@ -305,7 +268,7 @@
 }
 
 .tunnel-title {
-    font-size: clamp(36px, 6vw, 72px);
+    font-size: clamp(48px, 8vw, 96px);
     font-weight: 800;
     letter-spacing: -0.04em;
     line-height: 0.95;
@@ -367,28 +330,11 @@
 .tunnel-btn-secondary:hover { opacity: 0.7; }
 
 /* Theme toggle */
-.loader-theme-wrapper {
+.loader-theme-toggle {
     position: absolute;
     top: 24px;
     right: 24px;
     z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.loader-theme-hint {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-tertiary);
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(8px);
-    animation: hintFadeIn 0.6s 1.5s ease forwards;
-}
-@keyframes hintFadeIn {
-    to { opacity: 1; transform: translateX(0); }
-}
-.loader-theme-toggle {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 50%;
@@ -441,7 +387,6 @@
             background: rgba(250,250,250,0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-light);
-            transition: background 0.5s, border-color 0.5s;
         }
 
         .nav-logo {
@@ -488,6 +433,7 @@
             padding: 80px var(--gm) 40px;
             max-width: 1200px;
             margin: 0 auto;
+            scroll-snap-align: start;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -518,29 +464,12 @@
             z-index: 1;
             height: 100vh;
             max-height: 100vh;
+            scroll-snap-align: start;
             display: flex; flex-direction: column;
-            padding: 40px var(--gm);
+            justify-content: center;
+            padding: 80px var(--gm) 40px;
             box-sizing: border-box;
-            overflow-y: auto;
-        }
-
-        .hero-content {
-            margin: auto 0;
-        }
-
-        /* Blur Text animation - initial state */
-        .hero-blur-text {
-            filter: blur(8px);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: none;
-        }
-
-        .hero-blur-text.animate {
-            filter: blur(0);
-            opacity: 1;
-            transform: translateY(0);
-            transition: filter 0.8s ease, opacity 0.6s ease, transform 0.6s ease;
+            overflow: hidden;
         }
 
         .hero-name {
@@ -556,6 +485,7 @@
             font-size: clamp(15px, 1.8vw, 18px);
             font-weight: 400;
             color: var(--text-secondary);
+            max-width: 560px;
             line-height: 1.6;
             margin-bottom: 24px;
         }
@@ -579,43 +509,16 @@
             margin-top: 4px;
         }
 
-        .hero-data-section {
-            margin-top: 20px;
+        .hero-tags {
+            display: flex; gap: 8px; flex-wrap: wrap;
         }
-
-        .hero-data-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .hero-ai-groups {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-        }
-
-        .hero-ai-group {
-            flex: 1;
-            min-width: 200px;
-            padding-left: 12px;
-            border-left: 2px solid var(--border);
-        }
-
-        .hero-ai-group-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-tertiary);
-            margin-bottom: 8px;
-        }
-
-        .hero-ai-group .hero-stats {
-            gap: 20px;
+        .hero-tag {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px; font-weight: 400;
+            color: var(--text-secondary);
+            background: var(--surface);
         }
 
         .projects-list {
@@ -624,17 +527,6 @@
             flex: 1;
             overflow-y: auto;
             padding-right: 8px;
-        }
-
-        #projects {
-            height: auto;
-            max-height: none;
-            overflow: visible;
-        }
-
-        #projects .projects-list {
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
         }
         
         .projects-list::-webkit-scrollbar {
@@ -1187,23 +1079,6 @@
             background: var(--accent-light);
         }
 
-        .library-resource-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 14px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .library-resource-item:hover {
-            border-color: var(--accent);
-            background: var(--accent-light);
-        }
-
         .demo-library-upload-icon {
             width: 48px; height: 48px;
             margin: 0 auto 12px;
@@ -1717,6 +1592,41 @@
             color: var(--text-tertiary);
         }
 
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .metric-cell {
+            background: var(--surface);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .metric-num {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .metric-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .metric-desc strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
         .exp-list {
             display: flex; flex-direction: column;
             flex: 1;
@@ -1819,150 +1729,7 @@
             font-size: clamp(32px, 5vw, 48px);
             font-weight: 800;
             letter-spacing: -0.03em;
-            margin-bottom: 12px;
-        }
-
-        .contact-subtitle {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-        }
-
-        .contact-profile-card {
-            display: flex;
-            align-items: stretch;
-            gap: 40px;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: var(--shadow-lg);
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .contact-profile-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .contact-profile-left {
-            flex-shrink: 0;
-        }
-
-        .contact-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 16px;
-            object-fit: cover;
-        }
-
-        .contact-profile-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .contact-name {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 4px;
-        }
-
-        .contact-role {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .contact-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .contact-detail-icon {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .contact-detail-value a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .contact-detail-value a:hover {
-            color: var(--accent);
-        }
-
-        .contact-social {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
-        }
-
-        .contact-social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .contact-social-link:hover {
-            background: var(--text);
-            color: var(--bg);
-            border-color: var(--text);
-        }
-
-        .contact-social-link svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .contact-qr-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .contact-qr {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
-
-        .contact-qr-label {
-            font-size: 11px;
-            color: var(--text-tertiary);
+            margin-bottom: 32px;
         }
 
         .contact-info {
@@ -2010,6 +1777,7 @@
         @media (max-width: 900px) {
             :root { --gm: 24px; }
             .project-row { grid-template-columns: 1fr; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
             .exp-item { grid-template-columns: 1fr; gap: 8px; }
             .cap-grid { grid-template-columns: 1fr; }
             .demo-kol-cards { grid-template-columns: 1fr; }
@@ -2019,10 +1787,6 @@
             .nav-links { display: none; }
             .hamburger { display: flex; }
             .demo-library-grid { grid-template-columns: 1fr; }
-            .contact-profile-card { flex-direction: column; align-items: center; text-align: center; }
-            .contact-avatar { width: 140px; height: 140px; }
-            .contact-details { align-items: center; }
-            .contact-qr-wrapper { margin-top: 20px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -2306,7 +2070,6 @@
             .hero-avatar { width: 64px; height: 64px; }
             .hero-stats { gap: 20px; }
             .hero-stat-value { font-size: 24px; }
-            .hero-ai-groups { flex-direction: column; gap: 20px; }
             .contact-info { flex-direction: column; gap: 20px; }
             .progress-dots { display: none; }
             footer { flex-direction: column; text-align: center; }
@@ -2361,13 +2124,8 @@
     <div class="bg-grid"></div>
 
     <div class="loader-3d" id="loader">
-        <!-- Physics Canvas -->
-        <canvas id="physicsCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:15;pointer-events:auto;"></canvas>
-
         <!-- Theme Toggle -->
-        <div class="loader-theme-wrapper">
-            <span class="loader-theme-hint">切换主题</span>
-            <button class="loader-theme-toggle" id="loaderThemeToggle" aria-label="Toggle theme">
+        <button class="loader-theme-toggle" id="loaderThemeToggle" aria-label="Toggle theme">
             <svg class="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
@@ -2375,7 +2133,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
         </button>
-        </div>
 
         <!-- 3D Tunnel Scene -->
         <div class="tunnel-scene">
@@ -2395,20 +2152,19 @@
         <!-- Center Content -->
         <div class="tunnel-content">
             <div class="tunnel-label">嗨👋欢迎来串门</div>
-            <h1 class="tunnel-title">我是 Teddy Wu</h1>
+            <h1 class="tunnel-title">Teddy Wu</h1>
             <p class="tunnel-subtitle">你即将解锁我的AI打怪升级存档🌟</p>
             <button class="tunnel-btn" id="enterBtn">进入我的主页</button>
         </div>
     </div>
     <nav class="nav">
-        <div class="nav-logo" onclick="backToLoader()">← 返回主页</div>
+        <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Teddy Wu</div>
         <div class="nav-right">
             <div class="nav-links">
-                <a href="#hero">个人信息</a>
-                <a href="#projects">AI系统落地</a>
-                <a href="#experience">职业路径</a>
-                <a href="#capabilities">能力模型</a>
-                <a href="#contact">联系我</a>
+                <a href="#projects">Projects</a>
+                <a href="#metrics">Impact</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
             </div>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
                 <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -2424,25 +2180,24 @@
         </div>
     </nav>
     <div class="mobile-menu" id="mobileMenu">
-        <a href="#hero" onclick="closeMobileMenu()">个人信息</a>
-        <a href="#projects" onclick="closeMobileMenu()">AI系统落地</a>
-        <a href="#experience" onclick="closeMobileMenu()">职业路径</a>
-        <a href="#capabilities" onclick="closeMobileMenu()">能力模型</a>
-        <a href="#contact" onclick="closeMobileMenu()">联系我</a>
+        <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+        <a href="#metrics" onclick="closeMobileMenu()">Impact</a>
+        <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+        <a href="#contact" onclick="closeMobileMenu()">Contact</a>
     </div>
 
     <div class="progress-dots" id="progressDots">
-        <div class="progress-dot active" data-section="hero" onclick="scrollToSection('hero')"><span class="dot-label">个人信息</span></div>
-        <div class="progress-dot" data-section="projects" onclick="scrollToSection('projects')"><span class="dot-label">AI系统落地</span></div>
-        <div class="progress-dot" data-section="experience" onclick="scrollToSection('experience')"><span class="dot-label">职业路径</span></div>
-        <div class="progress-dot" data-section="capabilities" onclick="scrollToSection('capabilities')"><span class="dot-label">能力模型</span></div>
-        <div class="progress-dot" data-section="contact" onclick="scrollToSection('contact')"><span class="dot-label">联系我</span></div>
+        <div class="progress-dot active" data-section="hero" onclick="scrollToSection('hero')"><span class="dot-label">Home</span></div>
+        <div class="progress-dot" data-section="projects" onclick="scrollToSection('projects')"><span class="dot-label">Projects</span></div>
+        <div class="progress-dot" data-section="metrics" onclick="scrollToSection('metrics')"><span class="dot-label">Impact</span></div>
+        <div class="progress-dot" data-section="experience" onclick="scrollToSection('experience')"><span class="dot-label">Experience</span></div>
+        <div class="progress-dot" data-section="capabilities" onclick="scrollToSection('capabilities')"><span class="dot-label">Skills</span></div>
+        <div class="progress-dot" data-section="contact" onclick="scrollToSection('contact')"><span class="dot-label">Contact</span></div>
     </div>
 
     <main>
 
-        <section class="hero" id="hero">
-            <div class="hero-content">
+        <section class="hero">
             <div class="hero-top">
                 <img src="resource/image/头像.jpg" alt="Teddy Wu" class="hero-avatar">
                 <div class="hero-top-text">
@@ -2450,57 +2205,31 @@
                     <h1 class="hero-name">Teddy Wu</h1>
                 </div>
             </div>
-            <p class="hero-role hero-blur-text">
-                专注内容营销场景下 AI 提效工具的设计与落地。从一线痛点出发，<strong>独立设计并落地两套 AI 系统</strong>，驱动内容投放全链路提效
+            <p class="hero-role">
+                专注内容营销场景下 AI 提效工具的设计与落地。<br>
+                从一线痛点出发，<strong>独立设计并落地两套 AI 系统</strong>，<br>
+                驱动内容投放全链路提效 70-83%
             </p>
-            <div class="hero-data-section hero-blur-text">
-                <div class="hero-data-title">媒介执行业绩数据</div>
-                <div class="hero-stats">
-                    <div>
-                        <div class="hero-stat-value">200+</div>
-                        <div class="hero-stat-label">月均博主投放</div>
-                    </div>
-                    <div>
-                        <div class="hero-stat-value">150万+</div>
-                        <div class="hero-stat-label">月消耗预算</div>
-                    </div>
-                    <div>
-                        <div class="hero-stat-value">40%+</div>
-                        <div class="hero-stat-label">月度爆文率</div>
-                    </div>
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-value">200+</div>
+                    <div class="hero-stat-label">月均博主投放</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">150万+</div>
+                    <div class="hero-stat-label">月消耗预算</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">40%+</div>
+                    <div class="hero-stat-label">月度爆文率</div>
                 </div>
             </div>
-            <div class="hero-data-section hero-blur-text">
-                <div class="hero-data-title">AI 产品化提效数据</div>
-                <div class="hero-ai-groups">
-                    <div class="hero-ai-group">
-                        <div class="hero-ai-group-label">选号工具</div>
-                        <div class="hero-stats">
-                            <div>
-                                <div class="hero-stat-value">↑83%</div>
-                                <div class="hero-stat-label">选号效率 30→5min</div>
-                            </div>
-                            <div>
-                                <div class="hero-stat-value">↑67%</div>
-                                <div class="hero-stat-label">中选率 30%→50%</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hero-ai-group">
-                        <div class="hero-ai-group-label">审核工具</div>
-                        <div class="hero-stats">
-                            <div>
-                                <div class="hero-stat-value">↑70%</div>
-                                <div class="hero-stat-label">审核效率 10→3min</div>
-                            </div>
-                            <div>
-                                <div class="hero-stat-value">↑200%</div>
-                                <div class="hero-stat-label">一稿通过率 10%→30%</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="hero-tags">
+                <span class="hero-tag">RAG 知识库</span>
+                <span class="hero-tag">Prompt Engineering</span>
+                <span class="hero-tag">HITL 人机协同</span>
+                <span class="hero-tag">数据建模</span>
+                <span class="hero-tag">场景化匹配</span>
             </div>
         </section>
 
@@ -2559,6 +2288,12 @@
                                     资料库
                                 </div>
                             </div>
+                            <div class="demo-nav-right">
+                                <button class="demo-nav-btn">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3"/></svg>
+                                    设置 API
+                                </button>
+                            </div>
                         </div>
                         <div class="demo-content">
                             <!-- Page 1: Import -->
@@ -2574,13 +2309,22 @@
                                 <div class="demo-section">
                                     <div class="demo-section-title">导入飞书文档</div>
                                     <div class="demo-input-row">
-                                        <input type="text" class="demo-input" placeholder="粘贴飞书文档链接..." id="demo1-url-input" value="https://my.feishu.cn/docx/HE6VdmVdaoYvTExiG7XcazSunce" readonly style="cursor:not-allowed;opacity:0.7;">
+                                        <input type="text" class="demo-input" placeholder="粘贴飞书文档链接..." id="demo1-url-input" value="https://my.feishu.cn/docx/HE6VdmVdaoYvTExiG7XcazSunce">
                                         <button class="demo-btn-sm" onclick="importDocument()">
                                             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
                                             导入文档
                                         </button>
                                     </div>
                                     <div id="demo1-import-msg" style="display:none;" class="demo-success-msg">文档导入成功，点击"文档预览"查看内容</div>
+                                </div>
+                                <div class="demo-section" style="margin-top:32px;">
+                                    <div class="demo-section-title">快速开始</div>
+                                    <div style="display:flex;gap:12px;">
+                                        <button class="demo-btn-sm" onclick="quickImport()" style="flex:1;justify-content:center;">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            使用示例文档
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2590,35 +2334,32 @@
                                     <div class="demo-section-title">文档预览</div>
                                     <div class="demo-preview-card">
                                         <div class="demo-preview-header">
-                                            <div class="demo-preview-label">【标题】（18 字）</div>
-                                            <div class="demo-preview-count">1 块</div>
+                                            <div class="demo-preview-label">【发布标题】</div>
+                                            <div class="demo-preview-count">2 块</div>
                                         </div>
-                                        <div class="demo-preview-text"><span class="highlight">挖到宝！汰渍洗衣原液，柔顺留香珠都省了✨</span></div>
+                                        <div class="demo-preview-field">发布标题</div>
+                                        <div class="demo-preview-text"><span class="highlight">挖到宝！这瓶洗衣原液让我精简了洗衣步骤，感觉柔顺剂和留香珠都能省啦花火</span></div>
                                     </div>
                                     <div class="demo-preview-card">
                                         <div class="demo-preview-header">
-                                            <div class="demo-preview-label">【正文】</div>
-                                            <div class="demo-preview-count">1 块</div>
+                                            <div class="demo-preview-label">【发布文案】</div>
+                                            <div class="demo-preview-count">12 块</div>
                                         </div>
+                                        <div class="demo-preview-field">发布文案</div>
                                         <div class="demo-preview-text">
-                                            姐妹们！懒人洗衣神器按头安利💥<br>
-                                            汰渍洗衣浓缩液真的巨好用！<br><br>
-                                            以前洗衣服步骤超多🥲<br>
-                                            洗衣液、柔顺剂、留香珠轮番安排<br><br>
-                                            它和普通洗衣液不一样✅<br>
-                                            一瓶融合去渍、留香、护色、温和配方<br>
-                                            <span class="highlight">所有顽固污渍都能轻松洗干净</span><br>
-                                            淡淡的山茶花香超治愈🌸<br>
-                                            贴身衣物清洗也安心<br><br>
-                                            直接精简洗衣流程，不用一堆洗护堆角落<br>
-                                            租房党、家务懒人闭眼冲！
+                                            <span class="highlight">姐妹们！今天必须给你们按头安利这个懒人洗衣神器——汰渍洗衣原液</span> 真的太好用了<br>
+                                            以前洗个衣服真的好麻烦<br>
+                                            <span class="highlight">洗衣原液</span><br>
+                                            <span class="highlight">一瓶搞定日常洗衣难题</span><br>
+                                            它和普通洗衣液不太一样哦！一瓶里就融合了去渍、留香、护色和温和配方
                                         </div>
                                     </div>
                                     <div class="demo-preview-card">
                                         <div class="demo-preview-header">
-                                            <div class="demo-preview-label">【TAG】</div>
-                                            <div class="demo-preview-count">1 块</div>
+                                            <div class="demo-preview-label">【发布 TAG】</div>
+                                            <div class="demo-preview-count">2 块</div>
                                         </div>
+                                        <div class="demo-preview-field">发布 TAG</div>
                                         <div class="demo-preview-text">#汰渍洗衣原液 #洗衣原液 #懒人洗衣神器 #家务好物分享 #衣物清洁 #洗衣好物 #汰渍 #家居好物 #洗衣液推荐 #去渍神器 #持久留香 #山茶花香</div>
                                     </div>
                                 </div>
@@ -2633,80 +2374,44 @@
                                 <div class="demo-review-header">
                                     <div class="demo-review-title">内容审核</div>
                                     <div style="display:flex;align-items:center;gap:12px;">
-                                        <div class="demo-review-count">2 条问题</div>
+                                        <div class="demo-review-count">3 条建议</div>
                                         <button class="demo-btn-sm" onclick="runDemo1Review()">
                                             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 0111.47-2.4M14 8a6 6 0 01-11.47 2.4"/><path d="M14 2v4h-4M2 14v-4h4"/></svg>
                                             重新审核
                                         </button>
                                     </div>
                                 </div>
-                                <div class="demo-review-item" id="review-item-1">
+                                <div class="demo-review-item">
                                     <div class="demo-review-item-header">
-                                        <div class="demo-review-item-title">产品名错误：洗衣浓缩液</div>
+                                        <div class="demo-review-item-title">卖点缺乏使用场景或可感知价值；表达不够自然</div>
                                         <div class="demo-review-status">待处理</div>
                                     </div>
-                                    <div class="demo-review-desc">正文中将"洗衣原液"误写为"洗衣浓缩液"，与产品官方名称不一致，需修正为正确产品名。</div>
+                                    <div class="demo-review-desc">原文描述过于侧重物理特性（非牛顿流体、挂壁性），未直接关联用户感知的清洁效果或使用便利性。且"非牛顿流体"等术语对普通消费者不够直观，建议转化为更易懂的场景化描述。</div>
                                     <div class="demo-review-compare">
                                         <div class="demo-review-box original">
                                             <div class="demo-review-box-label">原文</div>
-                                            汰渍洗衣浓缩液真的巨好用！
+                                            图2｜产品质地特写 俯拍角度，手拿原液瓶往透明玻璃杯里倒出一点原液，展示非牛顿流体那种稠稠的质地。展示其高浓缩质地，挂壁性强不易流淌，说明用量少也能产生丰富泡沫，适合日常机洗。加花字标注："高浓缩，少量即可满足日常洗涤需求！"
                                         </div>
                                         <div class="demo-review-arrow">→</div>
                                         <div class="demo-review-box suggestion">
                                             <div class="demo-review-box-label">建议</div>
-                                            汰渍洗衣原液真的巨好用！
+                                            图2｜质地特写 俯拍展示原液倒入杯中，质地浓稠挂壁，流动性慢。这种高浓缩配方意味着只需少量就能覆盖衣物表面，轻松包裹污渍，日常机洗更省心。加花字标注："高浓缩，少量即净，机洗更省力！"
                                         </div>
                                     </div>
                                     <div class="demo-review-actions">
-                                        <button class="demo-action-btn confirm" onclick="confirmReview(1)">
+                                        <button class="demo-action-btn save">
                                             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
-                                            确认修改
+                                            保存编辑
                                         </button>
-                                        <button class="demo-action-btn ignore" onclick="ignoreReview(1)">
+                                        <button class="demo-action-btn confirm">
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+                                            确认
+                                        </button>
+                                        <button class="demo-action-btn ignore">
                                             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
                                             忽略
                                         </button>
                                     </div>
-                                </div>
-                                <div class="demo-review-item" id="review-item-2">
-                                    <div class="demo-review-item-header">
-                                        <div class="demo-review-item-title">绝对化话术：所有顽固污渍都能轻松洗干净</div>
-                                        <div class="demo-review-status">待处理</div>
-                                    </div>
-                                    <div class="demo-review-desc">"所有顽固污渍都能轻松洗干净"属于绝对化用语，违反广告法相关规定，建议修改为更合规的表达。</div>
-                                    <div class="demo-review-compare">
-                                        <div class="demo-review-box original">
-                                            <div class="demo-review-box-label">原文</div>
-                                            所有顽固污渍都能轻松洗干净
-                                        </div>
-                                        <div class="demo-review-arrow">→</div>
-                                        <div class="demo-review-box suggestion">
-                                            <div class="demo-review-box-label">建议</div>
-                                            多种顽固污渍都能有效清洁
-                                        </div>
-                                    </div>
-                                    <div class="demo-review-actions">
-                                        <button class="demo-action-btn confirm" onclick="confirmReview(2)">
-                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
-                                            确认修改
-                                        </button>
-                                        <button class="demo-action-btn ignore" onclick="ignoreReview(2)">
-                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
-                                            忽略
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="writeback-section" style="display:none;margin-top:20px;padding:16px;background:var(--success-light);border:1px solid rgba(16,185,129,0.3);border-radius:8px;text-align:center;">
-                                    <div style="font-size:14px;font-weight:600;color:var(--success);margin-bottom:12px;">✅ 所有问题已处理</div>
-                                    <button class="demo-btn-sm" onclick="writebackToFeishu()" style="background:var(--success);color:#fff;">
-                                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
-                                        一键写回飞书
-                                    </button>
-                                </div>
-                                <div id="writeback-success" style="display:none;margin-top:20px;padding:20px;background:var(--surface);border:2px solid var(--success);border-radius:12px;text-align:center;">
-                                    <div style="font-size:32px;margin-bottom:12px;">🎉</div>
-                                    <div style="font-size:16px;font-weight:600;color:var(--success);margin-bottom:8px;">写回成功</div>
-                                    <div style="font-size:13px;color:var(--text-secondary);">内容已成功写回飞书文档</div>
                                 </div>
                                 <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
                                     <button class="demo-btn-sm" onclick="switchDemo1Page('preview')">← 返回预览</button>
@@ -2720,28 +2425,28 @@
                                     <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">管理品牌 BRIEF、审核模板和合规规则</p>
                                 </div>
                                 <div class="demo-library-grid">
-                                    <div class="demo-library-card" onclick="openLibraryModal('brief')">
+                                    <div class="demo-library-card">
                                         <div class="demo-library-card-icon">
                                             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8v8H4z"/><path d="M6 8h4M6 10h4M6 6h2"/></svg>
                                         </div>
                                         <div class="demo-library-card-title">品牌 BRIEF</div>
                                         <div class="demo-library-card-desc">汰渍/潘婷/飘柔品牌调性、卖点、禁忌词库</div>
                                     </div>
-                                    <div class="demo-library-card" onclick="openLibraryModal('template')">
+                                    <div class="demo-library-card">
                                         <div class="demo-library-card-icon">
                                             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8v12H4z"/><path d="M6 6h4M6 8h4M6 10h4"/></svg>
                                         </div>
                                         <div class="demo-library-card-title">审核模板</div>
                                         <div class="demo-library-card-desc">图文审核、视频审核、直播话术审核模板</div>
                                     </div>
-                                    <div class="demo-library-card" onclick="openLibraryModal('rules')">
+                                    <div class="demo-library-card">
                                         <div class="demo-library-card-icon">
                                             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg>
                                         </div>
                                         <div class="demo-library-card-title">合规规则</div>
                                         <div class="demo-library-card-desc">广告法禁用词、平台规则、品牌特殊要求</div>
                                     </div>
-                                    <div class="demo-library-card" onclick="openLibraryModal('history')">
+                                    <div class="demo-library-card">
                                         <div class="demo-library-card-icon">
                                             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
                                         </div>
@@ -2749,7 +2454,7 @@
                                         <div class="demo-library-card-desc">已审核文档归档、数据导出、效果复盘</div>
                                     </div>
                                 </div>
-                                <div class="demo-library-upload" onclick="showNextTime()">
+                                <div class="demo-library-upload">
                                     <div class="demo-library-upload-icon">
                                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4 6l4-4 4 4M2 12v2h12v-2"/></svg>
                                     </div>
@@ -2757,7 +2462,6 @@
                                     <div class="demo-library-upload-hint">支持 PDF、Word、Excel 格式</div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -2819,11 +2523,11 @@
                                     <div class="demo-kol-filters">
                                         <div>
                                             <div class="demo-kol-filter-label">推广品类</div>
-                                            <select class="demo-kol-select" id="demo2-category">
-                                                <option value="母婴育儿">母婴育儿</option>
-                                                <option value="居家生活">居家生活</option>
-                                                <option value="美妆护肤">美妆护肤</option>
-                                                <option value="美食饮料">美食饮料</option>
+                                            <select class="demo-kol-select">
+                                                <option>家居生活</option>
+                                                <option>美妆护肤</option>
+                                                <option>母婴育儿</option>
+                                                <option>美食饮品</option>
                                             </select>
                                         </div>
                                         <div>
@@ -2859,8 +2563,8 @@
                                         <div class="demo-kol-retry" onclick="switchDemo2Page('recommend')">重新推荐</div>
                                     </div>
                                     <div class="demo-kol-results-right">
-                                        <button class="demo-kol-action" onclick="selectAllKOL()">全选</button>
-                                        <button class="demo-kol-action" onclick="exportSelectedKOLs()">导出深度数据 (0)</button>
+                                        <button class="demo-kol-action">全选</button>
+                                        <button class="demo-kol-action">导出深度数据 (0)</button>
                                     </div>
                                 </div>
                                 <div class="demo-kol-summary">
@@ -2874,7 +2578,7 @@
                                 </div>
                                 <div class="demo-kol-cards" id="demo2-kol-cards"></div>
                                 <div class="demo-kol-footer">
-                                    以上数据均为真实的小红书达人数据（只取21个做展示），数据截止时间2026年6月
+                                    AI 生成的达人推荐仅供参考 · 数据为模拟生成 · 实际合作请以达人真实数据为准
                                 </div>
                             </div>
 
@@ -2909,7 +2613,7 @@
                                     <h2>导入达人库</h2>
                                     <p>支持从飞书、Excel、CSV 批量导入达人数据</p>
                                 </div>
-                                <div class="demo-library-upload" style="margin-top:24px;" onclick="showNextTime()">
+                                <div class="demo-library-upload" style="margin-top:24px;">
                                     <div class="demo-library-upload-icon">
                                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4 6l4-4 4 4M2 12v2h12v-2"/></svg>
                                     </div>
@@ -2933,22 +2637,28 @@
             </div>
         </section>
 
-        <!-- Resource Detail Modal -->
-        <div id="resource-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9001;align-items:center;justify-content:center;padding:20px;">
-            <div style="background:var(--surface);border-radius:16px;padding:0;max-width:480px;width:100%;max-height:80vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);">
-                    <div style="font-size:16px;font-weight:700;" id="detail-title"></div>
-                    <button onclick="closeResourceDetail()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary);padding:4px;">✕</button>
+        <section id="metrics">
+            <div class="section-label">Business Impact</div>
+            <h2 class="section-title">核心数据</h2>
+            <div class="metrics-grid">
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="70">0</div>
+                    <div class="metric-desc"><strong>审核效率</strong>提升<br>10min → 3min</div>
                 </div>
-                <div style="padding:24px;overflow-y:auto;max-height:calc(80vh - 80px);">
-                    <div id="detail-content" style="font-size:13px;color:var(--text-secondary);line-height:2;margin-bottom:20px;"></div>
-                    <div style="display:flex;gap:8px;">
-                        <button onclick="showNextTime()" style="flex:1;padding:10px;background:var(--text);color:var(--bg);border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">更新</button>
-                        <button onclick="showNextTime()" style="flex:1;padding:10px;background:var(--surface);color:var(--danger);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">删除</button>
-                    </div>
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="83">0</div>
+                    <div class="metric-desc"><strong>选号效率</strong>提升<br>30min → 5min</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="200">0</div>
+                    <div class="metric-desc"><strong>一稿通过率</strong>提升<br>10% → 30%</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num" data-target="67">0</div>
+                    <div class="metric-desc"><strong>中选率</strong>提升<br>30% → 50%</div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <section id="experience">
             <div class="section-label">Career Path</div>
@@ -3019,42 +2729,26 @@
 
        <section class="contact" id="contact">
             <h2 class="contact-title">Let's Talk</h2>
-            <p class="contact-subtitle">期待与你交流</p>
-
-            <div class="contact-profile-card">
-                <div class="contact-profile-left">
-                    <img src="resource/image/头像.jpg" alt="Teddy Wu" class="contact-avatar">
+            <div class="curved-email-wrapper">
+                <div id="curved-email-input"></div>
+            </div>
+            <div class="contact-info">
+                <div>
+                    <div class="contact-item-label">Phone</div>
+                    <div class="contact-item-value"><a href="tel:13680369508">13680369508</a></div>
                 </div>
-                <div class="contact-profile-right">
-                    <h3 class="contact-name">Teddy Wu</h3>
-                    <p class="contact-role">AI Product Manager · 广州</p>
-
-                    <div class="contact-details">
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📍</span>
-                            <span>广州, 中国</span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📧</span>
-                            <span class="contact-detail-value">
-                                <a href="mailto:1502110191@qq.com">1502110191@qq.com</a>
-                            </span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📱</span>
-                            <span class="contact-detail-value">
-                                <a href="tel:13680369508">13680369508</a>
-                            </span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">💬</span>
-                            <span class="contact-detail-value">TeddyGorrr</span>
+                <div>
+                    <div class="contact-item-label">WeChat</div>
+                    <div class="contact-item-value wechat-qr-wrapper">
+                        <button class="copy-btn" onclick="toggleWechatQR()">
+                            TeddyGorrr
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        </button>
+                        <div class="wechat-qr-popup" id="wechatQR">
+                            <img src="resource/image/微信二维码.jpeg" alt="WeChat QR Code">
+                            <p>扫码添加微信</p>
                         </div>
                     </div>
-                </div>
-                <div class="contact-qr-wrapper">
-                    <img src="resource/image/微信二维码.jpeg" alt="WeChat QR" class="contact-qr">
-                    <span class="contact-qr-label">扫码添加微信</span>
                 </div>
             </div>
         </section>
@@ -3078,173 +2772,21 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Loader - GSAP tunnel animation
+        // Loader
         const loader = document.getElementById('loader');
         const enterBtn = document.getElementById('enterBtn');
-        const tunnelContainer = document.querySelector('.tunnel-container');
-        const tunnelScene = document.querySelector('.tunnel-scene');
-
-        // Idle: smooth forward Z drift (replicates original CSS tunnelScroll)
-        const tunnelDrift = gsap.to(tunnelContainer, {
-            z: 1500,
-            duration: 20,
-            ease: 'none',
-            repeat: -1
-        });
-
         setTimeout(() => enterBtn.classList.add('visible'), 500);
-
-        enterBtn.addEventListener('click', function onClick() {
-            enterBtn.removeEventListener('click', onClick);
-            document.documentElement.style.scrollSnapType = 'none';
-            tunnelDrift.kill();
-            loader.classList.add('zooming');
-
-            gsap.to(tunnelContainer, {
-                z: '+=2500',
-                scale: 1.6,
-                duration: 0.9,
-                ease: 'power3.in',
-                onComplete: function() {
-                    gsap.to(loader, {
-                        filter: 'blur(12px)',
-                        opacity: 0,
-                        duration: 0.4,
-                        ease: 'power2.in',
-                        onComplete: function() {
-                            loader.style.display = 'none';
-                            loader.style.filter = '';
-                            window.scrollTo(0, 0);
-                            setTimeout(function() {
-                                document.documentElement.style.scrollSnapType = '';
-                            }, 300);
-                            // Cleanup physics
-                            if (window.physicsCleanup) window.physicsCleanup();
-                            // Trigger blur text animation
-                            triggerBlurTextAnimation();
-                        }
-                    });
-                }
-            });
-
-            gsap.to(tunnelScene, {
-                filter: 'blur(6px)',
-                duration: 0.7,
-                ease: 'power2.in'
-            });
+        enterBtn.addEventListener('click', () => {
+            loader.classList.add('done');
+            setTimeout(() => {
+                loader.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }, 600);
         });
 
-        // Blur Text Animation
-        function triggerBlurTextAnimation() {
-            var blurElements = document.querySelectorAll('.hero-blur-text');
-            blurElements.forEach(function(el, index) {
-                setTimeout(function() {
-                    el.classList.add('animate');
-                }, index * 200 + 100);
-            });
-        }
 
-        // Back to Loader
-        function backToLoader() {
-            // Show loader immediately in zoomed-out state (where entry ended)
-            loader.style.display = '';
-            loader.style.opacity = '0';
-            loader.style.filter = 'blur(12px)';
-            loader.classList.remove('zooming', 'done');
-            loader.classList.add('zooming'); // hide tunnel content initially
 
-            // Set tunnel to zoomed-out state (reverse of entry end)
-            gsap.set(tunnelContainer, { z: 2500, scale: 1.6 });
-            gsap.set(tunnelScene, { filter: 'blur(6px)' });
-
-            // Scroll to top
-            window.scrollTo(0, 0);
-            document.documentElement.style.scrollSnapType = 'none';
-
-            // Phase 1: Fade in loader
-            gsap.to(loader, {
-                opacity: 1,
-                filter: 'none',
-                duration: 0.4,
-                ease: 'power2.out',
-                onComplete: function() {
-                    // Phase 2: Tunnel zooms back (reverse of entry)
-                    gsap.to(tunnelContainer, {
-                        z: 0,
-                        scale: 1,
-                        duration: 0.9,
-                        ease: 'power3.out'
-                    });
-
-                    gsap.to(tunnelScene, {
-                        filter: 'none',
-                        duration: 0.7,
-                        ease: 'power2.out'
-                    });
-
-                    // Phase 3: Fade in tunnel content
-                    setTimeout(function() {
-                        loader.classList.remove('zooming');
-                    }, 300);
-
-                    // Phase 4: Start idle drift after zoom completes
-                    setTimeout(function() {
-                        var newDrift = gsap.to(tunnelContainer, {
-                            z: 1500,
-                            duration: 20,
-                            ease: 'none',
-                            repeat: -1
-                        });
-
-                        // Re-enable scroll-snap
-                        document.documentElement.style.scrollSnapType = '';
-
-                        // Re-attach entry click handler
-                        enterBtn.onclick = function() {
-                            newDrift.kill();
-                            document.documentElement.style.scrollSnapType = 'none';
-                            loader.classList.add('zooming');
-
-                            gsap.to(tunnelContainer, {
-                                z: '+=2500',
-                                scale: 1.6,
-                                duration: 0.9,
-                                ease: 'power3.in',
-                                onComplete: function() {
-                                    gsap.to(loader, {
-                                        filter: 'blur(12px)',
-                                        opacity: 0,
-                                        duration: 0.4,
-                                        ease: 'power2.in',
-                                        onComplete: function() {
-                                            loader.style.display = 'none';
-                                            loader.style.filter = '';
-                                            window.scrollTo(0, 0);
-                                            setTimeout(function() {
-                                                document.documentElement.style.scrollSnapType = '';
-                                            }, 300);
-                                        }
-                                    });
-                                }
-                            });
-
-                            gsap.to(tunnelScene, {
-                                filter: 'blur(6px)',
-                                duration: 0.7,
-                                ease: 'power2.in'
-                            });
-                        };
-                    }, 1200);
-                }
-            });
-
-            // Reinitialize physics icons
-            setTimeout(function() {
-                if (window.physicsCleanup) window.physicsCleanup();
-                if (window.physicsInit) window.physicsInit();
-            }, 500);
-        }
-
+        
         // Loader Theme Toggle
         const loaderThemeToggle = document.getElementById('loaderThemeToggle');
         const themeIconSun = loaderThemeToggle.querySelector('.theme-icon-sun');
@@ -3271,222 +2813,12 @@
                 themeIconMoon.style.display = 'block';
             }
         });
-
-        // ========== Physics Icons ==========
-        (function() {
-            const canvas = document.getElementById('physicsCanvas');
-            const ctx = canvas.getContext('2d');
-            const { Engine, Render, World, Bodies, Body, Mouse, MouseConstraint, Events, Runner } = Matter;
-
-            let engine, render, runner, mouseConstraint;
-            const ICON_SIZE = 64;
-            const dpr = window.devicePixelRatio || 1;
-            const iconFiles = [
-                'ChatGPT.png', 'Claude.png', 'Codex_OpenAI.png', 'Cursor.png',
-                'DeepSeek.png', 'Doubao_豆包.png', 'KIMI.png', 'Ollama.png',
-                'ChatGPT.png', 'Claude.png', 'Codex_OpenAI.png', 'Cursor.png',
-                'DeepSeek.png', 'Doubao_豆包.png', 'KIMI.png', 'Ollama.png'
-            ];
-
-            function resizeCanvas() {
-                canvas.width = window.innerWidth * dpr;
-                canvas.height = window.innerHeight * dpr;
-                canvas.style.width = window.innerWidth + 'px';
-                canvas.style.height = window.innerHeight + 'px';
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            }
-
-            function initPhysics() {
-                resizeCanvas();
-
-                engine = Engine.create({ gravity: { x: 0, y: 1.2 } });
-
-                // Walls (extra thick to prevent escape)
-                const wallThickness = 200;
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                const walls = [
-                    Bodies.rectangle(w / 2, h + wallThickness / 2, w + 400, wallThickness, { isStatic: true, friction: 0.8, restitution: 0.3 }),
-                    Bodies.rectangle(-wallThickness / 2, h / 2, wallThickness, h * 3, { isStatic: true, friction: 0.8, restitution: 0.3 }),
-                    Bodies.rectangle(w + wallThickness / 2, h / 2, wallThickness, h * 3, { isStatic: true, friction: 0.8, restitution: 0.3 })
-                ];
-                World.add(engine.world, walls);
-
-                // Static bodies for tunnel content (text + button)
-                var contentEls = document.querySelectorAll('.tunnel-label, .tunnel-title, .tunnel-subtitle, .tunnel-btn');
-                var contentBodies = [];
-                contentEls.forEach(function(el) {
-                    var rect = el.getBoundingClientRect();
-                    if (rect.width === 0 || rect.height === 0) return;
-                    var bx = rect.left + rect.width / 2;
-                    var by = rect.top + rect.height / 2;
-                    var body = Bodies.rectangle(bx, by, rect.width + 20, rect.height + 10, {
-                        isStatic: true,
-                        friction: 0,
-                        restitution: 1.2,
-                        label: 'content'
-                    });
-                    contentBodies.push(body);
-                });
-                World.add(engine.world, contentBodies);
-
-                // Load and create icon bodies
-                let loaded = 0;
-                const images = [];
-                iconFiles.forEach(function(file, i) {
-                    const img = new Image();
-                    img.onload = function() {
-                        images[i] = img;
-                        loaded++;
-                        if (loaded === iconFiles.length) {
-                            spawnIcons(images);
-                        }
-                    };
-                    img.src = 'resource/ai-logos/processed/' + encodeURIComponent(file);
-                });
-
-                // Mouse drag
-                const mouse = Mouse.create(canvas);
-                mouse.pixelRatio = dpr;
-                mouseConstraint = MouseConstraint.create(engine, {
-                    mouse: mouse,
-                    constraint: { stiffness: 0.6, render: { visible: false } }
-                });
-                World.add(engine.world, mouseConstraint);
-
-                // Fix mouse position for retina
-                Events.on(mouseConstraint, 'mousedown', function(e) {
-                    canvas.style.cursor = 'grabbing';
-                });
-                Events.on(mouseConstraint, 'mouseup', function() {
-                    canvas.style.cursor = 'grab';
-                });
-
-                // Custom render loop
-                Events.on(engine, 'afterUpdate', function() {
-                    draw(images);
-                });
-
-                runner = Runner.create();
-                Runner.run(runner, engine);
-            }
-
-            function spawnIcons(images) {
-                iconFiles.forEach(function(file, i) {
-                    const x = 80 + Math.random() * (canvas.width - 160);
-                    const delay = i * 400;
-                    setTimeout(function() {
-                        const body = Bodies.circle(x, -20 - Math.random() * 40, ICON_SIZE / 2 + 4, {
-                            restitution: 0.6,
-                            friction: 0.3,
-                            frictionAir: 0.01,
-                            density: 0.002,
-                            label: 'icon-' + i
-                        });
-                        World.add(engine.world, body);
-                    }, delay);
-                });
-            }
-
-            function isDark() {
-                return document.documentElement.getAttribute('data-theme') === 'dark';
-            }
-
-            function draw(images) {
-                ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-                const bodies = Matter.Composite.allBodies(engine.world);
-                const dark = isDark();
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-
-                bodies.forEach(function(body) {
-                    if (!body.label || !body.label.startsWith('icon-')) return;
-
-                    // Safety: reset escaped icons
-                    if (body.position.x < -100 || body.position.x > w + 100 || body.position.y > h + 200) {
-                        Body.setPosition(body, { x: w / 2, y: -30 });
-                        Body.setVelocity(body, { x: 0, y: 0 });
-                    }
-
-                    const idx = parseInt(body.label.split('-')[1]);
-                    const img = images[idx];
-                    if (!img) return;
-
-                    ctx.save();
-                    ctx.translate(body.position.x, body.position.y);
-                    ctx.rotate(body.angle);
-
-                    // Dark mode: subtle dark background circle behind icon
-                    if (dark) {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, ICON_SIZE / 2 + 6, 0, Math.PI * 2);
-                        ctx.fillStyle = 'rgba(30,30,30,0.85)';
-                        ctx.fill();
-                        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                        // Invert icon colors for dark mode
-                        ctx.filter = 'invert(1)';
-                    } else {
-                        // Light mode: soft shadow
-                        ctx.shadowColor = 'rgba(0,0,0,0.12)';
-                        ctx.shadowBlur = 8;
-                        ctx.shadowOffsetY = 3;
-                    }
-
-                    ctx.drawImage(img, -ICON_SIZE / 2, -ICON_SIZE / 2, ICON_SIZE, ICON_SIZE);
-                    ctx.restore();
-                });
-            }
-
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                resizeCanvas();
-            });
-
-            // Initialize
-            if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                setTimeout(initPhysics, 100);
-            } else {
-                window.addEventListener('load', function() { setTimeout(initPhysics, 100); });
-            }
-
-            // Expose cleanup for backToLoader
-            window.physicsCleanup = function() {
-                if (runner) Runner.stop(runner);
-                if (engine) World.clear(engine.world);
-                if (engine) Engine.clear(engine);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            };
-
-            window.physicsInit = initPhysics;
-            window._physicsEngine = function() { return engine; };
-        })();
-
         // Demo 1: Page Switching
         function switchDemo1Page(page) {
-            // Show loading state
-            var btn = event && event.target && event.target.closest('.demo-nav-tab, .demo-btn-sm');
-            if (btn) {
-                var originalText = btn.innerHTML;
-                btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite"><path d="M8 2a6 6 0 0111.47 2.4"/></svg> 加载中...';
-                btn.style.pointerEvents = 'none';
-                setTimeout(function() {
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = '';
-                    // Switch pages
-                    document.querySelectorAll('#demo1-panel .demo-page').forEach(p => p.classList.remove('active'));
-                    document.querySelectorAll('#demo1-panel .demo-nav-tab').forEach(t => t.classList.remove('active'));
-                    document.getElementById('demo1-page-' + page).classList.add('active');
-                    document.querySelector('#demo1-panel .demo-nav-tab[data-page="' + page + '"]').classList.add('active');
-                }, 1500);
-            } else {
-                // Direct call without button (e.g., from importDocument)
-                document.querySelectorAll('#demo1-panel .demo-page').forEach(p => p.classList.remove('active'));
-                document.querySelectorAll('#demo1-panel .demo-nav-tab').forEach(t => t.classList.remove('active'));
-                document.getElementById('demo1-page-' + page).classList.add('active');
-                document.querySelector('#demo1-panel .demo-nav-tab[data-page="' + page + '"]').classList.add('active');
-            }
+            document.querySelectorAll('#demo1-panel .demo-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#demo1-panel .demo-nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('demo1-page-' + page).classList.add('active');
+            document.querySelector('#demo1-panel .demo-nav-tab[data-page="' + page + '"]').classList.add('active');
         }
 
         function importDocument() {
@@ -3505,6 +2837,12 @@
             setTimeout(() => switchDemo1Page('preview'), 800);
         }
 
+        function quickImport() {
+            document.getElementById('demo1-url-input').value = 'https://my.feishu.cn/docx/HE6VdmVdaoYvTExiG7XcazSunce';
+            document.getElementById('demo1-import-msg').style.display = 'block';
+            setTimeout(() => switchDemo1Page('preview'), 800);
+        }
+
         function runDemo1Review() {
             const btn = event.target.closest('.demo-btn-sm');
             btn.disabled = true;
@@ -3515,459 +2853,136 @@
             }, 1500);
         }
 
-        // Review actions
-        var reviewStatus = {1: null, 2: null};
-        function confirmReview(id) {
-            reviewStatus[id] = 'confirmed';
-            var item = document.getElementById('review-item-' + id);
-            var btn = item.querySelector('.demo-action-btn.confirm');
-            btn.classList.add('confirmed');
-            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg> 已确认';
-            item.querySelector('.demo-review-status').textContent = '已确认';
-            item.querySelector('.demo-review-status').style.background = 'var(--success-light)';
-            item.querySelector('.demo-review-status').style.color = 'var(--success)';
-            checkAllReviews();
-        }
-        function ignoreReview(id) {
-            reviewStatus[id] = 'ignored';
-            var item = document.getElementById('review-item-' + id);
-            var btn = item.querySelector('.demo-action-btn.ignore');
-            btn.classList.add('ignored');
-            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg> 已忽略';
-            item.querySelector('.demo-review-status').textContent = '已忽略';
-            item.querySelector('.demo-review-status').style.background = 'var(--danger-light)';
-            item.querySelector('.demo-review-status').style.color = 'var(--danger)';
-            checkAllReviews();
-        }
-        function checkAllReviews() {
-            if (reviewStatus[1] && reviewStatus[2]) {
-                document.getElementById('writeback-section').style.display = 'block';
-            }
-        }
-        function writebackToFeishu() {
-            var btn = event.target.closest('.demo-btn-sm');
-            btn.disabled = true;
-            btn.innerHTML = '写回中...';
-            setTimeout(function() {
-                document.getElementById('writeback-section').style.display = 'none';
-                document.getElementById('writeback-success').style.display = 'block';
-            }, 1500);
-        }
-
-        // Library Modal
-        var libraryData = {
-            brief: {
-                title: '品牌 BRIEF',
-                desc: '汰渍品牌小红书合作 BRIEF 资料库',
-                files: [
-                    { name: '汰渍洗衣原液-202607小红书合作BRIEF.docx' }
-                ]
-            },
-            template: {
-                title: '审核模板',
-                desc: '汰渍品牌内容审核模板资料库',
-                files: [
-                    { name: '汰渍洗衣原液-202607小红书合作审核模板.docx' }
-                ]
-            },
-            rules: {
-                title: '合规规则',
-                desc: '汰渍品牌合规与平台规则资料库',
-                files: [
-                    { name: '汰渍洗衣原液-202607小红书合作合规规则.docx' }
-                ]
-            },
-            history: {
-                title: '历史审核',
-                desc: '已完成审核稿件归档',
-                files: []
-            }
-        };
-        function openLibraryModal(type) {
-            var data = libraryData[type];
-            document.getElementById('detail-title').textContent = data.title;
-            var contentEl = document.getElementById('detail-content');
-
-            if (data.files.length === 0) {
-                contentEl.innerHTML =
-                    '<div style="text-align:center;padding:32px 0;color:var(--text-tertiary);font-size:13px;">暂无资料</div>';
-            } else {
-                var html = '<div style="font-size:12px;color:var(--text-tertiary);margin-bottom:12px;">' + data.desc + '</div>';
-                html += '<div style="display:flex;flex-direction:column;gap:10px;">';
-                data.files.forEach(function(file) {
-                    html +=
-                        '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;" onclick="showNextTime()">' +
-                        '<div style="width:44px;height:44px;background:#E8F0FE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-                        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
-                        '</div>' +
-                        '<div style="flex:1;min-width:0;">' +
-                        '<div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + file.name + '</div>' +
-                        '<div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">Word 文档 · 点击打开</div>' +
-                        '</div>' +
-                        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M4 12l8-8M8 4h4v4"/></svg>' +
-                        '</div>';
-                });
-                html += '</div>';
-                contentEl.innerHTML = html;
-            }
-
-            document.getElementById('resource-detail-modal').style.display = 'flex';
-        }
-        function openResourceDetail(type) {
-            var data = libraryData[type];
-            document.getElementById('detail-title').textContent = data.title;
-            var contentEl = document.getElementById('detail-content');
-
-            if (data.type === 'doc') {
-                contentEl.innerHTML =
-                    '<div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;" onclick="showNextTime()">' +
-                    '<div style="width:44px;height:44px;background:#E8F0FE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-                    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
-                    '</div>' +
-                    '<div style="flex:1;min-width:0;">' +
-                    '<div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + data.fileName + '</div>' +
-                    '<div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">Word 文档 · 点击打开</div>' +
-                    '</div>' +
-                    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M4 12l8-8M8 4h4v4"/></svg>' +
-                    '</div>';
-            } else if (data.type === 'links') {
-                var html = '<div style="display:flex;flex-direction:column;gap:10px;">';
-                data.items.forEach(function(item, i) {
-                    html +=
-                        '<a href="' + item.url + '" onclick="event.preventDefault();showNextTime()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;text-decoration:none;cursor:pointer;transition:border-color 0.2s;">' +
-                        '<div style="width:28px;height:28px;background:var(--accent-light);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:var(--accent);">' + (i + 1) + '</div>' +
-                        '<div style="flex:1;min-width:0;">' +
-                        '<div style="font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + item.name + '</div>' +
-                        '</div>' +
-                        '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5"><path d="M4 12l8-8M8 4h4v4"/></svg>' +
-                        '</a>';
-                });
-                html += '</div>';
-                contentEl.innerHTML = html;
-            }
-
-            document.getElementById('resource-detail-modal').style.display = 'flex';
-        }
-        function closeResourceDetail() {
-            document.getElementById('resource-detail-modal').style.display = 'none';
-        }
-        function showNextTime() {
-            // Create toast
-            var toast = document.createElement('div');
-            toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--text);color:var(--bg);padding:16px 32px;border-radius:12px;font-size:15px;font-weight:600;z-index:9999;animation:fadeIn 0.3s ease;';
-            toast.textContent = '下次一定 🙏';
-            document.body.appendChild(toast);
-            setTimeout(function() {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s ease';
-                setTimeout(function() { toast.remove(); }, 300);
-            }, 1500);
-        }
-
-        // Demo 2: Page Switching with loading
+        // Demo 2: Page Switching
         function switchDemo2Page(page) {
-            // Show loading for feishu tab
-            if (page === 'feishu') {
-                var feishuList = document.getElementById('demo2-feishu-list');
-                if (feishuList && feishuList.children.length === 0) {
-                    feishuList.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px 0;"><div style="display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:8px;font-size:12px;color:var(--text-tertiary);">加载中...</div></td></tr>';
-                }
-            }
-
             document.querySelectorAll('#demo2-panel .demo-page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('#demo2-panel .demo-kol-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('demo2-page-' + page).classList.add('active');
-            // Tab selection is optional (results page has no tab)
-            var tab = document.querySelector('#demo2-panel .demo-kol-tab[data-page="' + page + '"]');
-            if (tab) tab.classList.add('active');
+            document.querySelector('#demo2-panel .demo-kol-tab[data-page="' + page + '"]').classList.add('active');
         }
-
-        // KOL selection state
-        var kolSelected = {};
-        var currentKOLs = [];
-
-        // Semantic category mapping
-        var categoryMapping = {
-            '母婴育儿': ['母婴用品', '母婴育儿', '育儿', '母婴', '宝宝', '妈妈'],
-            '居家生活': ['家居日用', '家居', '居家', '生活', '收纳', '家电', '清洁'],
-            '美妆护肤': ['美妆护肤', '美妆', '护肤', '化妆品', '个护'],
-            '美食饮料': ['食品饮料', '美食', '饮料', '食品', '零食', '饮品']
-        };
 
         function startDemo2Recommend() {
             const btn = document.getElementById('demo2-start-btn');
             btn.disabled = true;
             btn.textContent = '推荐中...';
-            kolSelected = {};
+            
+            setTimeout(() => {
+                const mockKOLs = [
+                    { name: '鹿可可 Yolo', tags: ['家居生活', '母婴'], score: '92', desc: '亲切知性宝妈风，清爽干净的生活感测评', followers: '12.6w', engagement: '1000-3000', comments: '50-200', recommend: '宝妈人设契合度高，图文报价 3058 元在预算内，擅长家电家居测评。', pills: [{text:'性价比高',color:'green'},{text:'专业度强',color:'blue'},{text:'风格独特',color:'purple'}], price: '3058', avatar: '鹿' },
+                    { name: '天天在家', tags: ['母婴育儿', '家居'], score: '95', desc: '温馨家庭日常，真实亲切的育儿与生活分享', followers: '12.8w', engagement: '1000-3000', comments: '50-200', recommend: '母婴 + 家居双领域标签，直击中产宝妈群体，虽报价略高但内容场景极契合。', pills: [{text:'转化率高',color:'green'},{text:'粉丝黏性好',color:'blue'},{text:'口碑好',color:'green'}], price: '10000', avatar: '天' },
+                    { name: '诗哥的家居生活', tags: ['家居家装'], score: '85', desc: '理性专业设计师风，干货满满的选购攻略', followers: '11.3w', engagement: '1000-3000', comments: '50-200', recommend: '女粉占比 92% 极高，擅长理性测评，虽人设为设计师但家居属性强，适合硬核对比。', pills: [{text:'专业度强',color:'blue'},{text:'内容优质',color:'green'},{text:'种草力强',color:'purple'}], price: '9000', avatar: '诗' }
+                ];
 
-            // Show loading skeleton
-            var loadingHTML = '<div style="text-align:center;padding:40px 0;"><div style="display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:12px;font-size:13px;color:var(--text-tertiary);">AI 正在匹配达人...</div></div>';
-            document.getElementById('demo2-kol-cards').innerHTML = loadingHTML;
-            switchDemo2Page('results');
+                const cardsHTML = mockKOLs.map(k => `
+                    <div class="demo-kol-card">
+                        <div class="demo-kol-card-top">
+                            <div class="demo-kol-card-checkbox"></div>
+                            <div class="demo-kol-card-avatar">${k.avatar}</div>
+                            <div class="demo-kol-card-info">
+                                <div class="demo-kol-card-name">${k.name}</div>
+                                <div class="demo-kol-card-tags">
+                                    ${k.tags.map(t => `<span class="demo-kol-card-tag">${t}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="demo-kol-card-score">${k.score}</div>
+                        </div>
+                        <div class="demo-kol-card-desc">${k.desc}</div>
+                        <div class="demo-kol-card-stats">
+                            <div class="demo-kol-card-stat">
+                                <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z"/></svg>
+                                ${k.followers}
+                            </div>
+                            <div class="demo-kol-card-stat">
+                                <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 2l2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3 4-.5z"/></svg>
+                                ${k.engagement}
+                            </div>
+                            <div class="demo-kol-card-stat">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 8h12"/></svg>
+                                ${k.comments}
+                            </div>
+                        </div>
+                        <div class="demo-kol-card-recommend">
+                            <strong>AI 推荐：</strong>${k.recommend}
+                        </div>
+                        <div class="demo-kol-card-bottom">
+                            <div class="demo-kol-card-pills">
+                                ${k.pills.map(p => `<span class="demo-kol-card-pill ${p.color}">${p.text}</span>`).join('')}
+                            </div>
+                            <div class="demo-kol-card-price">${k.price}</div>
+                        </div>
+                    </div>
+                `).join('');
 
-            // Get selected category
-            var category = document.getElementById('demo2-category').value;
-            var keywords = categoryMapping[category] || [category];
-            var startTime = Date.now();
+                document.getElementById('demo2-kol-cards').innerHTML = cardsHTML;
+                switchDemo2Page('results');
+                btn.disabled = false;
+                btn.textContent = '开始推荐';
+            }, 1500);
+        }
 
-            // Load KOL data immediately
-            fetch('resource/KOL/kol_data.json')
-                .then(response => response.json())
-                .then(allKOLs => {
-                    // Semantic matching - use 内容主题 field
-                    var filteredKOLs = allKOLs.filter(kol => {
-                        var kolCategory = (kol['内容主题'] || '').toLowerCase();
-                        return keywords.some(keyword => kolCategory.includes(keyword.toLowerCase()));
+        // Generate Feishu KOL List
+        const feishuKOLs = [
+            { name: '鹿可可 Yolo', category: '家居生活/母婴', followers: '12.6w', imgPrice: '3,058', videoPrice: '5,500', persona: '知性宝妈', style: '清爽生活测评', exposure: '8.5w', engagement: '2,100' },
+            { name: '天天在家', category: '母婴育儿/家居', followers: '12.8w', imgPrice: '10,000', videoPrice: '18,000', persona: '温馨家庭', style: '育儿生活分享', exposure: '9.2w', engagement: '2,400' },
+            { name: '诗哥的家居生活', category: '家居家装', followers: '11.3w', imgPrice: '9,000', videoPrice: '16,000', persona: '理性设计师', style: '干货选购攻略', exposure: '7.8w', engagement: '1,900' },
+            { name: '小敏妈日记', category: '母婴育儿', followers: '8.5w', imgPrice: '2,500', videoPrice: '4,500', persona: '普通宝妈', style: '真实育儿日常', exposure: '6.2w', engagement: '1,600' },
+            { name: '家居种草机', category: '家居生活', followers: '15.2w', imgPrice: '4,200', videoPrice: '7,800', persona: '家居达人', style: '好物推荐测评', exposure: '11w', engagement: '2,800' },
+            { name: '辣妈成长记', category: '母婴育儿', followers: '9.8w', imgPrice: '3,200', videoPrice: '5,800', persona: '成长型妈妈', style: '母婴好物分享', exposure: '7.1w', engagement: '1,800' },
+            { name: '生活家阿杰', category: '家居生活', followers: '18.5w', imgPrice: '5,500', videoPrice: '9,500', persona: '品质生活', style: '生活方式分享', exposure: '13w', engagement: '3,200' },
+            { name: '萌娃与家', category: '母婴/家居', followers: '10.2w', imgPrice: '3,800', videoPrice: '6,500', persona: '萌娃家庭', style: '亲子家居生活', exposure: '8w', engagement: '2,000' },
+            { name: '收纳师小林', category: '家居生活', followers: '13.6w', imgPrice: '4,500', videoPrice: '8,000', persona: '专业收纳师', style: '收纳整理技巧', exposure: '9.5w', engagement: '2,500' },
+            { name: '二胎妈妈 Lily', category: '母婴育儿', followers: '11.8w', imgPrice: '3,500', videoPrice: '6,200', persona: '二胎宝妈', style: '多孩家庭日常', exposure: '8.8w', engagement: '2,200' }
+        ];
+
+        const feishuListHTML = feishuKOLs.map(k => `
+            <tr>
+                <td>
+                    <div class="demo-kol-list-blogger">
+                        <div class="demo-kol-list-avatar">${k.name[0]}</div>
+                        <div>
+                            <div class="demo-kol-list-name">${k.name}</div>
+                            <div class="demo-kol-list-category">${k.category}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>${k.followers}</td>
+                <td>¥${k.imgPrice}</td>
+                <td>¥${k.videoPrice}</td>
+                <td>${k.persona}</td>
+                <td>${k.style}</td>
+                <td>${k.exposure}</td>
+                <td>${k.engagement}</td>
+            </tr>
+        `).join('');
+
+        document.getElementById('demo2-feishu-list').innerHTML = feishuListHTML;
+
+        // Metric counters
+        document.querySelectorAll('.metric-num[data-target]').forEach(el => {
+            const target = +el.dataset.target;
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 60%',
+                onEnter: () => {
+                    gsap.to(el, {
+                        innerText: target,
+                        duration: 1.5,
+                        ease: 'power2.out',
+                        snap: { innerText: 1 },
+                        onUpdate() { el.textContent = Math.round(parseFloat(el.textContent)) + '%'; }
                     });
-
-                    if (filteredKOLs.length === 0) {
-                        filteredKOLs = allKOLs;
-                    }
-
-                    // Shuffle and take up to 6
-                    filteredKOLs = filteredKOLs.sort(() => Math.random() - 0.5).slice(0, 6);
-                    currentKOLs = filteredKOLs;
-
-                    // Calculate remaining delay (minimum 1.5s loading)
-                    var elapsed = Date.now() - startTime;
-                    var remainingDelay = Math.max(0, 1500 - elapsed);
-
-                    setTimeout(function() {
-                        // Generate cards
-                        const cardsHTML = filteredKOLs.map((k, i) => {
-                            var followers = k['粉丝量'] || 0;
-                            var followersStr = followers >= 10000 ? (followers / 10000).toFixed(1) + 'w' : followers.toString();
-                            var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(k['达人昵称']) + '&background=FF2442&color=fff&size=80&font-size=0.4';
-                            var tags = (k['内容主题'] || '').split(',').map(t => t.trim()).slice(0, 3);
-                            var desc = (k['人设'] || '暂无简介').split(',')[0];
-                            var imgPrice = k['图文报价'] || 0;
-                            var price = imgPrice > 0 ? '¥' + imgPrice.toLocaleString() : '议价';
-                            var femaleRatio = k['女粉占比'] || 0;
-                            var health = k['健康度'] || '';
-                            var contentFormat = (k['内容形式'] || '图文').split(',')[0];
-
-                            return `
-                                <div class="demo-kol-card" id="kol-card-${i}" onclick="toggleKOL(${i})">
-                                    <div class="demo-kol-card-top">
-                                        <div class="demo-kol-card-checkbox" id="kol-check-${i}"></div>
-                                        <div class="demo-kol-card-avatar" style="background:url(${avatarUrl}) center/cover;border-radius:50%;"></div>
-                                        <div class="demo-kol-card-info">
-                                            <div class="demo-kol-card-name"><a href="${k['主页链接']}" target="_blank" style="color:inherit;text-decoration:none;" onclick="event.stopPropagation();">${k['达人昵称']}</a></div>
-                                            <div class="demo-kol-card-tags">
-                                                ${tags.map(t => `<span class="demo-kol-card-tag">${t}</span>`).join('')}
-                                            </div>
-                                        </div>
-                                        <div class="demo-kol-card-score">${Math.floor(Math.random() * 15) + 80}</div>
-                                    </div>
-                                    <div class="demo-kol-card-desc">${desc}</div>
-                                    <div class="demo-kol-card-stats">
-                                        <div class="demo-kol-card-stat">
-                                            <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z"/></svg>
-                                            ${followersStr}
-                                        </div>
-                                        <div class="demo-kol-card-stat">
-                                            <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 2l2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3 4-.5z"/></svg>
-                                            ${femaleRatio}%
-                                        </div>
-                                        <div class="demo-kol-card-stat">
-                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 8h12"/></svg>
-                                            ${contentFormat}
-                                        </div>
-                                    </div>
-                                    <div class="demo-kol-card-recommend">
-                                        <strong>AI 推荐：</strong>${health === '优秀' ? '账号健康度优秀，' : ''}${desc}人设契合，图文报价 ${imgPrice > 0 ? imgPrice.toLocaleString() : '待定'} 元。
-                                    </div>
-                                    <div class="demo-kol-card-bottom">
-                                        <div class="demo-kol-card-pills">
-                                            ${health === '优秀' ? '<span class="demo-kol-card-pill green">健康度优</span>' : ''}
-                                            ${femaleRatio > 70 ? '<span class="demo-kol-card-pill blue">女粉占比高</span>' : ''}
-                                            <span class="demo-kol-card-pill purple">${contentFormat}</span>
-                                        </div>
-                                        <div class="demo-kol-card-price">${price}</div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('');
-
-                        document.getElementById('demo2-kol-cards').innerHTML = cardsHTML;
-
-                        // Update KOL count
-                        var countEl = document.querySelector('.demo-kol-results-count');
-                        if (countEl) {
-                            countEl.innerHTML = '共推荐 <strong>' + filteredKOLs.length + '</strong> 位达人';
-                        }
-
-                        // Update button state
-                        btn.disabled = false;
-                        btn.textContent = '再次推荐';
-                        btn.onclick = function() {
-                            btn.textContent = '推荐中...';
-                            btn.disabled = true;
-                            startDemo2Recommend();
-                        };
-                    }, remainingDelay);
-                })
-                .catch(error => {
-                    console.error('Error loading KOL data:', error);
-                    btn.disabled = false;
-                    btn.textContent = '开始推荐';
-                });
-        }
-
-        function toggleKOL(index) {
-            var card = document.getElementById('kol-card-' + index);
-            var checkbox = document.getElementById('kol-check-' + index);
-            if (kolSelected[index]) {
-                delete kolSelected[index];
-                card.style.borderColor = '';
-                checkbox.style.background = '';
-                checkbox.style.borderColor = '';
-            } else {
-                kolSelected[index] = true;
-                card.style.borderColor = '#FF2442';
-                checkbox.style.background = '#FF2442';
-                checkbox.style.borderColor = '#FF2442';
-            }
-            updateExportCount();
-        }
-
-        function selectAllKOL() {
-            var cards = document.querySelectorAll('.demo-kol-card');
-            var allSelected = Object.keys(kolSelected).length === cards.length;
-            cards.forEach(function(card, i) {
-                var checkbox = document.getElementById('kol-check-' + i);
-                if (allSelected) {
-                    delete kolSelected[i];
-                    card.style.borderColor = '';
-                    checkbox.style.background = '';
-                    checkbox.style.borderColor = '';
-                } else {
-                    kolSelected[i] = true;
-                    card.style.borderColor = '#FF2442';
-                    checkbox.style.background = '#FF2442';
-                    checkbox.style.borderColor = '#FF2442';
-                }
+                },
+                once: true
             });
-            updateExportCount();
-        }
-
-        function updateExportCount() {
-            var count = Object.keys(kolSelected).length;
-            var btn = document.querySelector('.demo-kol-action:last-child');
-            if (btn) btn.textContent = '导出深度数据 (' + count + ')';
-        }
-
-        function exportSelectedKOLs() {
-            var selectedIndices = Object.keys(kolSelected);
-            if (selectedIndices.length === 0) {
-                showNextTime();
-                return;
-            }
-
-            // Get selected KOLs data
-            var selectedKOLs = selectedIndices.map(i => currentKOLs[i]).filter(Boolean);
-
-            if (selectedKOLs.length === 0) {
-                showNextTime();
-                return;
-            }
-
-            // Get all field names from first KOL
-            var fields = Object.keys(selectedKOLs[0]);
-
-            // Create CSV content with BOM
-            var csvContent = '﻿';
-            csvContent += fields.join(',') + '\n';
-
-            selectedKOLs.forEach((kol, index) => {
-                var row = fields.map(field => {
-                    var val = kol[field] !== undefined ? kol[field] : '';
-                    // Wrap strings with quotes if they contain commas
-                    if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
-                        return '"' + val.replace(/"/g, '""') + '"';
-                    }
-                    return val;
-                });
-                csvContent += row.join(',') + '\n';
-            });
-
-            // Download CSV
-            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = '达人推荐_' + new Date().toISOString().slice(0, 10) + '.csv';
-            link.click();
-            URL.revokeObjectURL(link.href);
-        }
-
-        // Generate Feishu KOL List from JSON
-        fetch('resource/KOL/kol_data.json')
-            .then(response => response.json())
-            .then(allKOLs => {
-                const feishuListHTML = allKOLs.map(k => {
-                    var followers = k['粉丝量'] || 0;
-                    var followersStr = followers >= 10000 ? (followers / 10000).toFixed(1) + 'w' : followers.toString();
-                    var name = k['达人昵称'] || '';
-                    var avatar = name.charAt(0);
-                    var categories = (k['内容主题'] || '').split(',').map(t => t.trim()).slice(0, 2).join('/');
-                    var persona = (k['人设'] || '达人').split(',')[0];
-                    var contentFormat = (k['内容形式'] || '图文').split(',')[0];
-                    var imgPrice = k['图文报价'] || 0;
-                    var videoPrice = k['视频报价'] || 0;
-                    var imgPriceStr = imgPrice > 0 ? '¥' + imgPrice.toLocaleString() : '议价';
-                    var videoPriceStr = videoPrice > 0 ? '¥' + videoPrice.toLocaleString() : '议价';
-                    var femaleRatio = k['女粉占比'] || 0;
-                    var health = k['健康度'] || '-';
-                    var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=FF2442&color=fff&size=60&font-size=0.4';
-
-                    return `
-                        <tr>
-                            <td>
-                                <div class="demo-kol-list-blogger">
-                                    <div class="demo-kol-list-avatar" style="background:url(${avatarUrl}) center/cover;border-radius:50%;"></div>
-                                    <div>
-                                        <div class="demo-kol-list-name"><a href="${k['主页链接']}" target="_blank" style="color:inherit;text-decoration:none;">${name}</a></div>
-                                        <div class="demo-kol-list-category">${categories}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>${followersStr}</td>
-                            <td>${imgPriceStr}</td>
-                            <td>${videoPriceStr}</td>
-                            <td>${persona}</td>
-                            <td>${contentFormat}</td>
-                            <td>${femaleRatio}%</td>
-                            <td>${health}</td>
-                        </tr>
-                    `;
-                }).join('');
-
-                document.getElementById('demo2-feishu-list').innerHTML = feishuListHTML;
-            })
-            .catch(error => {
-                console.error('Error loading Feishu KOL list:', error);
-            });
+        });
 
         // Scroll reveal
-        gsap.utils.toArray('.exp-item, .cap-cell').forEach(el => {
+        gsap.utils.toArray('.project-row, .exp-item, .metric-cell, .cap-cell').forEach(el => {
             gsap.from(el, {
                 opacity: 0, y: 16,
                 duration: 0.6, ease: 'power2.out',
                 scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
             });
-        });
-
-        // Contact card progressive reveal
-        gsap.to('.contact-profile-card', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: '.contact-profile-card',
-                start: 'top 80%',
-                toggleActions: 'play none none none'
-            }
         });
 
         // Dark Mode Toggle
@@ -4014,7 +3029,7 @@
 
         // Update active dot on scroll
         function updateProgressDots() {
-            const sections = ['hero', 'projects', 'experience', 'capabilities', 'contact'];
+            const sections = ['hero', 'projects', 'metrics', 'experience', 'capabilities', 'contact'];
             const dots = document.querySelectorAll('.progress-dot');
             const scrollPos = window.scrollY + window.innerHeight / 2;
 

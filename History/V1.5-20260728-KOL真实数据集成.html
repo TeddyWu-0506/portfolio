@@ -17,28 +17,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
     <style>
-       /* Theme transition: register properties so CSS variables animate on theme toggle */
-       @property --bg { syntax: '<color>'; inherits: true; initial-value: #FAFAFA; }
-       @property --surface { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
-       @property --surface-hover { syntax: '<color>'; inherits: true; initial-value: #F5F5F5; }
-       @property --text { syntax: '<color>'; inherits: true; initial-value: #1A1A1A; }
-       @property --text-secondary { syntax: '<color>'; inherits: true; initial-value: #6B7280; }
-       @property --text-tertiary { syntax: '<color>'; inherits: true; initial-value: #9CA3AF; }
-       @property --border { syntax: '<color>'; inherits: true; initial-value: #E5E7EB; }
-       @property --border-light { syntax: '<color>'; inherits: true; initial-value: #F3F4F6; }
-       @property --accent { syntax: '<color>'; inherits: true; initial-value: #5E6AD2; }
-       @property --accent-hover { syntax: '<color>'; inherits: true; initial-value: #4F5BC4; }
-       @property --accent-light { syntax: '<color>'; inherits: true; initial-value: rgba(94,106,210,0.08); }
-       @property --success { syntax: '<color>'; inherits: true; initial-value: #10B981; }
-       @property --success-light { syntax: '<color>'; inherits: true; initial-value: rgba(16,185,129,0.08); }
-       @property --warning { syntax: '<color>'; inherits: true; initial-value: #F59E0B; }
-       @property --warning-light { syntax: '<color>'; inherits: true; initial-value: rgba(245,158,11,0.08); }
-       @property --danger { syntax: '<color>'; inherits: true; initial-value: #EF4444; }
-       @property --danger-light { syntax: '<color>'; inherits: true; initial-value: rgba(239,68,68,0.08); }
-       @property --shadow-sm { syntax: '<shadow>'; inherits: true; initial-value: 0 1px 2px rgba(0,0,0,0.04); }
-       @property --shadow-md { syntax: '<shadow>'; inherits: true; initial-value: 0 4px 12px rgba(0,0,0,0.06); }
-       @property --shadow-lg { syntax: '<shadow>'; inherits: true; initial-value: 0 8px 24px rgba(0,0,0,0.08); }
-
        :root {
            --bg: #FAFAFA;
            --surface: #FFFFFF;
@@ -64,9 +42,6 @@
            --radius-lg: 12px;
            --gm: 40px;
        }
-
-       html { transition: color 0.5s, background-color 0.5s; }
-       body { transition: color 0.5s, background-color 0.5s; }
 
         
 [data-theme="dark"] .loader-3d {
@@ -180,7 +155,6 @@
     background: #FAFAFA;
     z-index: 9999;
     overflow: hidden;
-    transition: background 0.5s;
 }
 
 .loader-3d.done {
@@ -232,12 +206,11 @@
     top: 50%;
     margin-left: -1500px;
     margin-top: -1500px;
-    background-image:
+    background-image: 
         linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px);
     background-size: 150px 150px;
     background-color: #FAFAFA;
-    transition: background-color 0.5s;
 }
 
 .tunnel-wall--left { transform: translateX(-500px) rotateY(90deg); }
@@ -441,7 +414,6 @@
             background: rgba(250,250,250,0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-light);
-            transition: background 0.5s, border-color 0.5s;
         }
 
         .nav-logo {
@@ -1819,150 +1791,7 @@
             font-size: clamp(32px, 5vw, 48px);
             font-weight: 800;
             letter-spacing: -0.03em;
-            margin-bottom: 12px;
-        }
-
-        .contact-subtitle {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-        }
-
-        .contact-profile-card {
-            display: flex;
-            align-items: stretch;
-            gap: 40px;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: var(--shadow-lg);
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .contact-profile-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .contact-profile-left {
-            flex-shrink: 0;
-        }
-
-        .contact-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 16px;
-            object-fit: cover;
-        }
-
-        .contact-profile-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .contact-name {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 4px;
-        }
-
-        .contact-role {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .contact-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .contact-detail-icon {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .contact-detail-value a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .contact-detail-value a:hover {
-            color: var(--accent);
-        }
-
-        .contact-social {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
-        }
-
-        .contact-social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .contact-social-link:hover {
-            background: var(--text);
-            color: var(--bg);
-            border-color: var(--text);
-        }
-
-        .contact-social-link svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .contact-qr-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .contact-qr {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
-
-        .contact-qr-label {
-            font-size: 11px;
-            color: var(--text-tertiary);
+            margin-bottom: 32px;
         }
 
         .contact-info {
@@ -2019,10 +1848,6 @@
             .nav-links { display: none; }
             .hamburger { display: flex; }
             .demo-library-grid { grid-template-columns: 1fr; }
-            .contact-profile-card { flex-direction: column; align-items: center; text-align: center; }
-            .contact-avatar { width: 140px; height: 140px; }
-            .contact-details { align-items: center; }
-            .contact-qr-wrapper { margin-top: 20px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -2874,7 +2699,7 @@
                                 </div>
                                 <div class="demo-kol-cards" id="demo2-kol-cards"></div>
                                 <div class="demo-kol-footer">
-                                    以上数据均为真实的小红书达人数据（只取21个做展示），数据截止时间2026年6月
+                                    AI 生成的达人推荐仅供参考 · 数据为模拟生成 · 实际合作请以达人真实数据为准
                                 </div>
                             </div>
 
@@ -3019,42 +2844,26 @@
 
        <section class="contact" id="contact">
             <h2 class="contact-title">Let's Talk</h2>
-            <p class="contact-subtitle">期待与你交流</p>
-
-            <div class="contact-profile-card">
-                <div class="contact-profile-left">
-                    <img src="resource/image/头像.jpg" alt="Teddy Wu" class="contact-avatar">
+            <div class="curved-email-wrapper">
+                <div id="curved-email-input"></div>
+            </div>
+            <div class="contact-info">
+                <div>
+                    <div class="contact-item-label">Phone</div>
+                    <div class="contact-item-value"><a href="tel:13680369508">13680369508</a></div>
                 </div>
-                <div class="contact-profile-right">
-                    <h3 class="contact-name">Teddy Wu</h3>
-                    <p class="contact-role">AI Product Manager · 广州</p>
-
-                    <div class="contact-details">
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📍</span>
-                            <span>广州, 中国</span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📧</span>
-                            <span class="contact-detail-value">
-                                <a href="mailto:1502110191@qq.com">1502110191@qq.com</a>
-                            </span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📱</span>
-                            <span class="contact-detail-value">
-                                <a href="tel:13680369508">13680369508</a>
-                            </span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">💬</span>
-                            <span class="contact-detail-value">TeddyGorrr</span>
+                <div>
+                    <div class="contact-item-label">WeChat</div>
+                    <div class="contact-item-value wechat-qr-wrapper">
+                        <button class="copy-btn" onclick="toggleWechatQR()">
+                            TeddyGorrr
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        </button>
+                        <div class="wechat-qr-popup" id="wechatQR">
+                            <img src="resource/image/微信二维码.jpeg" alt="WeChat QR Code">
+                            <p>扫码添加微信</p>
                         </div>
                     </div>
-                </div>
-                <div class="contact-qr-wrapper">
-                    <img src="resource/image/微信二维码.jpeg" alt="WeChat QR" class="contact-qr">
-                    <span class="contact-qr-label">扫码添加微信</span>
                 </div>
             </div>
         </section>
@@ -3664,22 +3473,12 @@
             }, 1500);
         }
 
-        // Demo 2: Page Switching with loading
+        // Demo 2: Page Switching
         function switchDemo2Page(page) {
-            // Show loading for feishu tab
-            if (page === 'feishu') {
-                var feishuList = document.getElementById('demo2-feishu-list');
-                if (feishuList && feishuList.children.length === 0) {
-                    feishuList.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px 0;"><div style="display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:8px;font-size:12px;color:var(--text-tertiary);">加载中...</div></td></tr>';
-                }
-            }
-
             document.querySelectorAll('#demo2-panel .demo-page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('#demo2-panel .demo-kol-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('demo2-page-' + page).classList.add('active');
-            // Tab selection is optional (results page has no tab)
-            var tab = document.querySelector('#demo2-panel .demo-kol-tab[data-page="' + page + '"]');
-            if (tab) tab.classList.add('active');
+            document.querySelector('#demo2-panel .demo-kol-tab[data-page="' + page + '"]').classList.add('active');
         }
 
         // KOL selection state
@@ -3700,26 +3499,21 @@
             btn.textContent = '推荐中...';
             kolSelected = {};
 
-            // Show loading skeleton
-            var loadingHTML = '<div style="text-align:center;padding:40px 0;"><div style="display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:12px;font-size:13px;color:var(--text-tertiary);">AI 正在匹配达人...</div></div>';
-            document.getElementById('demo2-kol-cards').innerHTML = loadingHTML;
-            switchDemo2Page('results');
-
             // Get selected category
             var category = document.getElementById('demo2-category').value;
             var keywords = categoryMapping[category] || [category];
-            var startTime = Date.now();
 
-            // Load KOL data immediately
+            // Load KOL data
             fetch('resource/KOL/kol_data.json')
                 .then(response => response.json())
                 .then(allKOLs => {
-                    // Semantic matching - use 内容主题 field
+                    // Semantic matching - find KOLs whose category contains any keyword
                     var filteredKOLs = allKOLs.filter(kol => {
-                        var kolCategory = (kol['内容主题'] || '').toLowerCase();
+                        var kolCategory = kol.category.toLowerCase();
                         return keywords.some(keyword => kolCategory.includes(keyword.toLowerCase()));
                     });
 
+                    // If no matches, show all
                     if (filteredKOLs.length === 0) {
                         filteredKOLs = allKOLs;
                     }
@@ -3728,84 +3522,69 @@
                     filteredKOLs = filteredKOLs.sort(() => Math.random() - 0.5).slice(0, 6);
                     currentKOLs = filteredKOLs;
 
-                    // Calculate remaining delay (minimum 1.5s loading)
-                    var elapsed = Date.now() - startTime;
-                    var remainingDelay = Math.max(0, 1500 - elapsed);
+                    // Generate cards
+                    const cardsHTML = filteredKOLs.map((k, i) => {
+                        var followersStr = k.followers >= 10000 ? (k.followers / 10000).toFixed(1) + 'w' : k.followers.toString();
+                        var avatar = k.name.charAt(0);
+                        var tags = k.category.split(',').map(t => t.trim()).slice(0, 3);
+                        var desc = k.persona || '暂无简介';
+                        var price = k.img_price > 0 ? '¥' + k.img_price.toLocaleString() : '议价';
 
-                    setTimeout(function() {
-                        // Generate cards
-                        const cardsHTML = filteredKOLs.map((k, i) => {
-                            var followers = k['粉丝量'] || 0;
-                            var followersStr = followers >= 10000 ? (followers / 10000).toFixed(1) + 'w' : followers.toString();
-                            var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(k['达人昵称']) + '&background=FF2442&color=fff&size=80&font-size=0.4';
-                            var tags = (k['内容主题'] || '').split(',').map(t => t.trim()).slice(0, 3);
-                            var desc = (k['人设'] || '暂无简介').split(',')[0];
-                            var imgPrice = k['图文报价'] || 0;
-                            var price = imgPrice > 0 ? '¥' + imgPrice.toLocaleString() : '议价';
-                            var femaleRatio = k['女粉占比'] || 0;
-                            var health = k['健康度'] || '';
-                            var contentFormat = (k['内容形式'] || '图文').split(',')[0];
-
-                            return `
-                                <div class="demo-kol-card" id="kol-card-${i}" onclick="toggleKOL(${i})">
-                                    <div class="demo-kol-card-top">
-                                        <div class="demo-kol-card-checkbox" id="kol-check-${i}"></div>
-                                        <div class="demo-kol-card-avatar" style="background:url(${avatarUrl}) center/cover;border-radius:50%;"></div>
-                                        <div class="demo-kol-card-info">
-                                            <div class="demo-kol-card-name"><a href="${k['主页链接']}" target="_blank" style="color:inherit;text-decoration:none;" onclick="event.stopPropagation();">${k['达人昵称']}</a></div>
-                                            <div class="demo-kol-card-tags">
-                                                ${tags.map(t => `<span class="demo-kol-card-tag">${t}</span>`).join('')}
-                                            </div>
-                                        </div>
-                                        <div class="demo-kol-card-score">${Math.floor(Math.random() * 15) + 80}</div>
-                                    </div>
-                                    <div class="demo-kol-card-desc">${desc}</div>
-                                    <div class="demo-kol-card-stats">
-                                        <div class="demo-kol-card-stat">
-                                            <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z"/></svg>
-                                            ${followersStr}
-                                        </div>
-                                        <div class="demo-kol-card-stat">
-                                            <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 2l2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3 4-.5z"/></svg>
-                                            ${femaleRatio}%
-                                        </div>
-                                        <div class="demo-kol-card-stat">
-                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 8h12"/></svg>
-                                            ${contentFormat}
+                        return `
+                            <div class="demo-kol-card" id="kol-card-${i}" onclick="toggleKOL(${i})">
+                                <div class="demo-kol-card-top">
+                                    <div class="demo-kol-card-checkbox" id="kol-check-${i}"></div>
+                                    <div class="demo-kol-card-avatar">${avatar}</div>
+                                    <div class="demo-kol-card-info">
+                                        <div class="demo-kol-card-name"><a href="${k.url}" target="_blank" style="color:inherit;text-decoration:none;" onclick="event.stopPropagation();">${k.name}</a></div>
+                                        <div class="demo-kol-card-tags">
+                                            ${tags.map(t => `<span class="demo-kol-card-tag">${t}</span>`).join('')}
                                         </div>
                                     </div>
-                                    <div class="demo-kol-card-recommend">
-                                        <strong>AI 推荐：</strong>${health === '优秀' ? '账号健康度优秀，' : ''}${desc}人设契合，图文报价 ${imgPrice > 0 ? imgPrice.toLocaleString() : '待定'} 元。
+                                    <div class="demo-kol-card-score">${Math.floor(Math.random() * 15) + 80}</div>
+                                </div>
+                                <div class="demo-kol-card-desc">${desc}</div>
+                                <div class="demo-kol-card-stats">
+                                    <div class="demo-kol-card-stat">
+                                        <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z"/></svg>
+                                        ${followersStr}
                                     </div>
-                                    <div class="demo-kol-card-bottom">
-                                        <div class="demo-kol-card-pills">
-                                            ${health === '优秀' ? '<span class="demo-kol-card-pill green">健康度优</span>' : ''}
-                                            ${femaleRatio > 70 ? '<span class="demo-kol-card-pill blue">女粉占比高</span>' : ''}
-                                            <span class="demo-kol-card-pill purple">${contentFormat}</span>
-                                        </div>
-                                        <div class="demo-kol-card-price">${price}</div>
+                                    <div class="demo-kol-card-stat">
+                                        <svg viewBox="0 0 16 16" fill="#FF2442"><path d="M8 2l2 4 4 .5-3 3 1 4-4-2-4 2 1-4-3-3 4-.5z"/></svg>
+                                        ${k.female_ratio}%
+                                    </div>
+                                    <div class="demo-kol-card-stat">
+                                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 8h12"/></svg>
+                                        ${k.content_format.split(',')[0] || '图文'}
                                     </div>
                                 </div>
-                            `;
-                        }).join('');
+                                <div class="demo-kol-card-recommend">
+                                    <strong>AI 推荐：</strong>${k.health === '优秀' ? '账号健康度优秀，' : ''}${k.persona.split(',')[0] || '达人'}人设契合，图文报价 ${k.img_price > 0 ? k.img_price.toLocaleString() : '待定'} 元。
+                                </div>
+                                <div class="demo-kol-card-bottom">
+                                    <div class="demo-kol-card-pills">
+                                        ${k.health === '优秀' ? '<span class="demo-kol-card-pill green">健康度优</span>' : ''}
+                                        ${k.female_ratio > 70 ? '<span class="demo-kol-card-pill blue">女粉占比高</span>' : ''}
+                                        <span class="demo-kol-card-pill purple">${k.content_format.split(',')[0] || '图文'}</span>
+                                    </div>
+                                    <div class="demo-kol-card-price">${price}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
 
-                        document.getElementById('demo2-kol-cards').innerHTML = cardsHTML;
+                    document.getElementById('demo2-kol-cards').innerHTML = cardsHTML;
 
-                        // Update KOL count
-                        var countEl = document.querySelector('.demo-kol-results-count');
-                        if (countEl) {
-                            countEl.innerHTML = '共推荐 <strong>' + filteredKOLs.length + '</strong> 位达人';
-                        }
+                    // Update button state BEFORE switching page
+                    btn.disabled = false;
+                    btn.textContent = '再次推荐';
+                    btn.onclick = function() {
+                        btn.textContent = '推荐中...';
+                        btn.disabled = true;
+                        startDemo2Recommend();
+                    };
 
-                        // Update button state
-                        btn.disabled = false;
-                        btn.textContent = '再次推荐';
-                        btn.onclick = function() {
-                            btn.textContent = '推荐中...';
-                            btn.disabled = true;
-                            startDemo2Recommend();
-                        };
-                    }, remainingDelay);
+                    switchDemo2Page('results');
                 })
                 .catch(error => {
                     console.error('Error loading KOL data:', error);
@@ -3872,23 +3651,23 @@
                 return;
             }
 
-            // Get all field names from first KOL
-            var fields = Object.keys(selectedKOLs[0]);
-
-            // Create CSV content with BOM
-            var csvContent = '﻿';
-            csvContent += fields.join(',') + '\n';
+            // Create CSV content
+            var csvContent = '﻿'; // BOM for UTF-8
+            csvContent += '序号,达人昵称,主页链接,人设,内容形式,粉丝量,女粉占比,图文报价,视频报价,健康度\n';
 
             selectedKOLs.forEach((kol, index) => {
-                var row = fields.map(field => {
-                    var val = kol[field] !== undefined ? kol[field] : '';
-                    // Wrap strings with quotes if they contain commas
-                    if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
-                        return '"' + val.replace(/"/g, '""') + '"';
-                    }
-                    return val;
-                });
-                csvContent += row.join(',') + '\n';
+                csvContent += [
+                    index + 1,
+                    '"' + kol.name + '"',
+                    kol.url,
+                    '"' + kol.persona + '"',
+                    '"' + kol.content_format + '"',
+                    kol.followers,
+                    kol.female_ratio + '%',
+                    kol.img_price,
+                    kol.video_price,
+                    '"' + kol.health + '"'
+                ].join(',') + '\n';
             });
 
             // Download CSV
@@ -3905,28 +3684,21 @@
             .then(response => response.json())
             .then(allKOLs => {
                 const feishuListHTML = allKOLs.map(k => {
-                    var followers = k['粉丝量'] || 0;
-                    var followersStr = followers >= 10000 ? (followers / 10000).toFixed(1) + 'w' : followers.toString();
-                    var name = k['达人昵称'] || '';
-                    var avatar = name.charAt(0);
-                    var categories = (k['内容主题'] || '').split(',').map(t => t.trim()).slice(0, 2).join('/');
-                    var persona = (k['人设'] || '达人').split(',')[0];
-                    var contentFormat = (k['内容形式'] || '图文').split(',')[0];
-                    var imgPrice = k['图文报价'] || 0;
-                    var videoPrice = k['视频报价'] || 0;
-                    var imgPriceStr = imgPrice > 0 ? '¥' + imgPrice.toLocaleString() : '议价';
-                    var videoPriceStr = videoPrice > 0 ? '¥' + videoPrice.toLocaleString() : '议价';
-                    var femaleRatio = k['女粉占比'] || 0;
-                    var health = k['健康度'] || '-';
-                    var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=FF2442&color=fff&size=60&font-size=0.4';
+                    var followersStr = k.followers >= 10000 ? (k.followers / 10000).toFixed(1) + 'w' : k.followers.toString();
+                    var avatar = k.name.charAt(0);
+                    var categories = k.category.split(',').map(t => t.trim()).slice(0, 2).join('/');
+                    var persona = k.persona.split(',')[0] || '达人';
+                    var contentFormat = k.content_format.split(',')[0] || '图文';
+                    var imgPriceStr = k.img_price > 0 ? '¥' + k.img_price.toLocaleString() : '议价';
+                    var videoPriceStr = k.video_price > 0 ? '¥' + k.video_price.toLocaleString() : '议价';
 
                     return `
                         <tr>
                             <td>
                                 <div class="demo-kol-list-blogger">
-                                    <div class="demo-kol-list-avatar" style="background:url(${avatarUrl}) center/cover;border-radius:50%;"></div>
+                                    <div class="demo-kol-list-avatar">${avatar}</div>
                                     <div>
-                                        <div class="demo-kol-list-name"><a href="${k['主页链接']}" target="_blank" style="color:inherit;text-decoration:none;">${name}</a></div>
+                                        <div class="demo-kol-list-name"><a href="${k.url}" target="_blank" style="color:inherit;text-decoration:none;">${k.name}</a></div>
                                         <div class="demo-kol-list-category">${categories}</div>
                                     </div>
                                 </div>
@@ -3936,8 +3708,8 @@
                             <td>${videoPriceStr}</td>
                             <td>${persona}</td>
                             <td>${contentFormat}</td>
-                            <td>${femaleRatio}%</td>
-                            <td>${health}</td>
+                            <td>${k.female_ratio}%</td>
+                            <td>${k.health || '-'}</td>
                         </tr>
                     `;
                 }).join('');
@@ -3955,19 +3727,6 @@
                 duration: 0.6, ease: 'power2.out',
                 scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
             });
-        });
-
-        // Contact card progressive reveal
-        gsap.to('.contact-profile-card', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: '.contact-profile-card',
-                start: 'top 80%',
-                toggleActions: 'play none none none'
-            }
         });
 
         // Dark Mode Toggle

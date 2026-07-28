@@ -17,28 +17,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
     <style>
-       /* Theme transition: register properties so CSS variables animate on theme toggle */
-       @property --bg { syntax: '<color>'; inherits: true; initial-value: #FAFAFA; }
-       @property --surface { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
-       @property --surface-hover { syntax: '<color>'; inherits: true; initial-value: #F5F5F5; }
-       @property --text { syntax: '<color>'; inherits: true; initial-value: #1A1A1A; }
-       @property --text-secondary { syntax: '<color>'; inherits: true; initial-value: #6B7280; }
-       @property --text-tertiary { syntax: '<color>'; inherits: true; initial-value: #9CA3AF; }
-       @property --border { syntax: '<color>'; inherits: true; initial-value: #E5E7EB; }
-       @property --border-light { syntax: '<color>'; inherits: true; initial-value: #F3F4F6; }
-       @property --accent { syntax: '<color>'; inherits: true; initial-value: #5E6AD2; }
-       @property --accent-hover { syntax: '<color>'; inherits: true; initial-value: #4F5BC4; }
-       @property --accent-light { syntax: '<color>'; inherits: true; initial-value: rgba(94,106,210,0.08); }
-       @property --success { syntax: '<color>'; inherits: true; initial-value: #10B981; }
-       @property --success-light { syntax: '<color>'; inherits: true; initial-value: rgba(16,185,129,0.08); }
-       @property --warning { syntax: '<color>'; inherits: true; initial-value: #F59E0B; }
-       @property --warning-light { syntax: '<color>'; inherits: true; initial-value: rgba(245,158,11,0.08); }
-       @property --danger { syntax: '<color>'; inherits: true; initial-value: #EF4444; }
-       @property --danger-light { syntax: '<color>'; inherits: true; initial-value: rgba(239,68,68,0.08); }
-       @property --shadow-sm { syntax: '<shadow>'; inherits: true; initial-value: 0 1px 2px rgba(0,0,0,0.04); }
-       @property --shadow-md { syntax: '<shadow>'; inherits: true; initial-value: 0 4px 12px rgba(0,0,0,0.06); }
-       @property --shadow-lg { syntax: '<shadow>'; inherits: true; initial-value: 0 8px 24px rgba(0,0,0,0.08); }
-
        :root {
            --bg: #FAFAFA;
            --surface: #FFFFFF;
@@ -64,9 +42,6 @@
            --radius-lg: 12px;
            --gm: 40px;
        }
-
-       html { transition: color 0.5s, background-color 0.5s; }
-       body { transition: color 0.5s, background-color 0.5s; }
 
         
 [data-theme="dark"] .loader-3d {
@@ -180,7 +155,6 @@
     background: #FAFAFA;
     z-index: 9999;
     overflow: hidden;
-    transition: background 0.5s;
 }
 
 .loader-3d.done {
@@ -232,12 +206,11 @@
     top: 50%;
     margin-left: -1500px;
     margin-top: -1500px;
-    background-image:
+    background-image: 
         linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px);
     background-size: 150px 150px;
     background-color: #FAFAFA;
-    transition: background-color 0.5s;
 }
 
 .tunnel-wall--left { transform: translateX(-500px) rotateY(90deg); }
@@ -441,7 +414,6 @@
             background: rgba(250,250,250,0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-light);
-            transition: background 0.5s, border-color 0.5s;
         }
 
         .nav-logo {
@@ -1819,150 +1791,7 @@
             font-size: clamp(32px, 5vw, 48px);
             font-weight: 800;
             letter-spacing: -0.03em;
-            margin-bottom: 12px;
-        }
-
-        .contact-subtitle {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-        }
-
-        .contact-profile-card {
-            display: flex;
-            align-items: stretch;
-            gap: 40px;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: var(--shadow-lg);
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .contact-profile-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .contact-profile-left {
-            flex-shrink: 0;
-        }
-
-        .contact-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 16px;
-            object-fit: cover;
-        }
-
-        .contact-profile-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .contact-name {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 4px;
-        }
-
-        .contact-role {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .contact-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .contact-detail-icon {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .contact-detail-value a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .contact-detail-value a:hover {
-            color: var(--accent);
-        }
-
-        .contact-social {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
-        }
-
-        .contact-social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .contact-social-link:hover {
-            background: var(--text);
-            color: var(--bg);
-            border-color: var(--text);
-        }
-
-        .contact-social-link svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .contact-qr-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .contact-qr {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
-
-        .contact-qr-label {
-            font-size: 11px;
-            color: var(--text-tertiary);
+            margin-bottom: 32px;
         }
 
         .contact-info {
@@ -2019,10 +1848,6 @@
             .nav-links { display: none; }
             .hamburger { display: flex; }
             .demo-library-grid { grid-template-columns: 1fr; }
-            .contact-profile-card { flex-direction: column; align-items: center; text-align: center; }
-            .contact-avatar { width: 140px; height: 140px; }
-            .contact-details { align-items: center; }
-            .contact-qr-wrapper { margin-top: 20px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -3019,42 +2844,26 @@
 
        <section class="contact" id="contact">
             <h2 class="contact-title">Let's Talk</h2>
-            <p class="contact-subtitle">期待与你交流</p>
-
-            <div class="contact-profile-card">
-                <div class="contact-profile-left">
-                    <img src="resource/image/头像.jpg" alt="Teddy Wu" class="contact-avatar">
+            <div class="curved-email-wrapper">
+                <div id="curved-email-input"></div>
+            </div>
+            <div class="contact-info">
+                <div>
+                    <div class="contact-item-label">Phone</div>
+                    <div class="contact-item-value"><a href="tel:13680369508">13680369508</a></div>
                 </div>
-                <div class="contact-profile-right">
-                    <h3 class="contact-name">Teddy Wu</h3>
-                    <p class="contact-role">AI Product Manager · 广州</p>
-
-                    <div class="contact-details">
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📍</span>
-                            <span>广州, 中国</span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📧</span>
-                            <span class="contact-detail-value">
-                                <a href="mailto:1502110191@qq.com">1502110191@qq.com</a>
-                            </span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">📱</span>
-                            <span class="contact-detail-value">
-                                <a href="tel:13680369508">13680369508</a>
-                            </span>
-                        </div>
-                        <div class="contact-detail-item">
-                            <span class="contact-detail-icon">💬</span>
-                            <span class="contact-detail-value">TeddyGorrr</span>
+                <div>
+                    <div class="contact-item-label">WeChat</div>
+                    <div class="contact-item-value wechat-qr-wrapper">
+                        <button class="copy-btn" onclick="toggleWechatQR()">
+                            TeddyGorrr
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        </button>
+                        <div class="wechat-qr-popup" id="wechatQR">
+                            <img src="resource/image/微信二维码.jpeg" alt="WeChat QR Code">
+                            <p>扫码添加微信</p>
                         </div>
                     </div>
-                </div>
-                <div class="contact-qr-wrapper">
-                    <img src="resource/image/微信二维码.jpeg" alt="WeChat QR" class="contact-qr">
-                    <span class="contact-qr-label">扫码添加微信</span>
                 </div>
             </div>
         </section>
@@ -3955,19 +3764,6 @@
                 duration: 0.6, ease: 'power2.out',
                 scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
             });
-        });
-
-        // Contact card progressive reveal
-        gsap.to('.contact-profile-card', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: '.contact-profile-card',
-                start: 'top 80%',
-                toggleActions: 'play none none none'
-            }
         });
 
         // Dark Mode Toggle
